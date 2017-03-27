@@ -1,1 +1,5 @@
 Django==1.10.6
+django-extensions==1.7.7
+olefile==0.44
+Pillow==4.0.0
+six==1.10.0
