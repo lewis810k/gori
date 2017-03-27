@@ -14,7 +14,11 @@ import os
 
 DEBUG = True
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
-
+# 실험이 되는지 확인하기위해  True생성
+STORAGE_S3 = True
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+DB_RDS = True
+# DB_RDS = os.environ.get('DB') == 'RDS'
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
@@ -36,6 +40,37 @@ for key, key_dict in config_common.items():
         config[key] = {}
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
+
+# AWS
+AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+
+AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
+AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
+AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+
+# Static, Media storages
+if STORAGE_S3:
+    # Static files
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        staticfiles_location=STATICFILES_LOCATION,
+    )
+    # Media files
+    DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        mediafiles_location=MEDIAFILES_LOCATION
+    )
+else:
+    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 SECRET_KEY = config['django']['secret_key']
 ALLOWED_HOSTS = config['django']['allowed_hosts']
@@ -68,6 +103,16 @@ INSTALLED_APPS = [
 
     # extension
     'django_extensions',
+    # API 만들기 위한 프레임워크
+    'rest_framework',
+    # API 토큰
+    'rest_framework.authtoken',
+    # rest_framework 토큰 라이브러리
+    'rest_auth',
+    #
+    'corsheaders',
+    # aws s3
+    'storages',
 
     # app
     'member',
@@ -109,10 +154,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+if DEBUG and DB_RDS:
+    # DEBUG모드이며 DB_RDS옵션일 경우, 로컬 postgreSQL이 아닌 RDS로 접속해 테스트한다
+    config_db = config['db_rds']
+else:
+    # 그 외의 경우에는 해당 db설정을 따름
+    config_db = config['db']
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
@@ -120,18 +175,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+{
+    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+},
+{
+    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+},
+{
+    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+},
+{
+    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+},
 ]
 
 # Internationalization
@@ -150,4 +205,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+

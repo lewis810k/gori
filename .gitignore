@@ -5,6 +5,10 @@
 .idea/
 .conf-secret/
 django_app/static/css/
+.ebignore
+_Dockerfile*
+Dockerfile_*
+.ebextensions
 
 
 ### Django ###
