@@ -21,15 +21,15 @@ class GoriClass(models.Model):
     tutor = models.ForeignKey(Tutor, )
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
-    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, max_length=1, default='1', blank=False)
+    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default='1', blank=False)
     cover_image = models.ImageField(upload_to='class/cover_image')
     tutor_info = models.CharField(max_length=80, blank=False)
     class_info = models.CharField(max_length=150, blank=False)
     video1 = models.URLField(blank=True)
     video2 = models.URLField(blank=True)
     price_per_hour = models.IntegerField(blank=False)
-    hours_per_class = models.IntegerField(max_length=2, blank=False)
-    number_of_class = models.IntegerField(max_length=2, blank=False)
+    hours_per_class = models.IntegerField(blank=False)
+    number_of_class = models.IntegerField(blank=False)
 
 
 class ClassImage(models.Model):
