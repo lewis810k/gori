@@ -56,7 +56,6 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -72,6 +71,7 @@ INSTALLED_APPS = [
 
     # app
     'member',
+    'class',
 ]
 
 MIDDLEWARE = [
