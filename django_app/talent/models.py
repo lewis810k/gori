@@ -30,6 +30,7 @@ class Talent(models.Model):
     price_per_hour = models.IntegerField(blank=False, help_text='시간당 가격')
     hours_per_class = models.IntegerField(blank=False, help_text='기본 수업 시간')
     number_of_class = models.IntegerField(blank=False, help_text='한달 기준 총 수업 일')
+    is_soldout = models.BooleanField(default=False)
 
     def __str__(self):
         return '{}: {}'.format(self.pk, self.class_title)
@@ -44,8 +45,7 @@ class Registration(models.Model):
     student = models.ForeignKey(GoriUser)
     talent = models.ForeignKey(Talent)
     joined_date = models.DateTimeField(auto_now_add=True)
-
-    # is_registered = models.BooleanField(default=False)
+    is_registered = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent.pk, self.talent.class_title)
