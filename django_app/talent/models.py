@@ -36,6 +36,26 @@ class Talent(models.Model):
         return '{}: {}'.format(self.pk, self.class_title)
 
 
+    def to_dict(self):
+        ret = {
+            'tutor': self.tutor.to_dict(),
+            'class_title': self.class_title,
+            'category': self.category,
+            'class_type': self.class_type,
+            'cover_image': self.cover_image,
+            'tutor_info': self.tutor_info,
+            'class_info': self.class_info,
+            'video1': self.video1,
+            'video2': self.video2,
+            'price_per_hour': self.price_per_hour,
+            'hours_per_class': self.hours_per_class,
+            'number_of_class': self.number_of_class,
+            'is_soldout': self.is_soldout,
+
+        }
+        return ret
+
+
 class ClassImage(models.Model):
     talent = models.ForeignKey(Talent)
     image = models.ImageField(upload_to='talent/extra_images')
@@ -50,6 +70,14 @@ class Registration(models.Model):
     def __str__(self):
         return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent.pk, self.talent.class_title)
 
+    def to_dict(self):
+        ret = {
+            'student':self.student.to_dict(),
+            'talent':self.talent.to_dict(),
+            'joined_date':self.joined_date.strftime('%Y-%m-%d %H:%M'),
+            'is_registered':self.is_registered,
+        }
+        return ret
 
 class Location(models.Model):
     SCHOOL = (
@@ -129,3 +157,19 @@ class Location(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.talent, self.region)
+
+class WishList(models.Model):
+    talent = models.ForeignKey(Talent,)
+    user = models.ForeignKey(GoriUser,)
+    added_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{}의 wishlist에 {} 추가 '.format(self.user.email,self.talent.id)
+
+    def to_dict(self):
+        ret = {
+            'talent': self.talent.to_dict(),
+            'user':self.user.to_dict(),
+            'added_date': self.added_date.strftime('%Y-%m-%d %H:%M')
+        }
+        return ret
