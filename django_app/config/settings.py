@@ -76,7 +76,7 @@ INSTALLED_APPS = [
 
     # app
     'member',
-    'class',
+    'talent',
 ]
 
 MIDDLEWARE = [

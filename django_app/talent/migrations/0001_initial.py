@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             name='ClassImage',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('class_image', models.ImageField(upload_to='class/extra_images')),
+                ('class_image', models.ImageField(upload_to='talent/extra_images')),
             ],
         ),
         migrations.CreateModel(
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('class_title', models.CharField(max_length=30)),
                 ('category', models.CharField(choices=[('HNB', '헬스 / 뷰티'), ('LAN', '외국어'), ('COM', '컴퓨터'), ('ART', '미술 / 음악'), ('SPO', '스포츠'), ('JOB', '전공 / 취업'), ('HOB', '이색취미')], max_length=3)),
                 ('class_type', models.IntegerField(choices=[(0, '1:1'), (1, '그룹 수업'), (2, '원데이 수업')], default='1', max_length=1)),
-                ('cover_image', models.ImageField(upload_to='class/cover_image')),
+                ('cover_image', models.ImageField(upload_to='talent/cover_image')),
                 ('tutor_info', models.CharField(max_length=80)),
                 ('class_info', models.CharField(max_length=150)),
                 ('video1', models.URLField(blank=True)),
@@ -47,13 +47,13 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('joined_date', models.DateTimeField(auto_now_add=True)),
-                ('gori_class', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='class.GoriClass')),
+                ('talent', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='talent.GoriClass')),
                 ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AddField(
             model_name='classimage',
-            name='gori_class',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='class.GoriClass'),
+            name='talent',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='talent.GoriClass'),
         ),
     ]

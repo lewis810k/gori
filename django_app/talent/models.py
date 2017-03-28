@@ -3,7 +3,7 @@ from django.db import models
 from member.models import Tutor, GoriUser
 
 
-class GoriClass(models.Model):
+class Talent(models.Model):
     CATEGORY = (
         ('HNB', '헬스 / 뷰티'),
         ('LAN', '외국어'),
@@ -21,8 +21,8 @@ class GoriClass(models.Model):
     tutor = models.ForeignKey(Tutor, )
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
-    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default='1', blank=False)
-    cover_image = models.ImageField(upload_to='class/cover_image')
+    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default='1', blank=False,)
+    cover_image = models.ImageField(upload_to='talent/cover_image')
     tutor_info = models.CharField(max_length=80, blank=False)
     class_info = models.CharField(max_length=150, blank=False)
     video1 = models.URLField(blank=True)
@@ -33,11 +33,11 @@ class GoriClass(models.Model):
 
 
 class ClassImage(models.Model):
-    gori_class = models.ForeignKey(GoriClass)
-    class_image = models.ImageField(upload_to='class/extra_images')
+    gori_class = models.ForeignKey(Talent)
+    class_image = models.ImageField(upload_to='talent/extra_images')
 
 
 class Registration(models.Model):
     student = models.ForeignKey(GoriUser)
-    gori_class = models.ForeignKey(GoriClass)
+    gori_class = models.ForeignKey(Talent)
     joined_date = models.DateTimeField(auto_now_add=True)
