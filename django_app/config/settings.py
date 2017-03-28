@@ -12,13 +12,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = True
-# DEBUG = os.environ.get('MODE') == 'DEBUG'
+# DEBUG = True
+DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
-STORAGE_S3 = True
-# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
-DB_RDS = True
-# DB_RDS = os.environ.get('DB') == 'RDS'
+# STORAGE_S3 = True
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# DB_RDS = True
+
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
@@ -41,6 +41,7 @@ for key, key_dict in config_common.items():
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
 
+print(config)
 # AWS
 AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
 AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
@@ -78,9 +79,7 @@ ALLOWED_HOSTS = config['django']['allowed_hosts']
 # TEMPLATE
 TEMPLATES_DIR = 'templates'
 
-# MEDIA
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+
 
 # STATIC - bower는 나중에 필요하면 주석 해제 해서 사용하셈
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
@@ -89,7 +88,7 @@ STATICFILES_DIRS = (
     STATIC_DIR,
     # BOWER_DIR,
 )
-STATIC_URL = '/static/'
+
 
 # Application definition
 
@@ -153,21 +152,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-if DEBUG and DB_RDS:
-    # DEBUG모드이며 DB_RDS옵션일 경우, 로컬 postgreSQL이 아닌 RDS로 접속해 테스트한다
-    config_db = config['db_rds']
-else:
-    # 그 외의 경우에는 해당 db설정을 따름
-    config_db = config['db']
+config = config['db']
 DATABASES = {
     'default': {
-        'ENGINE': config_db['engine'],
-        'NAME': config_db['name'],
-        'USER': config_db['user'],
-        'PASSWORD': config_db['password'],
-        'HOST': config_db['host'],
-        'PORT': config_db['port'],
+        'ENGINE': config['engine'],
+        'NAME': config['name'],
+        'USER': config['user'],
+        'PASSWORD': config['password'],
+        'HOST': config['host'],
+        'PORT': config['port'],
     }
 }
 
