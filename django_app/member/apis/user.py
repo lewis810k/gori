@@ -4,6 +4,10 @@ from rest_framework.views import APIView
 
 from member.serializers import UserSerializer
 
+__all__ = (
+    'ProfileView',
+)
+
 
 class ProfileView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
