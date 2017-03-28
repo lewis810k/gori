@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import models
 
 from member.models import Tutor, GoriUser
@@ -35,7 +37,6 @@ class Talent(models.Model):
     def __str__(self):
         return '{}: {}'.format(self.pk, self.class_title)
 
-
     def to_dict(self):
         ret = {
             'tutor': self.tutor.to_dict(),
@@ -51,14 +52,46 @@ class Talent(models.Model):
             'hours_per_class': self.hours_per_class,
             'number_of_class': self.number_of_class,
             'is_soldout': self.is_soldout,
+            'curriculum_list': [curriculum_item for curriculum_item in self.curriculum_set.values_list('id',flat=True)]
 
         }
+        return ret
+
+    def get_location_info(self):
+        ret = {
+            'talent': self.to_dict(),
+        }
+        if self.location_set.all():
+            location_info = [location_item.to_dict() for location_item in self.location_set.all()]
+            ret["location"] = location_info
+        else:
+            ret["location"] = ''
         return ret
 
 
 class ClassImage(models.Model):
     talent = models.ForeignKey(Talent)
     image = models.ImageField(upload_to='talent/extra_images')
+
+
+class Curriculum(models.Model):
+    talent = models.ForeignKey(Talent, )
+    information = models.CharField(max_length=50)
+    image = models.ImageField(blank=True)
+
+    class Meta:
+        ordering = ['talent', ]
+
+    def __str__(self):
+        return 'Talent {}: {}'.format(self.talent.id, self.id)
+
+    def to_dict(self):
+        ret = {
+            'talent': self.talent.id,
+            'information': self.information,
+            'image': self.image,
+        }
+        return pprint(ret)
 
 
 class Registration(models.Model):
@@ -72,12 +105,13 @@ class Registration(models.Model):
 
     def to_dict(self):
         ret = {
-            'student':self.student.to_dict(),
-            'talent':self.talent.to_dict(),
-            'joined_date':self.joined_date.strftime('%Y-%m-%d %H:%M'),
-            'is_registered':self.is_registered,
+            'student': self.student.to_dict(),
+            'talent': self.talent.to_dict(),
+            'joined_date': self.joined_date.strftime('%Y-%m-%d %H:%M'),
+            'is_registered': self.is_registered,
         }
         return ret
+
 
 class Location(models.Model):
     SCHOOL = (
@@ -158,18 +192,32 @@ class Location(models.Model):
     def __str__(self):
         return '{} {}'.format(self.talent, self.region)
 
+    def to_dict(self):
+        ret = {
+            'talent': self.talent.id,
+            'region': self.region,
+            'specific_location': self.specific_location,
+            'location_info': self.location_info,
+            'extra_fee': self.extra_fee,
+            'extra_fee_amount': self.extra_fee_amount,
+            'day': self.day,
+            'time': self.time,
+        }
+        return ret
+
+
 class WishList(models.Model):
-    talent = models.ForeignKey(Talent,)
-    user = models.ForeignKey(GoriUser,)
+    talent = models.ForeignKey(Talent, )
+    user = models.ForeignKey(GoriUser, )
     added_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '{}의 wishlist에 {} 추가 '.format(self.user.email,self.talent.id)
+        return '{}의 wishlist에 {} 추가 '.format(self.user.email, self.talent.id)
 
     def to_dict(self):
         ret = {
-            'talent': self.talent.to_dict(),
-            'user':self.user.to_dict(),
+            'talent': self.talent.id,
+            'user': self.user.email,
             'added_date': self.added_date.strftime('%Y-%m-%d %H:%M')
         }
         return ret
