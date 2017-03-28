@@ -21,7 +21,7 @@ class Talent(models.Model):
     tutor = models.ForeignKey(Tutor, )
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
-    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default='1', blank=False, )
+    class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default=1, blank=False, )
     cover_image = models.ImageField(upload_to='talent/cover_image')
     tutor_info = models.CharField(max_length=80, blank=False)
     class_info = models.CharField(max_length=150, blank=False)
@@ -45,8 +45,10 @@ class Registration(models.Model):
     talent = models.ForeignKey(Talent)
     joined_date = models.DateTimeField(auto_now_add=True)
 
+    # is_registered = models.BooleanField(default=False)
+
     def __str__(self):
-        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name,self.talent.pk,self.talent.class_title)
+        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent.pk, self.talent.class_title)
 
 
 class Location(models.Model):
@@ -119,8 +121,11 @@ class Location(models.Model):
     talent = models.ForeignKey(Talent, )
     region = models.CharField(choices=REGION, max_length=4)
     specific_location = models.CharField(choices=SPECIFIC_LOCATION, max_length=4, help_text='상세 위치 정보')
-    location_info = models.CharField(max_length=10, help_text='직접 입력 10글자 내외',blank=True)
+    location_info = models.CharField(max_length=10, help_text='직접 입력 10글자 내외', blank=True)
     extra_fee = models.CharField(choices=EXTRA_FEE, max_length=1, default='N', help_text='장소 및 기타 비용이 있나요?')
-    extra_fee_amount = models.CharField(max_length=10,help_text='추가 비용: 예시) 재료 비용 1만원',blank=True)
+    extra_fee_amount = models.CharField(max_length=10, help_text='추가 비용: 예시) 재료 비용 1만원', blank=True)
     day = models.CharField(choices=DAYS_OF_WEEK, max_length=2)
     time = models.CharField(max_length=20, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
+
+    def __str__(self):
+        return '{} {}'.format(self.talent, self.region)
