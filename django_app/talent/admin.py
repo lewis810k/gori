@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from member.models import GoriUser
-from talent.models import Location, Talent, ClassImage, Registration
+from talent.models import Location, Talent, ClassImage, Registration, WishList, Curriculum
 
 
 class TalentAdmin(admin.ModelAdmin):
@@ -27,3 +27,5 @@ admin.site.register(Location)
 admin.site.register(Talent, TalentAdmin)
 admin.site.register(ClassImage)
 admin.site.register(Registration)
+admin.site.register(WishList)
+admin.site.register(Curriculum)
