@@ -20,7 +20,7 @@ class TalentAdmin(admin.ModelAdmin):
 
     def students_list(self, talent):
         student_list = []
-        for student in talent.location_set.values_list('student', flat=True):
+        for student in talent.location_set.values_list('registered_student', flat=True):
             student_list.append(student)
         return student_list
 

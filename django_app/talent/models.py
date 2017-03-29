@@ -161,7 +161,7 @@ class Location(models.Model):
         ('N', '아니오, 없습니다'),
     )
     REGION = AREA + SCHOOL
-    talent = models.ForeignKey(Talent, )
+    talent = models.ForeignKey(Talent, limit_choices_to={'is_soldout': False})
     registered_student = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Registration')
     region = models.CharField(choices=REGION, max_length=4)
     specific_location = models.CharField(choices=SPECIFIC_LOCATION, max_length=4, help_text='상세 위치 정보')
@@ -172,7 +172,7 @@ class Location(models.Model):
     time = models.CharField(max_length=20, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
 
     def __str__(self):
-        return '{} {}'.format(self.talent, self.region)
+        return '{} - 지역: {}'.format(self.talent, self.get_region_display())
 
     def to_dict(self):
         ret = {
@@ -198,9 +198,9 @@ class Registration(models.Model):
     talent_location = models.ForeignKey(Location, )
     joined_date = models.DateTimeField(auto_now_add=True)
     is_confirmed = models.BooleanField(default=False)
-    student_level = models.IntegerField(choices=LEVEL, help_text="레벨 선택")
-    experience_length = models.IntegerField(default=0, help_text="해당 수업관련 경력을 개월로 입력")
-    message_to_tutor = models.CharField(max_length=50, help_text="수강신청시 유저가 튜터에게 보내는 메세지", blank=True)
+    student_level = models.IntegerField(choices=LEVEL, help_text="레벨 선택", default=1)
+    experience_length = models.IntegerField(default=0, blank=True, help_text="해당 수업관련 경력을 개월로 입력")
+    message_to_tutor = models.CharField(max_length=50, help_text="수강신청시 유저가 튜터에게 보내는 메세지", blank=False)
 
     def __str__(self):
         return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent_location.talent.pk,
