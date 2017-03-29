@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = True
+DEBUG = False
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 
 # /gori/django_app/
@@ -61,6 +61,19 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,12 +87,18 @@ INSTALLED_APPS = [
     # extension
     'django_extensions',
     'rest_framework',
+    'rest_auth',
 
-
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'rest_framework.authtoken',
     # app
     'member',
     'talent',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -116,10 +135,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+config_db = config['db']
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
