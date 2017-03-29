@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         now = timezone.now()
@@ -107,18 +106,18 @@ class GoriUser(AbstractBaseUser, PermissionsMixin):
         }
         return ret
 
-    # # user의 wishlist talent(수업) 정보 보기
-    # def add_to_wishlist(self, talent_id):
-    #     talent = Talent.objects.get(id=talent_id)
-    #     wishlist = WishList.objects.create(user=self, talent=talent)
-    #     return wishlist
-    #
-    # def get_wishlist_info(self):
-    #     ret = {
-    #         'user': self.email,
-    #         'wishlist_info': [wish_item.to_dict() for wish_item in self.wishlist_set.all()]
-    #     }
-    #     return ret
+        # # user의 wishlist talent(수업) 정보 보기
+        # def add_to_wishlist(self, talent_id):
+        #     talent = Talent.objects.get(id=talent_id)
+        #     wishlist = WishList.objects.create(user=self, talent=talent)
+        #     return wishlist
+        #
+        # def get_wishlist_info(self):
+        #     ret = {
+        #         'user': self.email,
+        #         'wishlist_info': [wish_item.to_dict() for wish_item in self.wishlist_set.all()]
+        #     }
+        #     return ret
 
 
 class Tutor(models.Model):
@@ -135,7 +134,7 @@ class Tutor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True)
     joined_date = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
-    verification_method = models.CharField(choices=VERIFICATION_CHOICES, max_length=2, default='UN')
+    verification_method = models.CharField(choices=VERIFICATION_CHOICES, max_length=2, default='ID')
     verification_images = models.ImageField(upload_to='member/verification_image')
     school = models.CharField(max_length=20, blank=True)
     major = models.CharField(max_length=20, blank=True)
