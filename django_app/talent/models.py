@@ -1,8 +1,7 @@
-from pprint import pprint
-
 from django.db import models
 
-from member.models import Tutor, GoriUser
+from config import settings
+from member.models import Tutor
 
 
 class Talent(models.Model):
@@ -21,6 +20,7 @@ class Talent(models.Model):
         (2, '원데이 수업'),
     )
     tutor = models.ForeignKey(Tutor, )
+    wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
     class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default=1, blank=False, )
@@ -52,7 +52,7 @@ class Talent(models.Model):
             'hours_per_class': self.hours_per_class,
             'number_of_class': self.number_of_class,
             'is_soldout': self.is_soldout,
-            'curriculum_list': [curriculum_item for curriculum_item in self.curriculum_set.values_list('id',flat=True)]
+            'curriculum_list': [curriculum_item for curriculum_item in self.curriculum_set.values_list('id', flat=True)]
 
         }
         return ret
@@ -90,25 +90,6 @@ class Curriculum(models.Model):
             'talent': self.talent.id,
             'information': self.information,
             'image': self.image,
-        }
-        return pprint(ret)
-
-
-class Registration(models.Model):
-    student = models.ForeignKey(GoriUser)
-    talent = models.ForeignKey(Talent)
-    joined_date = models.DateTimeField(auto_now_add=True)
-    is_registered = models.BooleanField(default=False)
-
-    def __str__(self):
-        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent.pk, self.talent.class_title)
-
-    def to_dict(self):
-        ret = {
-            'student': self.student.to_dict(),
-            'talent': self.talent.to_dict(),
-            'joined_date': self.joined_date.strftime('%Y-%m-%d %H:%M'),
-            'is_registered': self.is_registered,
         }
         return ret
 
@@ -180,7 +161,8 @@ class Location(models.Model):
         ('N', '아니오, 없습니다'),
     )
     REGION = AREA + SCHOOL
-    talent = models.ForeignKey(Talent, )
+    talent = models.ForeignKey(Talent, limit_choices_to={'is_soldout': False})
+    registered_student = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Registration')
     region = models.CharField(choices=REGION, max_length=4)
     specific_location = models.CharField(choices=SPECIFIC_LOCATION, max_length=4, help_text='상세 위치 정보')
     location_info = models.CharField(max_length=10, help_text='직접 입력 10글자 내외', blank=True)
@@ -190,7 +172,7 @@ class Location(models.Model):
     time = models.CharField(max_length=20, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
 
     def __str__(self):
-        return '{} {}'.format(self.talent, self.region)
+        return '{} - 지역: {}'.format(self.talent, self.get_region_display())
 
     def to_dict(self):
         ret = {
@@ -206,9 +188,37 @@ class Location(models.Model):
         return ret
 
 
+class Registration(models.Model):
+    LEVEL = (
+        (1, '입문자'),
+        (2, '초/중급자'),
+        (3, '상급자'),
+    )
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, )
+    talent_location = models.ForeignKey(Location, )
+    joined_date = models.DateTimeField(auto_now_add=True)
+    is_confirmed = models.BooleanField(default=False)
+    student_level = models.IntegerField(choices=LEVEL, help_text="레벨 선택", default=1)
+    experience_length = models.IntegerField(default=0, blank=True, help_text="해당 수업관련 경력을 개월로 입력")
+    message_to_tutor = models.CharField(max_length=50, help_text="수강신청시 유저가 튜터에게 보내는 메세지", blank=False)
+
+    def __str__(self):
+        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent_location.talent.pk,
+                                                 self.talent_location.talent.class_title)
+
+    def to_dict(self):
+        ret = {
+            'student': self.student.to_dict(),
+            'talent': self.talent.to_dict(),
+            'joined_date': self.joined_date.strftime('%Y-%m-%d %H:%M'),
+            'is_registered': self.is_confirmed,
+        }
+        return ret
+
+
 class WishList(models.Model):
     talent = models.ForeignKey(Talent, )
-    user = models.ForeignKey(GoriUser, )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, )
     added_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

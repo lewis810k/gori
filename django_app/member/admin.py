@@ -3,9 +3,14 @@ from django.contrib import admin
 from member.models import GoriUser, Tutor
 
 
+class TutorInline(admin.TabularInline):
+    model = Tutor
+
+
 class GoriUserAdmin(admin.ModelAdmin):
     list_display = ('email', 'is_staff', 'is_active',
                     'joined_date', 'is_tutor', 'get_tutor_info',)
+    inlines = [TutorInline]
 
     def get_tutor_info(self, user):
         return user.tutor
@@ -17,7 +22,7 @@ class TutorAdmin(admin.ModelAdmin):
     def talent_title(self, tutor):
         title_list = []
         for index, item in enumerate(tutor.talent_set.values_list('class_title', flat=True)):
-            title_list.append('{}:{}'.format(index+1, item))
+            title_list.append('{}:{}'.format(index + 1, item))
         return title_list
 
 
