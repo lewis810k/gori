@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.urls import NoReverseMatch
 from django.urls import resolve
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APILiveServerTestCase
 
 from member.models import Tutor
@@ -17,29 +18,36 @@ class MemberTest(APILiveServerTestCase):
     test_password1 = 'qwer1234'
     test_password2 = 'qwer1234'
 
-    @staticmethod
-    def create_user():
-        user = User.objects.create(
-            email='test@email.com',
-            password='qwer1234',
-        )
-        return user
-
-    # def test_create_user(self):
-    #     user = self.create_user()
-    #     self.assertEqual(user.email, self.test_email)
-    #     self.assertEqual(User.objects.count(), 1)
-
-    def test_create_and_register_user(self):
+    def create_user(self):
         data = {
             'email': self.test_email,
             'password1': self.test_password1,
             'password2': self.test_password2,
         }
         url = reverse('rest_register')
-        print(url)
         response = self.client.post(url, data=data)
-        print(response.data)
+        return response
+
+    def test_create_and_register_user(self):
+        """
+        'rest_register'를 name으로 가지는 url을 불러온다.
+        rest_auth/registration/urls.py에 있음
+        해당 url로 post 요청을 보내서 응답을 확인한다.
+        """
+        response = self.create_user()
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.last()
+        self.assertEqual(user.email, self.test_email)
+
+    def test_delete_user(self):
+        """
+        유저 삭제 테스트
+        """
+        # self.create_user()
+        # url = reverse('api:user-delete', kwargs={'pk': '1'})
+        # print(url)
+
 
 
         # def test_apis_url_exist(self):
