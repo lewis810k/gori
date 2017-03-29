@@ -23,9 +23,17 @@ STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
 ROOT_DIR = os.path.dirname(BASE_DIR)
+# STATIC - bower는 나중에 필요하면 주석 해제 해서 사용하셈
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+# BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
+STATICFILES_DIRS = (
+    STATIC_DIR,
+    # BOWER_DIR,
+)
 # /gori/.conf-secret/
 CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
+
 # 디버그 모드일 경우 local, 아닐 경우 deploy 파일을 불러온다.
 if DEBUG:
     CONFIG_FILE = os.path.join(CONF_DIR, 'settings_local.json')
@@ -41,7 +49,7 @@ for key, key_dict in config_common.items():
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
 
-print(config)
+
 # AWS
 AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
 AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
@@ -81,13 +89,7 @@ TEMPLATES_DIR = 'templates'
 
 
 
-# STATIC - bower는 나중에 필요하면 주석 해제 해서 사용하셈
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-# BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
-STATICFILES_DIRS = (
-    STATIC_DIR,
-    # BOWER_DIR,
-)
+
 
 
 # Application definition
