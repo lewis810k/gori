@@ -18,6 +18,8 @@ DEBUG = os.environ.get('MODE') == 'DEBUG'
 # STORAGE_S3 = True
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
+print(DEBUG)
+print(STORAGE_S3)
 
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,6 +82,8 @@ else:
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+
+
 
 SECRET_KEY = config['django']['secret_key']
 ALLOWED_HOSTS = config['django']['allowed_hosts']
