@@ -6,6 +6,7 @@ from member.serializers import UserSerializer
 
 __all__ = (
     'UserProfileView',
+    'TutorProfileView',
 )
 
 
