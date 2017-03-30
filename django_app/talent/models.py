@@ -19,8 +19,8 @@ class Talent(models.Model):
         (1, '그룹 수업'),
         (2, '원데이 수업'),
     )
-    tutor = models.ForeignKey(Tutor, )
-    wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
+    tutor = models.ForeignKey(Tutor)
+    # wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
     class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default=1, blank=False, )
