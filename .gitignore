@@ -5,7 +5,11 @@
 .idea/
 .conf-secret/
 django_app/static/css/
-
+.ebignore
+_Dockerfile*
+Dockerfile_*
+.ebextensions
+.elasticbeanstalk
 
 ### Django ###
 *.log
@@ -214,3 +218,7 @@ ENV/
 .ropeproject
 
 # End of https://www.gitignore.io/api/django,macos,linux,python,pycharm,git
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

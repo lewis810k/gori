@@ -12,16 +12,30 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = True
-# DEBUG = os.environ.get('MODE') == 'DEBUG'
+# DEBUG = True
+DEBUG = os.environ.get('MODE') == 'DEBUG'
+# 실험이 되는지 확인하기위해  True생성
+# STORAGE_S3 = True
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# DB_RDS = True
+print(DEBUG)
+print(STORAGE_S3)
 
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
 ROOT_DIR = os.path.dirname(BASE_DIR)
+# STATIC - bower는 나중에 필요하면 주석 해제 해서 사용하셈
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+# BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
+STATICFILES_DIRS = (
+    STATIC_DIR,
+    # BOWER_DIR,
+)
 # /gori/.conf-secret/
 CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
+
 # 디버그 모드일 경우 local, 아닐 경우 deploy 파일을 불러온다.
 if DEBUG:
     CONFIG_FILE = os.path.join(CONF_DIR, 'settings_local.json')
@@ -37,29 +51,57 @@ for key, key_dict in config_common.items():
     for inner_key, inner_key_dict in key_dict.items():
         config[key][inner_key] = inner_key_dict
 
+# AWS
+AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+
+AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
+AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
+AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+
+# Static, Media storages
+if STORAGE_S3:
+    # Static files
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://{custom_domain}/{staticfiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        staticfiles_location=STATICFILES_LOCATION,
+    )
+    # Media files
+    DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://{custom_domain}/{mediafiles_location}/'.format(
+        custom_domain=AWS_S3_CUSTOM_DOMAIN,
+        mediafiles_location=MEDIAFILES_LOCATION
+    )
+else:
+    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+
 SECRET_KEY = config['django']['secret_key']
 ALLOWED_HOSTS = config['django']['allowed_hosts']
 
 # TEMPLATE
 TEMPLATES_DIR = 'templates'
 
-# MEDIA
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
-# STATIC - bower는 나중에 필요하면 주석 해제 해서 사용하셈
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-# BOWER_DIR = os.path.join(ROOT_DIR, 'bower_components')
-STATICFILES_DIRS = (
-    STATIC_DIR,
-    # BOWER_DIR,
-)
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
-
 AUTH_USER_MODEL = 'member.GoriUser'
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
 
 # Application definition
 
@@ -74,7 +116,22 @@ INSTALLED_APPS = [
     # extension
     'django_extensions',
 
-    # app
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+
+    # API 만들기 위한 프레임워크
+    'rest_framework',
+    # API 토큰
+    'rest_framework.authtoken',
+    # rest_framework 토큰 라이브러리
+    'rest_auth',
+    #
+    'corsheaders',
+    # aws s3
+    'storages',
+
     'member',
     'talent',
 ]
@@ -113,11 +170,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
+config_db = config['db']
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
@@ -151,6 +212,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-
