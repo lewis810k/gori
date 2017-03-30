@@ -158,15 +158,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-config = config['db']
+config_db = config['db']
 DATABASES = {
     'default': {
-        'ENGINE': config['engine'],
-        'NAME': config['name'],
-        'USER': config['user'],
-        'PASSWORD': config['password'],
-        'HOST': config['host'],
-        'PORT': config['port'],
+        'ENGINE': config_db['engine'],
+        'NAME': config_db['name'],
+        'USER': config_db['user'],
+        'PASSWORD': config_db['password'],
+        'HOST': config_db['host'],
+        'PORT': config_db['port'],
     }
 }
 
