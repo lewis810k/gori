@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from member.models import GoriUser, Tutor
+from talent.admin import RegistrationInline
 
 
 class TutorInline(admin.TabularInline):
@@ -10,7 +11,7 @@ class TutorInline(admin.TabularInline):
 class GoriUserAdmin(admin.ModelAdmin):
     list_display = ('email', 'is_staff', 'is_active',
                     'joined_date', 'is_tutor', 'get_tutor_info',)
-    inlines = [TutorInline]
+    inlines = [TutorInline, RegistrationInline]
 
     def get_tutor_info(self, user):
         return user.tutor
