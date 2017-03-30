@@ -14,18 +14,19 @@ User = get_user_model()
 
 
 class MemberTest(APILiveServerTestCase):
-    test_email = 'test@email.com'
+    test_user = 'test'
     test_password1 = 'qwer1234'
     test_password2 = 'qwer1234'
 
     def create_user(self):
         data = {
-            'email': self.test_email,
+            'username': self.test_user,
             'password1': self.test_password1,
             'password2': self.test_password2,
         }
         url = reverse('rest_register')
         response = self.client.post(url, data=data)
+        print(response.data)
         return response
 
     def test_create_and_register_user(self):
@@ -38,12 +39,12 @@ class MemberTest(APILiveServerTestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         user = User.objects.last()
-        self.assertEqual(user.email, self.test_email)
+        self.assertEqual(user.username, self.test_user)
 
-    def test_delete_user(self):
-        """
-        유저 삭제 테스트
-        """
+    # def test_delete_user(self):
+    #     """
+    #     유저 삭제 테스트
+    #     """
         # self.create_user()
         # url = reverse('api:user-delete', kwargs={'pk': '1'})
         # print(url)
