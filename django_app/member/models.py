@@ -17,6 +17,9 @@ class GoriUser(AbstractUser):
     joined_date = models.DateTimeField(auto_now_add=True)
     is_tutor = models.BooleanField(default=False)
 
+    def __str__(self):
+        return '{} {}'.format(self.username, self.name)
+
     def create_tutor(self, nickname, cellphone, profile_image,
                      verification_method, verification_images,
                      **extra_fields):
@@ -26,10 +29,10 @@ class GoriUser(AbstractUser):
         user.cellphone = cellphone
         user.profile_image = profile_image
         user.save()
-        Tutor.objects.create(user=user, verification_method=verification_method,
-                             verification_images=verification_images)
+        tutor = Tutor.objects.create(user=user, verification_method=verification_method,
+                                     verification_images=verification_images, **extra_fields)
 
-        return user
+        return tutor
 
 
 class Tutor(models.Model):
@@ -53,4 +56,4 @@ class Tutor(models.Model):
     current_status = models.CharField(max_length=1, blank=True)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username

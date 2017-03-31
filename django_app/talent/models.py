@@ -37,37 +37,6 @@ class Talent(models.Model):
     def __str__(self):
         return '{}: {}'.format(self.pk, self.class_title)
 
-    def to_dict(self):
-        ret = {
-            'tutor': self.tutor.to_dict(),
-            'class_title': self.class_title,
-            'category': self.category,
-            'class_type': self.class_type,
-            'cover_image': self.cover_image,
-            'tutor_info': self.tutor_info,
-            'class_info': self.class_info,
-            'video1': self.video1,
-            'video2': self.video2,
-            'price_per_hour': self.price_per_hour,
-            'hours_per_class': self.hours_per_class,
-            'number_of_class': self.number_of_class,
-            'is_soldout': self.is_soldout,
-            'curriculum_list': [curriculum_item for curriculum_item in self.curriculum_set.values_list('id', flat=True)]
-
-        }
-        return ret
-
-    def get_location_info(self):
-        ret = {
-            'talent': self.to_dict(),
-        }
-        if self.location_set.all():
-            location_info = [location_item.to_dict() for location_item in self.location_set.all()]
-            ret["location"] = location_info
-        else:
-            ret["location"] = ''
-        return ret
-
 
 class ClassImage(models.Model):
     talent = models.ForeignKey(Talent)
@@ -85,14 +54,6 @@ class Curriculum(models.Model):
     def __str__(self):
         return 'Talent {}: {}'.format(self.talent.id, self.id)
 
-    def to_dict(self):
-        ret = {
-            'talent': self.talent.id,
-            'information': self.information,
-            'image': self.image,
-        }
-        return ret
-
 
 class Location(models.Model):
     SCHOOL = (
@@ -105,10 +66,6 @@ class Location(models.Model):
         ('JAU', '중앙대'),
         ('GGU', '건국대'),
         ('HYU', '한양대'),
-        ('SCU', '서울시립대'),
-        ('KHU', '경희대'),
-        ('SJU', '세종대'),
-        ('SGKU', '성균관대'),
         ('GWU', '광운대'),
         ('SMWU', '숙명여대'),
         ('SSWU', '성신여대'),
@@ -134,14 +91,7 @@ class Location(models.Model):
         ('HH', '혜화'),
         ('YS', '용산'),
         ('HJ', '합정'),
-        ('MD', '목동'),
         ('NW', '노원'),
-        ('SDR', '신도림'),
-        ('YDB', '영등포'),
-        ('DDM', '동대문'),
-        ('DG', '대구'),
-        ('BS', '부산'),
-        ('ONL', '온라인'),
     )
     SPECIFIC_LOCATION = (
         ('NEGO', '협의 후 결정'),
@@ -174,19 +124,6 @@ class Location(models.Model):
     def __str__(self):
         return '{} - 지역: {}'.format(self.talent, self.get_region_display())
 
-    def to_dict(self):
-        ret = {
-            'talent': self.talent.id,
-            'region': self.region,
-            'specific_location': self.specific_location,
-            'location_info': self.location_info,
-            'extra_fee': self.extra_fee,
-            'extra_fee_amount': self.extra_fee_amount,
-            'day': self.day,
-            'time': self.time,
-        }
-        return ret
-
 
 class Registration(models.Model):
     LEVEL = (
@@ -203,17 +140,8 @@ class Registration(models.Model):
     message_to_tutor = models.CharField(max_length=50, help_text="수강신청시 유저가 튜터에게 보내는 메세지", blank=False)
 
     def __str__(self):
-        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.name, self.talent_location.talent.pk,
+        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.username, self.talent_location.talent.pk,
                                                  self.talent_location.talent.class_title)
-
-    def to_dict(self):
-        ret = {
-            'student': self.student.to_dict(),
-            'talent': self.talent.to_dict(),
-            'joined_date': self.joined_date.strftime('%Y-%m-%d %H:%M'),
-            'is_registered': self.is_confirmed,
-        }
-        return ret
 
 
 class WishList(models.Model):
@@ -222,12 +150,4 @@ class WishList(models.Model):
     added_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '{}의 wishlist에 {} 추가 '.format(self.user.email, self.talent.id)
-
-    def to_dict(self):
-        ret = {
-            'talent': self.talent.id,
-            'user': self.user.email,
-            'added_date': self.added_date.strftime('%Y-%m-%d %H:%M')
-        }
-        return ret
+        return '{}의 wishlist에 {} 추가 '.format(self.user.username, self.talent.id)
