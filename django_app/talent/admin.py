@@ -7,13 +7,21 @@ class LocationInline(admin.TabularInline):
     model = Location
 
 
+class CurriculumInline(admin.TabularInline):
+    model = Curriculum
+
+
+class ClassImageInline(admin.TabularInline):
+    model = ClassImage
+
+
 class RegistrationInline(admin.TabularInline):
     model = Registration
 
 
 class TalentAdmin(admin.ModelAdmin):
     list_display = ('class_title', 'location', 'tutor', 'students_list')
-    inlines = [LocationInline, ]
+    inlines = [LocationInline, ClassImageInline, CurriculumInline,]
 
     def tutor(self, talent):
         return talent.tutor
