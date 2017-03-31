@@ -1,12 +1,12 @@
 from rest_framework import generics
-from rest_framework import status
-from rest_framework.response import Response
 
-from talent.models import Talent
-from talent.serializers import TalentSerializers
+from talent.models import Talent, Curriculum, ClassImage
+from talent.serializers import TalentSerializers, CurriculumSerializers, ClassImageSerializers
 
 __all__ = (
     'TalentList',
+    'Curriculum',
+    'ClassImage',
 )
 
 
@@ -23,3 +23,13 @@ class TalentList(generics.ListCreateAPIView):
     #     )
     #     headers = self.get_success_headers(serializer.data)
     #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class Curriculum(generics.ListCreateAPIView):
+    queryset = Curriculum.objects.all()
+    serializer_class = CurriculumSerializers
+
+
+class ClassImage(generics.ListCreateAPIView):
+    queryset = ClassImage.objects.all()
+    serializer_class = ClassImageSerializers
