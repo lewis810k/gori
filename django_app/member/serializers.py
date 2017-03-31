@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    user_type = serializers.SerializerMethodField()
+    user_type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User

@@ -21,6 +21,7 @@ class Talent(models.Model):
     )
     tutor = models.ForeignKey(Tutor)
     # wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
+    created_date = models.DateTimeField(auto_now_add=True)
     class_title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
     class_type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default=1, blank=False, )
@@ -37,6 +38,9 @@ class Talent(models.Model):
     def __str__(self):
         return '{}: {}'.format(self.pk, self.class_title)
 
+    def get_category(self, obj):
+        return obj.get_category_dispaly()
+
 
 class ClassImage(models.Model):
     talent = models.ForeignKey(Talent)
@@ -46,10 +50,10 @@ class ClassImage(models.Model):
 class Curriculum(models.Model):
     talent = models.ForeignKey(Talent, )
     information = models.CharField(max_length=50)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='talent/curriculum', blank=True)
 
     class Meta:
-        ordering = ['talent', ]
+        ordering = ['-pk', ]
 
     def __str__(self):
         return 'Talent {}: {}'.format(self.talent.id, self.id)
