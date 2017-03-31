@@ -153,5 +153,9 @@ class WishList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, )
     added_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = (
+            ('talent', 'user',)
+        )
     def __str__(self):
         return '{}의 wishlist에 {} 추가 '.format(self.user.username, self.talent.id)

@@ -45,3 +45,4 @@ class TutorSerializer(serializers.ModelSerializer):
             'user',
             'is_verified',
         )
+
