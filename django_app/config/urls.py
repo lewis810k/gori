@@ -18,9 +18,11 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from member.urls import apis as member_api_urls
+from talent.urls import apis as talent_api_urls
 
 api_urlpatterns = [
     url(r'^member/', include(member_api_urls)),
+    url(r'^talent/', include(talent_api_urls)),
 ]
 
 urlpatterns = [

@@ -12,11 +12,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-# DEBUG = True
-DEBUG = os.environ.get('MODE') == 'DEBUG'
+DEBUG = True
+# DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
-# STORAGE_S3 = True
-STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+STORAGE_S3 = True
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
 print(DEBUG)
 print(STORAGE_S3)
@@ -90,13 +90,7 @@ TEMPLATES_DIR = 'templates'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",

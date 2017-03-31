@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'pk',
-            'email',
+            'username',
             'name',
             'user_type',
             'is_staff',
@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create(
-            email=validated_data['email'],
+            username=validated_data['username'],
         )
         user.set_password(validated_data['password'])
         user.save()
