@@ -34,7 +34,36 @@ class CurriculumSerializers(serializers.ModelSerializer):
         )
 
 
-class TalentSerializers(serializers.ModelSerializer):
+class TalentListSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Talent
+        fields = (
+            'tutor',
+            # 'wishlist_user',
+            'class_title',
+            'category',
+            'class_type',
+            'cover_image',
+            'price_per_hour',
+            'is_soldout',
+        )
+
+
+
+        # def create(self, validated_data):
+        #     photos = validated_data.pop('photo_set')
+        #     talent = Talent.objects.create(**validated_data)
+        #     for photo in photos:
+        #         print('photo', photo)
+        #         Talent.objects.create(
+        #             photo=photo,
+        #             post=
+        #         )
+        #
+        #     return post
+
+
+class TalentDetailSerializers(serializers.ModelSerializer):
     class_image = ClassImageSerializers(many=True, source='classimage_set', read_only=True)
     curriculum = CurriculumSerializers(many=True, source='curriculum_set', read_only=True)
 
@@ -58,16 +87,3 @@ class TalentSerializers(serializers.ModelSerializer):
             'class_image',
             'curriculum',
         )
-
-
-        # def create(self, validated_data):
-        #     photos = validated_data.pop('photo_set')
-        #     talent = Talent.objects.create(**validated_data)
-        #     for photo in photos:
-        #         print('photo', photo)
-        #         Talent.objects.create(
-        #             photo=photo,
-        #             post=
-        #         )
-        #
-        #     return post
