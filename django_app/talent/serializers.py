@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
-from talent.models import Talent, ClassImage, Curriculum
+from talent.models import Talent, ClassImage, Curriculum, Location
 
 
 class ClassImageSerializers(serializers.ModelSerializer):
@@ -10,6 +10,17 @@ class ClassImageSerializers(serializers.ModelSerializer):
         fields = (
             'talent',
             'image'
+        )
+
+
+class LocationSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = (
+            'region',
+            'talent',
+            'registered_student',
+            'specific_location',
         )
 
 
