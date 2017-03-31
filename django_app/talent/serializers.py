@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from member.serializers import TutorSerializer
 from talent.models import Talent, ClassImage, Curriculum, Location
+from member.models import Tutor
 
 
 class ClassImageSerializers(serializers.ModelSerializer):
@@ -35,18 +36,33 @@ class CurriculumSerializers(serializers.ModelSerializer):
 
 
 class TalentListSerializers(serializers.ModelSerializer):
+    tutor_id = serializers.PrimaryKeyRelatedField(
+        queryset=Tutor.objects.all(), required=True, source='tutor'
+    )
+    tutor_name = serializers.PrimaryKeyRelatedField(read_only=True,
+                                                    source='tutor.user.name')
+    class_image = ClassImageSerializers(many=True, source='classimage_set', read_only=True)
+    curriculum = CurriculumSerializers(many=True, source='curriculum_set', read_only=True)
+    category_name = serializers.SerializerMethodField(read_only=True)
+    category = serializers.ChoiceField(choices=Talent.CATEGORY)
+
     class Meta:
         model = Talent
         fields = (
-            'tutor',
+            'tutor_id',
+            'tutor_name',
             # 'wishlist_user',
             'class_title',
+            'category_name',
             'category',
             'class_type',
             'cover_image',
             'price_per_hour',
             'is_soldout',
         )
+
+    def get_category_name(self, obj):
+        return obj.get_category_display()
 
 
 
