@@ -14,17 +14,6 @@ class ClassImageSerializers(serializers.ModelSerializer):
         )
 
 
-class LocationSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = (
-            'region',
-            'talent',
-            'registered_student',
-            'specific_location',
-        )
-
-
 class CurriculumSerializers(serializers.ModelSerializer):
     class Meta:
         model = Curriculum
@@ -65,20 +54,6 @@ class TalentListSerializers(serializers.ModelSerializer):
         return obj.get_category_display()
 
 
-
-        # def create(self, validated_data):
-        #     photos = validated_data.pop('photo_set')
-        #     talent = Talent.objects.create(**validated_data)
-        #     for photo in photos:
-        #         print('photo', photo)
-        #         Talent.objects.create(
-        #             photo=photo,
-        #             post=
-        #         )
-        #
-        #     return post
-
-
 class TalentDetailSerializers(serializers.ModelSerializer):
     class_image = ClassImageSerializers(many=True, source='classimage_set', read_only=True)
     curriculum = CurriculumSerializers(many=True, source='curriculum_set', read_only=True)
@@ -103,3 +78,79 @@ class TalentDetailSerializers(serializers.ModelSerializer):
             'class_image',
             'curriculum',
         )
+
+
+#
+# class TalentListingField(serializers.RelatedField):
+#     @staticmethod
+#     def get_choices_value(key, CHOICE):
+#         for item in CHOICE:
+#             if key in item:
+#                 _, value = item
+#                 return value
+#
+#     def to_representation(self, value):
+#         category = self.get_choices_value(value.category, Talent.CATEGORY)
+#         class_type = self.get_choices_value(value.class_type, Talent.CLASS_TYPE_CHOICE)
+#         custom_fields = {
+#             'id': value.id,
+#             'title': value.class_title,
+#             'category': category,
+#             'class_type': class_type,
+#         }
+#         return custom_fields
+
+
+class LocationSerializers(serializers.ModelSerializer):
+    region = serializers.SerializerMethodField(read_only=True)
+    specific_location = serializers.SerializerMethodField(read_only=True)
+    day = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Location
+        fields = (
+            # 'talent',
+            'region',
+            'specific_location',
+            'registered_student',
+            'day',
+            'time',
+            'extra_fee',
+            'extra_fee_amount',
+        )
+
+    @staticmethod
+    def get_region(obj):
+        return obj.get_region_display()
+
+    @staticmethod
+    def get_specific_location(obj):
+        return obj.get_specific_location_display()
+
+    @staticmethod
+    def get_day(obj):
+        return obj.get_day_display()
+
+
+class LocationWrapperSerializers(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField(read_only=True)
+    class_type = serializers.SerializerMethodField(read_only=True)
+    locations = LocationSerializers(many=True)
+
+    class Meta:
+        model = Talent
+        fields = (
+            'id',
+            'class_title',
+            'category',
+            'class_type',
+            'locations',
+        )
+
+    @staticmethod
+    def get_category(obj):
+        return obj.get_category_display()
+
+    @staticmethod
+    def get_class_type(obj):
+        return obj.get_class_type_display()
