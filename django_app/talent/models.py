@@ -158,4 +158,10 @@ class WishList(models.Model):
             ('talent', 'user',)
         )
     def __str__(self):
-        return '{}의 wishlist에 {} 추가 '.format(self.user.username, self.talent.id)
+        return '{}'.format(self.user.name)
+
+    def get_talent_title(self):
+        return self.user.username
+
+class Review(models.Model):
+    pass

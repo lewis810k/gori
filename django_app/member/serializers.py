@@ -38,11 +38,26 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TutorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tutor
-        fields = (
-            'pk',
-            'user',
-            'is_verified',
-        )
+   username = serializers.CharField(
+       read_only=True, source='user.username')
+   name=serializers.CharField(
+       read_only=True, source='user.name'
+   )
+   cellphone = serializers.CharField(
+       read_only=True, source='user.cellphone'
+   )
+   profile_image = serializers.ImageField(
+       read_only=True, source='user.profile_image')
+
+   class Meta:
+       model = Tutor
+       fields = (
+           'pk',
+           'username',
+           'name',
+           'user',
+           'is_verified',
+           'profile_image',
+           'cellphone',
+       )
 
