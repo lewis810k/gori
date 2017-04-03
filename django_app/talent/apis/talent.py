@@ -1,44 +1,42 @@
 from rest_framework import generics
 
+from talent.models import Talent, Curriculum, ClassImage, Location
+from talent.serializers import CurriculumSerializers, ClassImageSerializers, TalentListSerializers, LocationSerializers, \
+    TalentDetailSerializers
 from utils.pagination import TalentPagination
 
 __all__ = (
     'TalentList',
+    'TalentDetail',
     'LocationList',
-    'Curriculum',
-    'ClassImage',
+    'CurriculumList',
+    'ClassImageList',
 )
 
-from talent.models import Talent, Curriculum, ClassImage, Location
-from talent.serializers import CurriculumSerializers, ClassImageSerializers, TalentListSerializers, LocationSerializers
 
-
-class TalentList(generics.ListCreateAPIView):
+# talent 전체 api
+class TalentList(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializers
     pagination_class = TalentPagination
+
+
+# 하나의 talent에 대한 세부 정보 api
+class TalentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = TalentDetailSerializers
 
 
 class LocationList(generics.ListAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializers
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #
-    #     serializer.save(
-    #         photo_set=request.data.getlist('photo')
-    #     )
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-
-class Curriculum(generics.ListCreateAPIView):
+class CurriculumList(generics.ListCreateAPIView):
     queryset = Curriculum.objects.all()
     serializer_class = CurriculumSerializers
 
 
-class ClassImage(generics.ListCreateAPIView):
+class ClassImageList(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()
     serializer_class = ClassImageSerializers
