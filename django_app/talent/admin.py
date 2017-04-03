@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from talent.models import Location, Talent, ClassImage, Registration, WishList, Curriculum
+from talent.models import Location, Talent, ClassImage, Registration, WishList, Curriculum, Review
 
 
 class LocationInline(admin.TabularInline):
@@ -20,7 +20,7 @@ class TalentAdmin(admin.ModelAdmin):
 
     def students_list(self, talent):
         student_list = []
-        for student in talent.location_set.values_list('registered_student', flat=True):
+        for student in talent.locations.values_list('registered_student', flat=True):
             student_list.append(student)
         return student_list
 
@@ -42,3 +42,4 @@ admin.site.register(ClassImage)
 admin.site.register(Registration)
 admin.site.register(WishList)
 admin.site.register(Curriculum)
+admin.site.register(Review)

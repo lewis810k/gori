@@ -46,12 +46,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TutorSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        read_only=True, source='user.username')
+    name = serializers.CharField(
+        read_only=True, source='user.name'
+    )
+    cellphone = serializers.CharField(
+        read_only=True, source='user.cellphone'
+    )
+    profile_image = serializers.ImageField(
+        read_only=True, source='user.profile_image')
+
     class Meta:
         model = Tutor
         fields = (
             'pk',
+            'username',
+            'name',
             'user',
             'is_verified',
+            'profile_image',
+            'cellphone',
         )
 
 
@@ -68,7 +83,6 @@ class CustomLoginSerializer(RegisterSerializer):
 
 
 class CustomSocialLoginSerializer(SocialLoginSerializer):
-
     def get_social_login(self, adapter, app, token, response):
         """
         :param adapter: allauth.socialaccount Adapter subclass.
@@ -114,7 +128,6 @@ class CustomSocialLoginSerializer(SocialLoginSerializer):
 
         social_token = adapter.parse_token({'access_token': access_token})
         social_token.app = app
-
 
         try:
             login = self.get_social_login(adapter, app, social_token, access_token)

@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from config import settings
@@ -15,7 +16,7 @@ class Talent(models.Model):
         ('HOB', '이색취미'),
     )
     CLASS_TYPE_CHOICE = (
-        (0, '1:1'),
+        (0, '1:1 수업'),
         (1, '그룹 수업'),
         (2, '원데이 수업'),
     )
@@ -40,6 +41,13 @@ class Talent(models.Model):
 
     def get_category(self, obj):
         return obj.get_category_dispaly()
+
+    @property
+    def registration_count(self):
+        count = 0
+        for l in self.locations.all():
+            count += l.registration_set.count()
+        return count
 
 
 class ClassImage(models.Model):
@@ -129,6 +137,7 @@ class Location(models.Model):
         return '{} - 지역: {}'.format(self.talent, self.get_region_display())
 
 
+
 class Registration(models.Model):
     LEVEL = (
         (1, '입문자'),
@@ -153,5 +162,24 @@ class WishList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, )
     added_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = (
+            ('talent', 'user',)
+        )
+
     def __str__(self):
-        return '{}의 wishlist에 {} 추가 '.format(self.user.username, self.talent.id)
+        return '{}'.format(self.user.name)
+
+    def get_talent_title(self):
+        return self.user.username
+
+
+class Review(models.Model):
+    talent = models.ForeignKey(Talent, )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_date = models.DateTimeField(auto_now_add=True)
+    curriculum_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)], help_text='5이하의 숫자를 입력하세요')
+    readiness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)], help_text='5이하의 숫자를 입력하세요')
+    timeliness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)], help_text='5이하의 숫자를 입력하세요')
+    delivery_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)], help_text='5이하의 숫자를 입력하세요')
+    friendliness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)], help_text='5이하의 숫자를 입력하세요')
