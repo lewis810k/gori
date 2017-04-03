@@ -1,7 +1,6 @@
-from django.views.generic import DetailView
-from requests import Response
 from rest_framework import generics
-from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from utils.pagination import TalentPagination
 
@@ -11,17 +10,27 @@ __all__ = (
     'Curriculum',
     'ClassImage',
     'WishList',
+    'RegistrationList',
+    'TalentRegistration',
 )
 
-from talent.models import Talent, Curriculum, ClassImage, Location, WishList
+from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
 from talent.serializers import CurriculumSerializers, ClassImageSerializers, TalentListSerializers, LocationSerializers, \
-    WishListSerializers
+    WishListSerializers, RegistrationSerializer
 
 
 class TalentList(generics.ListCreateAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializers
     pagination_class = TalentPagination
+
+
+class TalentRegistration(APIView):
+    def get(self, request, pk, *args, **kwargs):
+        regis = Registration.objects.filter(talent_location=pk)
+        print(regis)
+        serializer = RegistrationSerializer(regis, many=True)
+        return Response(serializer.data)
 
 
 class LocationList(generics.ListAPIView):
@@ -50,16 +59,10 @@ class ClassImage(generics.ListCreateAPIView):
 
 
 class WishList(generics.ListCreateAPIView):
-
     queryset = WishList.objects.all()
     serializer_class = WishListSerializers
 
 
-
-
-
-
-
-
-
-
+class RegistrationList(generics.ListCreateAPIView):
+    queryset = Registration.objects.all()
+    serializer_class = RegistrationSerializer
