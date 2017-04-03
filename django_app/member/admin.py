@@ -9,7 +9,7 @@ class TutorInline(admin.TabularInline):
 
 
 class GoriUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'is_staff', 'is_active',
+    list_display = ('username', 'email', 'is_staff', 'is_active',
                     'joined_date', 'is_tutor', 'get_tutor_info',)
     inlines = [TutorInline, RegistrationInline]
 

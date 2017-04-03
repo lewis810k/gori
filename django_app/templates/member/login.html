@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LOGIN</title>
+</head>
+<body>
+
+<div class="login-container">
+    <form action="{% url 'member:login' %}" method="POST">{% csrf_token %}
+        <label for="">ID : </label>
+        <input type="text" name="username">
+        <label for="">PW : </label>
+        <input type="password" name="password">
+        <button type="submit">로그인</button>
+    </form>
+
+</div>
+
+
+</body>
+</html>

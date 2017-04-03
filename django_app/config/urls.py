@@ -17,8 +17,12 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from rest_auth.tests.urls import FacebookLogin
+
 from member.urls import apis as member_api_urls
+from member.urls import member as member_urls
 from talent.urls import apis as talent_api_urls
+
 
 api_urlpatterns = [
     url(r'^member/', include(member_api_urls)),
@@ -28,9 +32,11 @@ api_urlpatterns = [
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(api_urlpatterns, namespace='api')),
-    url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^member/', include(member_urls)),
 ]
 
 if settings.DEBUG:
