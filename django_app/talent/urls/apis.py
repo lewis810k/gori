@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^list/$', apis.TalentList.as_view()),
     url(r'^list/location/(?P<pk>[0-9]+)/$', apis.LocationRetrieve.as_view()),
     url(r'^wishlist/$', apis.WishList.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentDetail.as_view()),
     url(r'^list/location/$', apis.LocationList.as_view()),
     url(r'^registration/$', apis.RegistrationList.as_view()),
     url(r'^(?P<pk>[0-9]+)/registration/$', apis.TalentRegistration.as_view()),

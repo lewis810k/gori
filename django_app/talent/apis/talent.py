@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from utils.pagination import TalentPagination
-from talent.serializers import LocationWrapperSerializers
+from talent.serializers import LocationWrapperSerializers, TalentDetailSerializers
 from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
 from talent.serializers import CurriculumSerializers, ClassImageSerializers, TalentListSerializers, LocationSerializers, \
     WishListSerializers, RegistrationSerializer
-
 
 __all__ = (
     'TalentList',
@@ -17,11 +16,13 @@ __all__ = (
     'WishList',
     'RegistrationList',
     'TalentRegistration',
+    'TalentDetail',
+    'LocationList',
 )
 
 
-
-class TalentList(generics.ListCreateAPIView):
+# talent 전체 api
+class TalentList(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializers
     pagination_class = TalentPagination
@@ -43,19 +44,25 @@ class TalentRegistration(APIView):
         return Response(serializer.data)
 
 
+# 하나의 talent에 대한 세부 정보 api
+class TalentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = TalentDetailSerializers
+
+
 class LocationList(generics.ListAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializers
 
-        # def create(self, request, *args, **kwargs):
-        #     serializer = self.get_serializer(data=request.data)
-        #     serializer.is_valid(raise_exception=True)
-        #
-        #     serializer.save(
-        #         photo_set=request.data.getlist('photo')
-        #     )
-        #     headers = self.get_success_headers(serializer.data)
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #
+    #     serializer.save(
+    #         photo_set=request.data.getlist('photo')
+    #     )
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CurriculumList(generics.ListCreateAPIView):

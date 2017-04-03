@@ -61,7 +61,7 @@ class Curriculum(models.Model):
     image = models.ImageField(upload_to='talent/curriculum', blank=True)
 
     class Meta:
-        ordering = ['-pk', ]
+        ordering = ['pk', ]
 
     def __str__(self):
         return 'Talent {}: {}'.format(self.talent.id, self.id)
