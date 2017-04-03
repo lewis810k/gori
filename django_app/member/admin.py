@@ -22,7 +22,7 @@ class TutorAdmin(admin.ModelAdmin):
 
     def talent_title(self, tutor):
         title_list = []
-        for index, item in enumerate(tutor.talent_set.values_list('class_title', flat=True)):
+        for index, item in enumerate(tutor.talent_set.values_list('title', flat=True)):
             title_list.append('{}:{}'.format(index + 1, item))
         return title_list
 

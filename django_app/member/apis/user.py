@@ -54,23 +54,21 @@ class DestroyUserView(generics.RetrieveUpdateDestroyAPIView):
 class CreateDjangoUserView(RegisterView):
     serializer_class = CustomLoginSerializer
 
+    def fb_complete_login(request, app, token):
+        provider = providers.registry.by_id(FacebookProvider.id, request)
+        resp = requests.get(
+            GRAPH_API_URL + '/me',
+            params={
+                'fields': ','.join(provider.get_fields()),
+                'access_token': token.token,
+                'appsecret_proof': compute_appsecret_proof(app, token)
+            })
 
-def fb_complete_login(request, app, token):
-
-    provider = providers.registry.by_id(FacebookProvider.id, request)
-    resp = requests.get(
-        GRAPH_API_URL + '/me',
-        params={
-            'fields': ','.join(provider.get_fields()),
-            'access_token': token.token,
-            'appsecret_proof': compute_appsecret_proof(app, token)
-        })
-
-    resp.raise_for_status()
-    extra_data = resp.json()
-    print(extra_data)
-    login = provider.sociallogin_from_response(request, extra_data)
-    return login
+        resp.raise_for_status()
+        extra_data = resp.json()
+        print(extra_data)
+        login = provider.sociallogin_from_response(request, extra_data)
+        return login
 
 
 class FacebookOAuth2TempAdapter(OAuth2Adapter):
@@ -83,8 +81,8 @@ class FacebookOAuth2TempAdapter(OAuth2Adapter):
     access_token_url = GRAPH_API_URL + '/oauth/access_token'
     expires_in_key = 'expires_in'
 
-    def complete_login(self, request, app, access_token, **kwargs):
-        return fb_complete_login(request, app, access_token)
+    # def complete_login(self, request, app, access_token, **kwargs):
+    #     return fb_complete_login(request, app, access_token)
 
 
 class CreateFacebookUserView(SocialLoginView):

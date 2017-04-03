@@ -20,7 +20,7 @@ class RegistrationInline(admin.TabularInline):
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ('class_title', 'location', 'tutor', 'students_list')
+    list_display = ('title', 'location', 'tutor', 'students_list')
     inlines = [LocationInline, ClassImageInline, CurriculumInline,]
 
     def tutor(self, talent):

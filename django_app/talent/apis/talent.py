@@ -3,10 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from utils.pagination import TalentPagination
-from talent.serializers import LocationWrapperSerializers, TalentDetailSerializers
+from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
 from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
-from talent.serializers import CurriculumSerializers, ClassImageSerializers, TalentListSerializers, LocationSerializers, \
-    WishListSerializers, RegistrationSerializer
+from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
+    WishListSerializer, RegistrationSerializer
 
 __all__ = (
     'TalentList',
@@ -24,7 +24,7 @@ __all__ = (
 # talent 전체 api
 class TalentList(generics.ListAPIView):
     queryset = Talent.objects.all()
-    serializer_class = TalentListSerializers
+    serializer_class = TalentListSerializer
     pagination_class = TalentPagination
 
 
@@ -47,12 +47,12 @@ class TalentRegistration(APIView):
 # 하나의 talent에 대한 세부 정보 api
 class TalentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Talent.objects.all()
-    serializer_class = TalentDetailSerializers
+    serializer_class = TalentDetailSerializer
 
 
 class LocationList(generics.ListAPIView):
     queryset = Location.objects.all()
-    serializer_class = LocationSerializers
+    serializer_class = LocationSerializer
 
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
@@ -67,17 +67,17 @@ class LocationList(generics.ListAPIView):
 
 class CurriculumList(generics.ListCreateAPIView):
     queryset = Curriculum.objects.all()
-    serializer_class = CurriculumSerializers
+    serializer_class = CurriculumSerializer
 
 
 class ClassImageList(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()
-    serializer_class = ClassImageSerializers
+    serializer_class = ClassImageSerializer
 
 
 class WishList(generics.ListCreateAPIView):
     queryset = WishList.objects.all()
-    serializer_class = WishListSerializers
+    serializer_class = WishListSerializer
 
 
 class RegistrationList(generics.ListCreateAPIView):
