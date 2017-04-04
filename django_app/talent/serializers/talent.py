@@ -8,10 +8,45 @@ from .curriculum import CurriculumSerializer
 
 __all__ = (
     'TalentListSerializer',
+    'TalentShortInfoSerializer',
     'TalentCrateSerializers',
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
 )
+
+
+class TalentShortInfoSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField(read_only=True)
+    type = serializers.SerializerMethodField(read_only=True)
+    review_count = serializers.SerializerMethodField(read_only=True)
+    region = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Talent
+        fields = (
+            'title',
+            'category',
+            'type',
+            'cover_image',
+            'price_per_hour',
+            'is_soldout',
+            'created_date',
+            'review_count',
+            'region',
+            'registration_count',
+        )
+
+    def get_category(self, obj):
+        return obj.get_category_display()
+
+    def get_type(self, obj):
+        return obj.get_type_display()
+
+    def get_review_count(self, obj):
+        return obj.review_set.count()
+
+    def get_region(self, obj):
+        return obj.region_list
 
 
 class TalentListSerializer(serializers.ModelSerializer):
@@ -31,8 +66,6 @@ class TalentListSerializer(serializers.ModelSerializer):
             'category_name',
             'category',
             'type_name',
-            # 'class_image',
-            # 'curriculum',
             'type',
             'cover_image',
             'price_per_hour',

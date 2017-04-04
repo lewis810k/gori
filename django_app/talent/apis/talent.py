@@ -1,10 +1,13 @@
+from django.contrib.auth import get_user_model
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
+from talent.models import Talent, Curriculum, ClassImage, Location, Registration
 from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
-    WishListSerializer, RegistrationSerializer, CurriculumWrapperSerializers, TalentShortDetailSerializer
+    RegistrationSerializer, CurriculumWrapperSerializers, TalentShortDetailSerializer, \
+    MyWishListSerializer
 from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
 from utils.pagination import TalentPagination
@@ -16,13 +19,14 @@ __all__ = (
     'LocationRetrieve',
     'ClassImageRetrieve',
     'CurriculumRetrieve',
-    'WishList',
+    'MyWishList',
     'RegistrationList',
     'TalentRegistration',
     'TalentShortDetail',
     'TalentDetail',
     'LocationList',
 )
+User = get_user_model()
 
 
 # talent 전체 api
@@ -64,7 +68,7 @@ class TalentShortDetail(generics.RetrieveAPIView):
 
 
 # 하나의 talent에 대한 세부 정보 api
-class TalentDetail(generics.RetrieveUpdateDestroyAPIView):
+class TalentDetail(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
 
@@ -94,9 +98,12 @@ class ClassImageList(generics.ListCreateAPIView):
     serializer_class = ClassImageSerializer
 
 
-class WishList(generics.ListCreateAPIView):
-    queryset = WishList.objects.all()
-    serializer_class = WishListSerializer
+class MyWishList(generics.ListAPIView):
+    serializer_class = MyWishListSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
 
 
 class RegistrationList(generics.ListCreateAPIView):
