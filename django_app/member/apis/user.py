@@ -44,4 +44,3 @@ class DestroyUserView(generics.RetrieveUpdateDestroyAPIView):
 
 class CreateDjangoUserView(RegisterView):
     serializer_class = CustomLoginSerializer
-
