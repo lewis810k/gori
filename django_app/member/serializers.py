@@ -53,13 +53,14 @@ class TutorSerializer(serializers.ModelSerializer):
     )
     profile_image = serializers.ImageField(
         read_only=True, source='user.profile_image')
-
+    nickname = serializers.CharField(read_only=True,source='user.nickname')
     class Meta:
         model = Tutor
         fields = (
             'pk',
             'username',
             'name',
+            'nickname',
             'user',
             'is_verified',
             'profile_image',

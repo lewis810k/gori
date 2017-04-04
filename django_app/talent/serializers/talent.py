@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from talent.models import Talent, Curriculum, Location
 from member.serializers import TutorSerializer
+from talent.models import Talent, Curriculum, Location
 from talent.serializers import LocationSerializer, LocationListSerializer
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
@@ -10,6 +10,7 @@ __all__ = (
     'TalentListSerializer',
     'TalentCrateSerializers',
     'TalentDetailSerializer',
+    'TalentShortDetailSerializer',
 )
 
 
@@ -54,6 +55,33 @@ class TalentListSerializer(serializers.ModelSerializer):
         return obj.review_set.count()
 
 
+class TalentShortDetailSerializer(serializers.ModelSerializer):
+    tutor = TutorSerializer(read_only=True)
+    category_name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        depth = 1
+        model = Talent
+        fields = (
+            'tutor',
+            'title',
+            'category_name',
+            'type',
+            'cover_image',
+            'tutor_info',
+            'class_info',
+            'video1',
+            'video2',
+            'price_per_hour',
+            'hours_per_class',
+            'number_of_class',
+            'is_soldout',
+        )
+
+    def get_category_name(self, obj):
+        return obj.get_category_display()
+
+
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
     class_image = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
@@ -67,7 +95,6 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         model = Talent
         fields = (
             'tutor',
-            'wishlist_user',
             'title',
             'category',
             'category_name',

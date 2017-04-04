@@ -2,20 +2,24 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from utils.pagination import TalentPagination
-from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
 from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
 from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
-    WishListSerializer, RegistrationSerializer
+    WishListSerializer, RegistrationSerializer, CurriculumWrapperSerializers, TalentShortDetailSerializer
+from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
+from talent.serializers.class_image import ClassImageWrapperSerializers
+from utils.pagination import TalentPagination
 
 __all__ = (
     'TalentList',
     'CurriculumList',
     'ClassImageList',
     'LocationRetrieve',
+    'ClassImageRetrieve',
+    'CurriculumRetrieve',
     'WishList',
     'RegistrationList',
     'TalentRegistration',
+    'TalentShortDetail',
     'TalentDetail',
     'LocationList',
 )
@@ -36,12 +40,27 @@ class LocationRetrieve(generics.RetrieveAPIView):
         return Talent.objects.filter(id=self.kwargs['pk'])
 
 
+class ClassImageRetrieve(generics.RetrieveAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = ClassImageWrapperSerializers
+
+
+class CurriculumRetrieve(generics.RetrieveAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = CurriculumWrapperSerializers
+
+
 class TalentRegistration(APIView):
     def get(self, request, pk, *args, **kwargs):
         regis = Registration.objects.filter(talent_location=pk)
         print(regis)
         serializer = RegistrationSerializer(regis, many=True)
         return Response(serializer.data)
+
+
+class TalentShortDetail(generics.RetrieveAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = TalentShortDetailSerializer
 
 
 # 하나의 talent에 대한 세부 정보 api
