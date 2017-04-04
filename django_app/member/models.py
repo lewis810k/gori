@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -8,7 +9,7 @@ class GoriUser(AbstractUser):
         ('d', 'Django'),
         ('f', 'Facebook'),
     )
-    name = models.CharField(max_length=30, blank=False)
+    name = models.CharField(max_length=30, blank=False, error_messages={'invalid': 'your custom error message'})
     nickname = models.CharField(max_length=15, blank=True, )
     cellphone = models.CharField(max_length=11, blank=True)
     profile_image = models.ImageField(upload_to='member/profile_image',
@@ -33,6 +34,9 @@ class GoriUser(AbstractUser):
                                      verification_images=verification_images, **extra_fields)
 
         return tutor
+
+    def clean_name(self):
+        raise ValidationError({'bark_volume': ["Must be louder!", ]})
 
 
 class Tutor(models.Model):

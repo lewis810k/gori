@@ -14,7 +14,6 @@ __all__ = (
     'TutorProfileView',
     'DestroyUserView',
     'CreateDjangoUserView',
-    'CreateFacebookUserView',
 )
 
 

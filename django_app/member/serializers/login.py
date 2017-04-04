@@ -34,7 +34,6 @@ class CustomSocialLoginSerializer(SocialLoginSerializer):
     def validate(self, attrs):
         view = self.context.get('view')
         request = self._get_request()
-
         if not view:
             raise serializers.ValidationError(
                 _("View is not defined, pass it as a context variable")
