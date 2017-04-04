@@ -87,7 +87,6 @@ class CustomSocialLoginSerializer(SocialLoginSerializer):
         return social_login
 
     def validate(self, attrs):
-        print(self.context.get('request').data)
         view = self.context.get('view')
         request = self._get_request()
 
@@ -114,17 +113,12 @@ class CustomSocialLoginSerializer(SocialLoginSerializer):
 
         try:
             login = self.get_social_login(adapter, app, social_token, access_token)
-            # print(login)
             complete_social_login(request, login)
         except HTTPError:
             raise serializers.ValidationError(_('Incorrect value'))
 
         if not login.is_existing:
             login.lookup()
-            # print(login)
             login.save(request, connect=True)
         attrs['user'] = login.account.user
-        # print(dir(login.account.user))
-        # print(dir(login.lookup.__str__()))
-        # print(attrs)
         return attrs

@@ -17,7 +17,7 @@ __all__ = (
     'RegistrationList',
     'TalentRegistration',
     'TalentDetail',
-    'LocationList',
+    # 'LocationList',
 )
 
 
@@ -50,9 +50,9 @@ class TalentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TalentDetailSerializer
 
 
-class LocationList(generics.ListAPIView):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+# class LocationList(generics.ListAPIView):
+#     queryset = Location.objects.all()
+#     serializer_class = LocationSerializer
 
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
