@@ -2,11 +2,12 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
+from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
 from rest_framework import serializers
-from django.utils.translation import ugettext_lazy as _
+
 from member.models import Tutor
-from requests.exceptions import HTTPError
 
 User = get_user_model()
 
@@ -53,7 +54,8 @@ class TutorSerializer(serializers.ModelSerializer):
     )
     profile_image = serializers.ImageField(
         read_only=True, source='user.profile_image')
-    nickname = serializers.CharField(read_only=True,source='user.nickname')
+    nickname = serializers.CharField(read_only=True, source='user.nickname')
+
     class Meta:
         model = Tutor
         fields = (
