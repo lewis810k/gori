@@ -10,7 +10,7 @@ __all__ = (
 
 class WishListSerializer(serializers.ModelSerializer):
     talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), write_only=True)
-    talent_title = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.class_title')
+    talent_title = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.title')
     user = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), write_only=True)
     user_name = serializers.PrimaryKeyRelatedField(read_only=True, source='user.name')
 
