@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from talent.models import Talent, Curriculum, ClassImage, Location, Registration
 from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
     RegistrationSerializer, CurriculumWrapperSerializers, TalentShortDetailSerializer, \
-    MyWishListSerializer
+    MyWishListSerializer, MyRegistrationListSerializer
 from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
 from utils.pagination import TalentPagination
@@ -20,6 +20,7 @@ __all__ = (
     'ClassImageRetrieve',
     'CurriculumRetrieve',
     'MyWishList',
+    'MyRegistrationList',
     'RegistrationList',
     'TalentRegistration',
     'TalentShortDetail',
@@ -34,6 +35,7 @@ class TalentList(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializer
     pagination_class = TalentPagination
+    lookup_field = 'pk'
 
 
 class LocationRetrieve(generics.RetrieveAPIView):
@@ -100,6 +102,14 @@ class ClassImageList(generics.ListCreateAPIView):
 
 class MyWishList(generics.ListAPIView):
     serializer_class = MyWishListSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+
+
+class MyRegistrationList(generics.ListAPIView):
+    serializer_class = MyRegistrationListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
