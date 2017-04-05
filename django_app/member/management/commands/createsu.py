@@ -11,11 +11,11 @@ class Command(BaseCommand):
         print(config)
         superuser_username = config['django']['superuser']['username']
         superuser_password = config['django']['superuser']['password']
-        # superuser_email = config['django']['superuser']['email']
+        superuser_email = config['django']['superuser']['email']
 
         if not User.objects.filter(username=superuser_username).exists():
             User.objects.create_superuser(
                 username=superuser_username,
                 password=superuser_password,
-                # email=superuser_email
+                email=superuser_email
             )
