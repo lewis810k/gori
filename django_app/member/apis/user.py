@@ -2,9 +2,12 @@ from django.contrib.auth import get_user_model
 from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from member.models import Tutor
+from member.serializers import TutorSerializer
 from member.serializers import UserSerializer, CustomLoginSerializer
 
 User = get_user_model()
@@ -29,9 +32,9 @@ class UserProfileView(APIView):
 class TutorProfileView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, format=None):
+    def get(self, request, *args, **kwargs):
         user = request.user
-        serializer = UserSerializer(user)
+        serializer = TutorSerializer(Tutor.objects.get(user_id=user.id))
         return Response(serializer.data)
 
 
