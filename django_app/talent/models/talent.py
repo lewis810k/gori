@@ -18,7 +18,7 @@ class Talent(models.Model):
         ('JOB', '전공 / 취업'),
         ('HOB', '이색취미'),
     )
-    CLASS_TYPE_CHOICE = (
+    TYPE_CHOICE = (
         (0, '1:1 수업'),
         (1, '그룹 수업'),
         (2, '원데이 수업'),
@@ -28,7 +28,7 @@ class Talent(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=30, blank=False)
     category = models.CharField(choices=CATEGORY, max_length=3, blank=False)
-    type = models.IntegerField(choices=CLASS_TYPE_CHOICE, default=1, blank=False, )
+    type = models.IntegerField(choices=TYPE_CHOICE, default=1, blank=False, )
     cover_image = models.ImageField(upload_to='talent/cover_image')
     tutor_info = models.CharField(max_length=80, blank=False)
     class_info = models.CharField(max_length=150, blank=False)

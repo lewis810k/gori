@@ -54,7 +54,7 @@ class TalentListSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField(read_only=True)
     category = serializers.ChoiceField(choices=Talent.CATEGORY, write_only=True)
     type_name = serializers.SerializerMethodField(read_only=True)
-    type = serializers.ChoiceField(choices=Talent.CLASS_TYPE_CHOICE, write_only=True)
+    type = serializers.ChoiceField(choices=Talent.TYPE_CHOICE, write_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     locations = LocationListSerializer(queryset=Location.objects.all(), many=True)
 
@@ -93,6 +93,7 @@ class TalentListSerializer(serializers.ModelSerializer):
 class TalentShortDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
     category_name = serializers.SerializerMethodField(read_only=True)
+    type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         depth = 1
@@ -116,6 +117,8 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
     def get_category_name(self, obj):
         return obj.get_category_display()
 
+    def get_type(self, obj):
+        return obj.get_type_display()
 
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
