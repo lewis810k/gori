@@ -65,7 +65,7 @@ class Location(models.Model):
     )
     REGION = AREA + SCHOOL
     talent = models.ForeignKey(Talent, limit_choices_to={'is_soldout': False}, related_name='locations')
-    registered_student = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Registration')
+    registered_student = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Registration',)
     region = models.CharField(choices=REGION, max_length=4)
     specific_location = models.CharField(choices=SPECIFIC_LOCATION, max_length=4, help_text='상세 위치 정보')
     location_info = models.CharField(max_length=10, help_text='직접 입력 10글자 내외', blank=True)

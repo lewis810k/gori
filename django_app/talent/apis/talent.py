@@ -1,12 +1,13 @@
 from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from utils.pagination import TalentPagination
-from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
+from talent.models import Review
 from talent.models import Talent, Curriculum, ClassImage, Location, WishList, Registration
 from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
     WishListSerializer, RegistrationSerializer
+from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer, RegistrationWrapperSerializers
+from talent.serializers import ReviewSerializer
+from talent.serializers import ReviewWrapperSerializer
+from utils.pagination import TalentPagination
 
 __all__ = (
     'TalentList',
@@ -15,9 +16,11 @@ __all__ = (
     'LocationRetrieve',
     'WishList',
     'RegistrationList',
-    'TalentRegistration',
+    # 'RegistrationRetrieve',
+    'TalentRegistrationRetrieveView',
     'TalentDetail',
     'LocationList',
+    'ReviewRetrieve',
 )
 
 
@@ -36,12 +39,27 @@ class LocationRetrieve(generics.RetrieveAPIView):
         return Talent.objects.filter(id=self.kwargs['pk'])
 
 
-class TalentRegistration(APIView):
-    def get(self, request, pk, *args, **kwargs):
-        regis = Registration.objects.filter(talent_location=pk)
-        print(regis)
-        serializer = RegistrationSerializer(regis, many=True)
-        return Response(serializer.data)
+class TalentRegistrationRetrieveView(generics.ListAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = RegistrationWrapperSerializers
+
+    def get_queryset(self):
+        return Talent.objects.filter(pk=self.kwargs['pk'])
+        # pagination_class = RegistrationPagination
+
+        # def get(self, request, *args, **kwargs):
+        #     registration = []
+        #     locations = Location.objects.filter(talent=kwargs['pk'])
+        #     print(locations)
+        #     for location in locations:
+        #         registration = location.registration_set.all()
+        #     # page = self.paginate_queryset(registration)
+        #     # if page is not None:
+        #     #     serializer = self.get_serializer(page, many=True)
+        #     #     return self.get_paginated_response(serializer.data)
+        #
+        #     serializer = RegistrationWrapperSerializers(registration, many=True)
+        #     return Response(serializer.data)
 
 
 # 하나의 talent에 대한 세부 정보 api
@@ -80,6 +98,21 @@ class WishList(generics.ListCreateAPIView):
     serializer_class = WishListSerializer
 
 
+# class RegistrationRetrieve(generics.RetrieveAPIView):
+#     queryset = Talent.objects.all()
+#     serializer_class = RegistrationWrapperSerializers
+#
+#     def get_queryset(self):
+#         return Talent.objects.filter(id=self.kwargs['pk'])
+
+
 class RegistrationList(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = RegistrationSerializer
+
+class ReviewRetrieve(generics.RetrieveAPIView):
+    queryset = Talent.objects.all()
+    serializer_class = ReviewWrapperSerializer
+
+    def get_queryset(self):
+        return Talent.objects.filter(id=self.kwargs['pk'])
