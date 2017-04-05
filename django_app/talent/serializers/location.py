@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from talent.models import Talent, Location
+
 
 __all__ = (
     'LocationSerializer',
@@ -9,6 +11,7 @@ __all__ = (
     'LocationTalentSerializers',
 )
 
+User = get_user_model()
 
 class LocationListSerializer(serializers.RelatedField):
     def to_representation(self, value):
@@ -19,13 +22,14 @@ class LocationSerializer(serializers.ModelSerializer):
     region = serializers.SerializerMethodField(read_only=True)
     specific_location = serializers.SerializerMethodField(read_only=True)
     day = serializers.SerializerMethodField(read_only=True)
+    # registered_student = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Location
         fields = (
             'region',
             'specific_location',
-            'registered_student',
+            # 'registered_student',
             'day',
             'time',
             'extra_fee',
@@ -43,6 +47,12 @@ class LocationSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_day(obj):
         return obj.get_day_display()
+
+    # @staticmethod
+    # def get_registered_student(obj):
+    #     # print(obj.registered_student)
+    #     print(obj.registered_student.values_list('name'))
+    #     return obj.registered_student_display()
 
 
 class LocationTalentSerializers(serializers.ModelSerializer):

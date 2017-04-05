@@ -43,7 +43,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
         return obj.get_type_display()
 
     def get_review_count(self, obj):
-        return obj.review_set.count()
+        return obj.reviews.count()
 
     def get_region(self, obj):
         return obj.region_list
@@ -87,7 +87,7 @@ class TalentListSerializer(serializers.ModelSerializer):
         return obj.get_type_display()
 
     def get_review_count(self, obj):
-        return obj.review_set.count()
+        return obj.reviews.count()
 
 
 class TalentShortDetailSerializer(serializers.ModelSerializer):

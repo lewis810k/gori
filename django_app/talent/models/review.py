@@ -6,16 +6,20 @@ from talent.models import Talent
 
 
 class Review(models.Model):
-    talent = models.ForeignKey(Talent, related_name='reviews')
+    talent = models.ForeignKey(Talent, related_name='reviews', default=1)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     created_date = models.DateTimeField(auto_now_add=True)
-    curriculum_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
-                                          help_text='5이하의 숫자를 입력하세요')
-    readiness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
-                                         help_text='5이하의 숫자를 입력하세요')
-    timeliness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
-                                          help_text='5이하의 숫자를 입력하세요')
-    delivery_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
-                                        help_text='5이하의 숫자를 입력하세요')
-    friendliness_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
-                                            help_text='5이하의 숫자를 입력하세요')
+    curriculum = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
+                                     help_text='5이하의 숫자를 입력하세요')
+    readiness = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
+                                    help_text='5이하의 숫자를 입력하세요')
+    timeliness = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
+                                     help_text='5이하의 숫자를 입력하세요')
+    delivery = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
+                                   help_text='5이하의 숫자를 입력하세요')
+    friendliness = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
+                                       help_text='5이하의 숫자를 입력하세요')
+
+    @property
+    def average_rate(self):
+        return (self.curriculum + self.readiness + self.timeliness + self.delivery + self.friendliness) / 5

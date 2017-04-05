@@ -77,7 +77,7 @@ def fb_complete_login(request, app, token):
     # facebook유저는 f로 구분
     login.user.user_type = 'f'
     # 프로필 이미지 받아오기
-    login = fb_profile_image_save(login)
+    # login = fb_profile_image_save(login)
     # print('login type: ', type(login))
     # print('login dir: ', dir(login))
     # print('login uid: ', login.user.id)

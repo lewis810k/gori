@@ -64,7 +64,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
 
 class TutorSerializer(DynamicFieldsModelSerializer):
-    username = serializers.CharField(
+    user_id = serializers.CharField(
         read_only=True, source='user.username')
     name = serializers.CharField(
         read_only=True, source='user.name'
@@ -80,10 +80,9 @@ class TutorSerializer(DynamicFieldsModelSerializer):
         model = Tutor
         fields = (
             'pk',
-            'username',
+            'user_id',
             'name',
             'nickname',
-            'user',
             'is_verified',
             'profile_image',
             'cellphone',
