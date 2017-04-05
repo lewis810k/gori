@@ -26,6 +26,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'delivery',
             'friendliness',
             'created_date',
+            'comment',
         )
 
 

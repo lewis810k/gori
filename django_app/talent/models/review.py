@@ -19,6 +19,7 @@ class Review(models.Model):
                                    help_text='5이하의 숫자를 입력하세요')
     friendliness = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
                                        help_text='5이하의 숫자를 입력하세요')
+    comment = models.TextField(blank=True)
 
     @property
     def average_rate(self):
