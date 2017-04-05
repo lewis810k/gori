@@ -9,8 +9,8 @@ __all__ = (
 
 
 class WishList(models.Model):
-    talent = models.ForeignKey(Talent, )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, )
+    talent = models.ForeignKey(Talent, related_name='wishlist_users')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_wishlist')
     added_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

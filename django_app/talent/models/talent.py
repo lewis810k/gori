@@ -51,3 +51,10 @@ class Talent(models.Model):
         for l in self.locations.all():
             count += l.registration_set.count()
         return count
+
+    @property
+    def region_list(self):
+        region_list = []
+        for location in self.locations.all():
+            region_list.append(location.get_region_display())
+        return region_list

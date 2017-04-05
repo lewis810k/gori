@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+
 from .talent import Talent
 
 __all__ = (

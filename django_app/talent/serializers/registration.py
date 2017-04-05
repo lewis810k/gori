@@ -1,39 +1,66 @@
-from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
-from member.models import GoriUser
-from talent.models import Registration
-from talent.models import Talent
-from .location import LocationSerializer
+from member.serializers import TutorSerializer
+from talent.serializers import TalentShortInfoSerializer
+
+from rest_framework import serializers
+from talent.models import Talent, Registration
+from .location import LocationListSerializer
 
 __all__ = (
-    'RegistrationSerializer',
-    'RegistrationWrapperSerializers'
+    # user
+    # 'MyRegistrationSerializer',
+    # 'MyRegistrationWrapperSerializer',
+    # talent
+    # 'TalentRegistrationSerializer',
+    'TalentRegistrationWrapperSerializer',
 )
 
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    student = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='student.name')
-    # talent_location = LocationListSerializer(read_only=True)
-    student_level = serializers.SerializerMethodField(read_only=True)
-    talent_location = LocationSerializer(read_only=True)
-
-    class Meta:
-        model = Registration
-        fields = (
-            'student',
-            'talent_location',
-            'joined_date',
-            'is_confirmed',
-            'student_level',
-            'experience_length',
-            'message_to_tutor',
-        )
-
-    def get_student_level(self, obj):
-        return obj.get_student_level_display()
+User = get_user_model()
 
 
-class RegistrationWrapperSerializers(serializers.ModelSerializer):
+# user=================
+#
+# class MyRegistrationSerializer(serializers.ModelSerializer):
+#     registered_talent_location = LocationListSerializer(read_only=True, source='talent_location')
+#     student_level = serializers.SerializerMethodField(read_only=True)
+#     talent = TalentShortInfoSerializer(source='talent_location.talent')
+#     tutor_info = TutorSerializer(source='talent_location.talent.tutor', fields=('name', 'profile_image'), )
+#
+#     class Meta:
+#         model = Registration
+#         fields = (
+#             'talent',
+#             'registered_talent_location',
+#             'is_confirmed',
+#             'student_level',
+#             'joined_date',
+#             'experience_length',
+#             'message_to_tutor',
+#             'tutor_info',
+#         )
+#
+#     def get_student_level(self, obj):
+#         return obj.get_student_level_display()
+#
+#
+# class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
+#     registration_info = MyRegistrationSerializer(many=True, source='registrations')
+#
+#     class Meta:
+#         model = User
+#         fields = (
+#             'name',
+#             'nickname',
+#             'cellphone',
+#             'profile_image',
+#             'joined_date',
+#             'registration_info',
+#         )
+#
+
+# ======== talent =========
+class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
     registration = serializers.SerializerMethodField(read_only=True)
@@ -54,21 +81,14 @@ class RegistrationWrapperSerializers(serializers.ModelSerializer):
             registration = Registration.objects.filter(student=location)
             sub_ret = {}
             for regi in registration:
-                sub_ret["student"]=regi.student.name
-                sub_ret["talent_location"] =regi.talent_location.get_region_display()
-                sub_ret["joined_date"]=regi.joined_date
-                sub_ret["is_confirmed"]=regi.is_confirmed
-                sub_ret["student_level"]=regi.get_student_level_display()
-                sub_ret["experience_length"]=regi.experience_length
-                sub_ret["message_to_tutor"]=regi.message_to_tutor
+                sub_ret["student"] = regi.student.name
+                sub_ret["talent_location"] = regi.talent_location.get_region_display()
+                sub_ret["joined_date"] = regi.joined_date
+                sub_ret["is_confirmed"] = regi.is_confirmed
+                sub_ret["student_level"] = regi.get_student_level_display()
+                sub_ret["experience_length"] = regi.experience_length
+                sub_ret["message_to_tutor"] = regi.message_to_tutor
                 ret.append(sub_ret)
-        # for registration_student in obj.locations.values_list('registered_student', flat=True):
-        #     print(registration_student)
-        #     registration = Registration.objects.filter(talent_location=registration_student)
-        #     print(registration)
-        #     for regi in registration:
-        #         if regi.talent_location.talent.id == obj.id:
-        #             student.append(regi.student.name)
         return ret
 
     @staticmethod
@@ -79,6 +99,23 @@ class RegistrationWrapperSerializers(serializers.ModelSerializer):
     def get_type(obj):
         return obj.get_type_display()
 
-        # @staticmethod
-        # def get_id(obj):
-        #     return obj.talent_location.talent.id
+
+class TalentRegistrationSerializer(serializers.ModelSerializer):
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='student.name')
+    talent_location = LocationListSerializer(read_only=True)
+    student_level = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Registration
+        fields = (
+            'student',
+            'talent_location',
+            'joined_date',
+            'is_confirmed',
+            'student_level',
+            'experience_length',
+            'message_to_tutor',
+        )
+
+    def get_student_level(self, obj):
+        return obj.get_student_level_display()

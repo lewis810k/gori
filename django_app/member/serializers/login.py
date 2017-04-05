@@ -1,15 +1,19 @@
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.socialaccount.helpers import complete_social_login
-from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
-from rest_framework import serializers
+
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
+from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
+from rest_framework import serializers
 
 __all__ = (
     'CustomLoginSerializer',
     'CustomSocialLoginSerializer',
 )
+
+User = get_user_model()
 
 
 class CustomLoginSerializer(RegisterSerializer):
