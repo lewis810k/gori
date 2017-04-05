@@ -61,6 +61,7 @@ class TalentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Talent
         fields = (
+            'pk',
             'tutor',
             'title',
             'category_name',
@@ -77,6 +78,7 @@ class TalentListSerializer(serializers.ModelSerializer):
             'locations',
             'registration_count',
         )
+
 
     def get_category_name(self, obj):
         return obj.get_category_display()
