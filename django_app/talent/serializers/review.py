@@ -20,11 +20,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = (
             'talent',
             'name',
-            'curriculum_rate',
-            'readiness_rate',
-            'timeliness_rate',
-            'delivery_rate',
-            'friendliness_rate',
+            'curriculum',
+            'readiness',
+            'timeliness',
+            'delivery',
+            'friendliness',
             'created_date',
         )
 
@@ -56,6 +56,8 @@ class ReviewWrapperSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_average_rate(obj):
-        print(obj.reviews.values_list('average_rate', flat=True))
-
-        print(obj.reviews.count())
+        sum_of_average = 0
+        for review in obj.reviews.all():
+            sum_of_average += review.average_rate
+        return_value = sum_of_average/obj.reviews.count()
+        return round(return_value, 1)
