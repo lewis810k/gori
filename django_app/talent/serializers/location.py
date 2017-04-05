@@ -6,6 +6,7 @@ __all__ = (
     'LocationSerializer',
     'LocationWrapperSerializers',
     'LocationListSerializer',
+    'LocationTalentSerializers',
 )
 
 
@@ -42,6 +43,23 @@ class LocationSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_day(obj):
         return obj.get_day_display()
+
+
+class LocationTalentSerializers(serializers.ModelSerializer):
+    talent_title = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.title')
+    talent_id = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
+    talent_category = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.category')
+    talent_type = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.type')
+
+    class Meta:
+        model = Location
+        fields = (
+            'talent_id'
+            'talent_title'
+            'talent_category'
+            'talent_type'
+
+        )
 
 
 class LocationWrapperSerializers(serializers.ModelSerializer):

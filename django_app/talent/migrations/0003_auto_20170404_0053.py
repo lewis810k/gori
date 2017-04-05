@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('talent', '0002_auto_20170403_2131'),
+        ('talent', '0002_auto_20170404_0053'),
     ]
 
     operations = [

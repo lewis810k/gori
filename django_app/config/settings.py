@@ -90,7 +90,7 @@ TEMPLATES_DIR = 'templates'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
-SITE_ID = 2
+SITE_ID = 1
 
 LOGIN_URL = '/admin/'
 CALLBACK_URL = '/admin/'
@@ -104,7 +104,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
 }
 

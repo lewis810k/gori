@@ -9,5 +9,7 @@ urlpatterns = [
     url(r'^wishlist/$', apis.WishList.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentDetail.as_view()),
     url(r'^registration/$', apis.RegistrationList.as_view()),
-    url(r'^(?P<pk>[0-9]+)/registration/$', apis.TalentRegistration.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieve.as_view())
+    # url(r'^(?P<pk>[0-9]+)/registration/$', apis.RegistrationRetrieve.as_view()),
 ]

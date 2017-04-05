@@ -15,13 +15,15 @@ class Registration(models.Model):
         (3, '상급자'),
     )
     student = models.ForeignKey(settings.AUTH_USER_MODEL, )
-    talent_location = models.ForeignKey(Location, )
+    talent_location = models.ForeignKey(Location,)
     joined_date = models.DateTimeField(auto_now_add=True)
     is_confirmed = models.BooleanField(default=False)
     student_level = models.IntegerField(choices=LEVEL, help_text="레벨 선택", default=1)
     experience_length = models.IntegerField(default=0, blank=True, help_text="해당 수업관련 경력을 개월로 입력")
     message_to_tutor = models.CharField(max_length=50, help_text="수강신청시 유저가 튜터에게 보내는 메세지", blank=False)
+    # registration = models.TextField(blank=True)
 
-    def __str__(self):
-        return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.username, self.talent_location.talent.pk,
-                                                 self.talent_location.talent.class_title)
+    # def __str__(self):
+    #     return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.username, self.talent_location.talent.pk,
+    #                                              self.talent_location.location.class_title)
+

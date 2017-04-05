@@ -6,7 +6,7 @@ from talent.models import Talent
 
 
 class Review(models.Model):
-    talent = models.ForeignKey(Talent, )
+    talent = models.ForeignKey(Talent, related_name='reviews')
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     created_date = models.DateTimeField(auto_now_add=True)
     curriculum_rate = models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(1)],
