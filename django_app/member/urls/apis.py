@@ -23,6 +23,8 @@ urlpatterns = [
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),
+
+    url(r'^logout/$', apis.CustomLogoutView.as_view()),
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.
     # /api/member/login 식으로 들어올 때 여기로 이동함.
