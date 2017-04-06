@@ -1,17 +1,13 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 
-from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
-from talent.serializers import ReviewWrapperSerializer
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from talent.models import Talent, Curriculum, ClassImage, Registration
-from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
+from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, \
     CurriculumWrapperSerializers, TalentShortDetailSerializer
-
 from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
+from talent.serializers import ReviewWrapperSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
+from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
 from utils.pagination import TalentPagination
 
 __all__ = (
@@ -31,7 +27,7 @@ __all__ = (
     # registration
     'TalentRegistrationRetrieve',
 
-    # 'MyWishList',
+    # 'MyWishListRetrieve',
     # 'MyRegistrationList',
     # 'RegistrationList',
 
@@ -121,22 +117,6 @@ class CurriculumList(generics.ListCreateAPIView):
 class ClassImageList(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()
     serializer_class = ClassImageSerializer
-
-
-# class MyWishList(generics.ListAPIView):
-#     serializer_class = MyWishListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-#
-# class MyRegistrationList(generics.ListAPIView):
-#     serializer_class = MyRegistrationListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
 
 
 # class RegistrationRetrieve(generics.RetrieveAPIView):

@@ -13,8 +13,6 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/location/$', apis.LocationRetrieve.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageRetrieve.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieve.as_view()),
-    # url(r'^mywishlist/$', apis.MyWishList.as_view()),
-    # url(r'^myregislist/$', apis.MyRegistrationList.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieve.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieve.as_view()),
