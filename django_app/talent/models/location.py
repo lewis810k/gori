@@ -80,3 +80,8 @@ class Location(models.Model):
 
     def __str__(self):
         return '{} - 지역: {}'.format(self.talent, self.get_region_display())
+
+    @property
+    def time_list(self):
+        time_list = self.time.split(',')
+        return time_list
