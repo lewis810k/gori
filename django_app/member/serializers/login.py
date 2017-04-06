@@ -3,6 +3,8 @@ from allauth.account.utils import setup_user_email
 from allauth.socialaccount.helpers import complete_social_login
 
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
@@ -17,10 +19,37 @@ User = get_user_model()
 
 
 class CustomLoginSerializer(RegisterSerializer):
+    name = serializers.CharField(write_only=True)
+
+    def validate_name(self, name):
+        name = get_adapter().clean_username(name)
+        return name
+
+    def get_cleaned_data(self):
+        return {
+            'username': self.validated_data.get('username', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'name': self.validated_data.get('name', '')
+        }
+
     def save(self, request):
+
         adapter = get_adapter()
         user = adapter.new_user(request)
-        user.name = request.POST['name']
+
+        if 'name' in request.POST:
+            user.name = request.POST['name']
+            # else:
+            #     raise Exception('test')
+            #     # return HttpResponse('test')
+            # raise MultiValueDictKeyError('test')
+        #
+        # try:
+        #     user.name = request.POST['name']
+        # except MultiValueDictKeyError as ME:
+        #     print(ME)
+        # finally:
+        #     raise ValueError('could not find {} in {}'.format(char, char_string))
         self.cleaned_data = self.get_cleaned_data()
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
