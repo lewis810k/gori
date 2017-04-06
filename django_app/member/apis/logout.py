@@ -1,4 +1,6 @@
-from django.contrib.auth import logout
+from django.contrib.auth import (
+    logout as django_logout
+)
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -27,10 +29,11 @@ class CustomLogoutView(APIView):
         try:
             request.user.auth_token.delete()
         except (AttributeError, ObjectDoesNotExist):
-            return Response({"detail": _("토큰이 유효하지 않습니다.")},
+            # 커스터마이징 부분
+            return Response({"detail": _("토큰이 제공되지 않았습니다.")},
                             status=status.HTTP_401_UNAUTHORIZED)
 
-        logout(request)
+        django_logout(request)
 
         return Response({"detail": _("Successfully logged out.")},
                         status=status.HTTP_200_OK)

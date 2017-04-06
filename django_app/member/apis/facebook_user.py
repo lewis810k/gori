@@ -2,14 +2,13 @@ from urllib.request import urlopen
 
 import requests
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider, GRAPH_API_URL
-from allauth.socialaccount.providers.facebook.views import compute_appsecret_proof
-from allauth.socialaccount.providers.oauth2.views import OAuth2Adapter
+from allauth.socialaccount.providers.facebook.views import compute_appsecret_proof, FacebookOAuth2Adapter
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.db import IntegrityError
 from rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount import app_settings, providers
+from allauth.socialaccount import providers
 
 from member.serializers import CustomSocialLoginSerializer
 
@@ -70,16 +69,7 @@ def fb_complete_login(request, app, token):
     return login
 
 
-class FacebookOAuth2TempAdapter(OAuth2Adapter):
-    provider_id = FacebookProvider.id
-    provider_default_auth_url = 'https://www.facebook.com/dialog/oauth'
-
-    settings = app_settings.PROVIDERS.get(provider_id, {})
-
-    authorize_url = settings.get('AUTHORIZE_URL', provider_default_auth_url)
-    access_token_url = GRAPH_API_URL + '/oauth/access_token'
-    expires_in_key = 'expires_in'
-
+class FacebookOAuth2TempAdapter(FacebookOAuth2Adapter):
     def complete_login(self, request, app, access_token, **kwargs):
         return fb_complete_login(request, app, access_token)
 
