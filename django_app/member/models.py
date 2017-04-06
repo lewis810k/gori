@@ -13,7 +13,8 @@ class GoriUser(AbstractUser):
     nickname = models.CharField(max_length=15, blank=True, )
     cellphone = models.CharField(max_length=11, blank=True)
     profile_image = models.ImageField(upload_to='member/profile_image',
-                                      blank=True)
+                                      blank=True,
+                                      )
     user_type = models.CharField(choices=USER_TYPE, max_length=1, default='d')
     joined_date = models.DateTimeField(auto_now_add=True)
     is_tutor = models.BooleanField(default=False)
