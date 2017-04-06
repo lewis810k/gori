@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
-from talent.models import Talent, Curriculum, Location
-from talent.serializers import LocationSerializer, LocationListSerializer
+from talent.models import Talent, Curriculum
+from talent.serializers import LocationSerializer
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
 
@@ -19,7 +19,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
-    region = serializers.SerializerMethodField(read_only=True)
+    regions = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -33,8 +33,8 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
             'is_soldout',
             'created_date',
             'review_count',
-            'region',
             'registration_count',
+            'regions',
         )
 
     def get_category(self, obj):
@@ -46,7 +46,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
     def get_review_count(self, obj):
         return obj.reviews.count()
 
-    def get_region(self, obj):
+    def get_regions(self, obj):
         return obj.region_list
 
 
@@ -57,7 +57,7 @@ class TalentListSerializer(serializers.ModelSerializer):
     type_name = serializers.SerializerMethodField(read_only=True)
     type = serializers.ChoiceField(choices=Talent.TYPE_CHOICE, write_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
-    locations = LocationListSerializer(queryset=Location.objects.all(), many=True)
+    regions = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -76,8 +76,8 @@ class TalentListSerializer(serializers.ModelSerializer):
             'is_soldout',
             'created_date',
             'review_count',
-            'locations',
             'registration_count',
+            'regions',
         )
 
     def get_category_name(self, obj):
@@ -88,6 +88,9 @@ class TalentListSerializer(serializers.ModelSerializer):
 
     def get_review_count(self, obj):
         return obj.reviews.count()
+
+    def get_regions(self, obj):
+        return obj.region_list
 
 
 class TalentShortDetailSerializer(serializers.ModelSerializer):
@@ -130,7 +133,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
     location = LocationSerializer(many=True, source='locations')
 
     class Meta:
-        depth = 2
+        depth = 1
         model = Talent
         fields = (
             'tutor',
