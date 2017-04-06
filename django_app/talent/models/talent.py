@@ -49,7 +49,7 @@ class Talent(models.Model):
     def registration_count(self):
         count = 0
         for l in self.locations.all():
-            count += l.registration_set.count()
+            count += l.registrations.count()
         return count
 
     @property
