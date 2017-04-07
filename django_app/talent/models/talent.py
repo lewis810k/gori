@@ -40,7 +40,7 @@ class Talent(models.Model):
     is_soldout = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{}: {}'.format(self.pk, self.title)
+        return '{}'.format(self.title)
 
     def get_category(self, obj):
         return obj.get_category_dispaly()

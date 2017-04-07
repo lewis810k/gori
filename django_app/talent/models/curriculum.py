@@ -16,4 +16,4 @@ class Curriculum(models.Model):
         ordering = ['pk', ]
 
     def __str__(self):
-        return 'Talent {}: {}'.format(self.talent.id, self.id)
+        return 'Tutor : {}, Talent : {}'.format(self.talent.tutor.user.name, self.talent.title)
