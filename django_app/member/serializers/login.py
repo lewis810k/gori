@@ -33,7 +33,6 @@ class CustomLoginSerializer(RegisterSerializer):
         }
 
     def save(self, request):
-
         adapter = get_adapter()
         user = adapter.new_user(request)
 

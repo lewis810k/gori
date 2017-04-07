@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 __all__ = (
     'ObtainAuthToken',
 )
+
 User = get_user_model()
 
 

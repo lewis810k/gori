@@ -4,6 +4,7 @@ from rest_framework import serializers
 from member.models import GoriUser
 from talent.models import Review
 from talent.models import Talent
+from utils import review_average_rate
 
 __all__ = (
     'ReviewSerializer',
@@ -36,6 +37,7 @@ class ReviewWrapperSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField(read_only=True)
     reviews = ReviewSerializer(many=True)
     average_rate = serializers.SerializerMethodField(read_only=True)
+    review_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -45,6 +47,7 @@ class ReviewWrapperSerializer(serializers.ModelSerializer):
             'category',
             'type',
             'average_rate',
+            'review_count',
             'reviews',
         )
 
@@ -58,8 +61,8 @@ class ReviewWrapperSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_average_rate(obj):
-        sum_of_average = 0
-        for review in obj.reviews.all():
-            sum_of_average += review.average_rate
-        return_value = sum_of_average/obj.reviews.count()
-        return round(return_value, 1)
+        return review_average_rate(obj.reviews)
+
+    @staticmethod
+    def get_review_count(obj):
+        return obj.reviews.count()

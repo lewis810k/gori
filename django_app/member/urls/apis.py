@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+
 from .. import apis
 
 urlpatterns = [
@@ -13,12 +14,16 @@ urlpatterns = [
     # ##### 정보수정 #####
     url(r'^update/user/$', apis.UserProfileView.as_view(), name='user-patch'),
 
-    # # ##### 유저삭제 #####
+    # ##### 유저삭제 #####
     url(r'^delete/user/$', apis.UserProfileView.as_view(), name='user-delete'),
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),
     url(r'^logout/$', apis.CustomLogoutView.as_view()),
+
+    # ##### 마이페이지 관련 #####
+    url(r'^wish-list/$', apis.MyWishListView.as_view()),
+    url(r'^registrations/$', apis.MyRegistrationView.as_view()),
 
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.

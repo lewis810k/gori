@@ -12,11 +12,11 @@ from allauth.socialaccount import providers
 
 from member.serializers import CustomSocialLoginSerializer
 
-User = get_user_model()
-
 __all__ = (
     'CreateFacebookUserView',
 )
+
+User = get_user_model()
 
 
 def fb_profile_image_save(login):

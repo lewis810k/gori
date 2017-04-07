@@ -7,6 +7,7 @@ from talent.models import Registration, Location, Talent
 __all__ = (
     'UserSerializer',
     'TutorSerializer',
+    # 'MyWishListSerializer',
 )
 
 User = get_user_model()
