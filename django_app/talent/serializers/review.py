@@ -18,6 +18,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = (
+            'pk',
             'talent',
             'name',
             'curriculum',
@@ -39,7 +40,7 @@ class ReviewWrapperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Talent
         fields = (
-            'id',
+            'pk',
             'title',
             'category',
             'type',

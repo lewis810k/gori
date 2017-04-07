@@ -47,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         해당 location의 registered_student 목록을 받아온다.
         목록을 리스트로 변환하고, none 객체를 제거한다.
+        (아무도 등록하지 않은 location의 경우 none을 반환한다.)
 
         목록의 카운트를 반환한다.
 

@@ -75,7 +75,7 @@ class LocationTalentSerializers(serializers.ModelSerializer):
 class LocationWrapperSerializers(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    locations = LocationSerializer(many=True)
+    locations = LocationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Talent

@@ -62,12 +62,12 @@ class TalentListSerializer(serializers.ModelSerializer):
         model = Talent
         fields = (
             'pk',
-            'tutor',
             'title',
             'category_name',
             'category',
             'type_name',
             'type',
+            'tutor',
             'cover_image',
             'price_per_hour',
             'hours_per_class',

@@ -69,7 +69,7 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Talent
         fields = (
-            'id',
+            'pk',
             'title',
             'category',
             'type',
@@ -78,18 +78,18 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
 
     def get_registration(self, obj):
         ret = []
-        for location in obj.locations.values_list('registered_student', flat=True):
-            registration = Registration.objects.filter(student=location)
+        for student_id, location_id in obj.locations.values_list('registered_student', 'id'):
+            registration = Registration.objects.get(student_id=student_id, talent_location_id=location_id)
             sub_ret = collections.OrderedDict()
-            for regi in registration:
-                sub_ret["name"] = regi.student.name
-                sub_ret["talent_location"] = regi.talent_location.get_region_display()
-                sub_ret["student_level"] = regi.get_student_level_display()
-                sub_ret["experience_length"] = regi.experience_length
-                sub_ret["is_confirmed"] = regi.is_confirmed
-                sub_ret["joined_date"] = regi.joined_date
-                sub_ret["message_to_tutor"] = regi.message_to_tutor
-                ret.append(sub_ret)
+            sub_ret["pk"] = registration.id
+            sub_ret["name"] = registration.student.name
+            sub_ret["talent_location"] = registration.talent_location.get_region_display()
+            sub_ret["student_level"] = registration.get_student_level_display()
+            sub_ret["experience_length"] = registration.experience_length
+            sub_ret["is_confirmed"] = registration.is_confirmed
+            sub_ret["joined_date"] = registration.joined_date
+            sub_ret["message_to_tutor"] = registration.message_to_tutor
+            ret.append(sub_ret)
         return ret
 
     @staticmethod
@@ -109,6 +109,7 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = (
+            'id'
             'student',
             'talent_location',
             'joined_date',
