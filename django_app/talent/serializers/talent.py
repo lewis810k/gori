@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
-from talent.models import Talent, Curriculum
+from talent.models import Talent, Curriculum, Location
 from talent.serializers import LocationSerializer
+from utils import review_average_rate
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
 
@@ -20,6 +21,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     regions = serializers.SerializerMethodField(read_only=True)
+    averate_rate = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -32,6 +34,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
             'price_per_hour',
             'is_soldout',
             'created_date',
+            'average_rate',
             'review_count',
             'registration_count',
             'regions',
@@ -49,6 +52,10 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
     def get_regions(self, obj):
         return obj.region_list
 
+    @staticmethod
+    def get_average_rate(obj):
+        return review_average_rate(obj.reviews)
+
 
 class TalentListSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer()
@@ -58,6 +65,8 @@ class TalentListSerializer(serializers.ModelSerializer):
     type = serializers.ChoiceField(choices=Talent.TYPE_CHOICE, write_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     regions = serializers.SerializerMethodField(read_only=True)
+    is_school = serializers.SerializerMethodField(read_only=True)
+    average_rate = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -69,12 +78,14 @@ class TalentListSerializer(serializers.ModelSerializer):
             'category',
             'type_name',
             'type',
+            'is_school',
             'cover_image',
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
             'is_soldout',
             'created_date',
+            'average_rate',
             'review_count',
             'registration_count',
             'regions',
@@ -92,11 +103,26 @@ class TalentListSerializer(serializers.ModelSerializer):
     def get_regions(self, obj):
         return obj.region_list
 
+    def get_is_school(self, obj):
+        is_school = False
+        school_list = [school[1] for school in Location.SCHOOL]
+        for item in obj.region_list:
+            if item in school_list:
+                is_school = True
+                break
+        return is_school
+
+    @staticmethod
+    def get_average_rate(obj):
+        return review_average_rate(obj.reviews)
+
 
 class TalentShortDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
     category_name = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
+    review_count = serializers.SerializerMethodField(read_only=True)
+    average_rate = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         depth = 1
@@ -109,6 +135,8 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
             'cover_image',
             'tutor_info',
             'class_info',
+            'average_rate',
+            'review_count',
             'video1',
             'video2',
             'price_per_hour',
@@ -123,12 +151,21 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
     def get_type(self, obj):
         return obj.get_type_display()
 
+    def get_review_count(self, obj):
+        return obj.reviews.count()
+
+    @staticmethod
+    def get_average_rate(obj):
+        return review_average_rate(obj.reviews)
+
 
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
     class_image = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
     curriculum = CurriculumSerializer(many=True, source='curriculum_set', read_only=False, )
     category_name = serializers.SerializerMethodField(read_only=True)
+    average_rate = serializers.SerializerMethodField(read_only=True)
+    review_count = serializers.SerializerMethodField(read_only=True)
     category = serializers.ChoiceField(choices=Talent.CATEGORY)
     location = LocationSerializer(many=True, source='locations')
 
@@ -141,6 +178,8 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'category',
             'category_name',
             'type',
+            'average_rate',
+            'review_count',
             'cover_image',
             'tutor_info',
             'class_info',
@@ -157,6 +196,13 @@ class TalentDetailSerializer(serializers.ModelSerializer):
 
     def get_category_name(self, obj):
         return obj.get_category_display()
+
+    @staticmethod
+    def get_average_rate(obj):
+        return review_average_rate(obj.reviews)
+
+    def get_review_count(self, obj):
+        return obj.reviews.count()
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
