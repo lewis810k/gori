@@ -17,12 +17,12 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from rest_auth.tests.urls import FacebookLogin
 
 from member.urls import apis as member_api_urls
 from member.urls import member as member_urls
 from talent.urls import apis as talent_api_urls
 
+# ##### API URL #####
 api_urlpatterns = [
     url(r'^member/', include(member_api_urls)),
     url(r'^talent/', include(talent_api_urls, namespace='talent')),
@@ -30,17 +30,18 @@ api_urlpatterns = [
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(api_urlpatterns, namespace='api')),
-    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^accounts/', include('allauth.urls')),
+
+    # ##### API #####
+    url(r'^api/', include(api_urlpatterns, namespace='api')),
+    url(r'^api-auth/', include('rest_framework.urls',
+                               namespace='rest_framework')),
+
+    # ##### 일반 뷰에 대한 URL #####
     url(r'^member/', include(member_urls)),
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
+
 ]
-urlpatterns += [
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
-]
+
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL,

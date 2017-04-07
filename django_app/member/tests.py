@@ -41,10 +41,10 @@ class MemberTest(APILiveServerTestCase):
         user = User.objects.last()
         self.assertEqual(user.username, self.test_user)
 
-    # def test_delete_user(self):
-    #     """
-    #     유저 삭제 테스트
-    #     """
+        # def test_delete_user(self):
+        #     """
+        #     유저 삭제 테스트
+        #     """
         # self.create_user()
         # url = reverse('api:user-delete', kwargs={'pk': '1'})
         # print(url)

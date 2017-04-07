@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
+from storages.backends.overwrite import OverwriteStorage
 
 
 class GoriUser(AbstractUser):
@@ -13,10 +14,15 @@ class GoriUser(AbstractUser):
     nickname = models.CharField(max_length=15, blank=True, )
     cellphone = models.CharField(max_length=11, blank=True)
     profile_image = models.ImageField(upload_to='member/profile_image',
-                                      blank=True)
+                                      blank=True,
+                                      storage=OverwriteStorage(),
+                                      )
     user_type = models.CharField(choices=USER_TYPE, max_length=1, default='d')
     joined_date = models.DateTimeField(auto_now_add=True)
     is_tutor = models.BooleanField(default=False)
+    email = models.EmailField(blank=True, null=True, unique=False)
+
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return '{} {}'.format(self.username, self.name)

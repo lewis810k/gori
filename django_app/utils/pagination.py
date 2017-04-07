@@ -1,5 +1,10 @@
 from rest_framework.pagination import CursorPagination
 
+__all__ = (
+    'TalentPagination',
+    'RegistrationPagination',
+)
+
 
 class TalentPagination(CursorPagination):
     page_size = 2
