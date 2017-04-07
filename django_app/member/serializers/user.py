@@ -17,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     user_id = serializers.CharField(
         read_only=True, source='username')
     received_registrations = serializers.SerializerMethodField(read_only=True)
+    # sent_registrations = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -34,6 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             'joined_date',
             'last_login',
             'received_registrations',
+            # 'sent_registrations',
         )
 
     def get_user_type(self, obj):
@@ -63,6 +65,21 @@ class UserSerializer(serializers.ModelSerializer):
             except:
                 break
         return len(list_registered_students)
+
+    # def get_sent_registrations(self, obj):
+    #     """
+    #     """
+    #     # registered_students = Location.objects.filter(student_id=obj.id).values_list('registered_student',
+    #     registered_students = Location.objects.filter(talent__tutor_id=obj.id).values_list('registered_student',
+    #                                                                                        flat=True)
+    #     print(registered_students)
+    #     # list_registered_students = list(registered_students)
+    #     # while True:
+    #     #     try:
+    #     #         list_registered_students.remove(None)
+    #     #     except:
+    #     #         break
+    #     return 1
 
     def create(self, validated_data):
         user = User.objects.create(
