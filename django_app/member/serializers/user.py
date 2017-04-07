@@ -13,12 +13,14 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     user_type = serializers.SerializerMethodField(read_only=True)
+    user_id = serializers.CharField(
+        read_only=True, source='username')
 
     class Meta:
         model = User
         fields = (
             'pk',
-            'username',
+            'user_id',
             'name',
             'user_type',
             'is_staff',

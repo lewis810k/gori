@@ -17,6 +17,8 @@ DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = True
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# STORAGE_S3 = False
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
 print(DEBUG)
 print(STORAGE_S3)
@@ -101,6 +103,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',

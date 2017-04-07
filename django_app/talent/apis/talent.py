@@ -45,7 +45,7 @@ User = get_user_model()
 class TalentList(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializer
-    pagination_class = TalentPagination
+    # pagination_class = TalentPagination
     lookup_field = 'pk'
 
 
