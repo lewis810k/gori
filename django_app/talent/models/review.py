@@ -24,3 +24,6 @@ class Review(models.Model):
     @property
     def average_rate(self):
         return (self.curriculum + self.readiness + self.timeliness + self.delivery + self.friendliness) / 5
+
+    def comment_summary(self):
+        return '{}...'.format(self.comment[0:10])
