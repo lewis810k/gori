@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     user_id = serializers.CharField(
         read_only=True, source='username')
     received_registrations = serializers.SerializerMethodField(read_only=True)
-    # sent_registrations = serializers.SerializerMethodField(read_only=True)
+    sent_registrations = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             'joined_date',
             'last_login',
             'received_registrations',
-            # 'sent_registrations',
+            'sent_registrations',
         )
 
     def get_user_type(self, obj):
@@ -66,20 +66,17 @@ class UserSerializer(serializers.ModelSerializer):
                 break
         return len(list_registered_students)
 
-    # def get_sent_registrations(self, obj):
-    #     """
-    #     """
-    #     # registered_students = Location.objects.filter(student_id=obj.id).values_list('registered_student',
-    #     registered_students = Location.objects.filter(talent__tutor_id=obj.id).values_list('registered_student',
-    #                                                                                        flat=True)
-    #     print(registered_students)
-    #     # list_registered_students = list(registered_students)
-    #     # while True:
-    #     #     try:
-    #     #         list_registered_students.remove(None)
-    #     #     except:
-    #     #         break
-    #     return 1
+    def get_sent_registrations(self, obj):
+        """
+        location을 순회하면서 registered_student에 현재 유저가 있는지 체크한다.
+        있을 경우 리스트에 해당 수업을 추가하고 최종적으로 리스트의 길이를 반환한다.
+        """
+        locations = Location.objects.all()
+        talent_list = []
+        for location in locations:
+            if obj.id in location.registered_student.values_list('id', flat=True):
+                talent_list.append(location.talent_id)
+        return len(talent_list)
 
     def create(self, validated_data):
         user = User.objects.create(
