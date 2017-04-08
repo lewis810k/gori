@@ -1,37 +1,33 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 
-from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
-from talent.serializers import ReviewWrapperSerializer
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from talent.models import Talent, Curriculum, ClassImage, Registration
-from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, LocationSerializer, \
+from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, \
     CurriculumWrapperSerializers, TalentShortDetailSerializer
-
 from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
+from talent.serializers import ReviewWrapperSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
+from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
 from utils.pagination import TalentPagination
 
 __all__ = (
     # talent
-    'TalentList',
+    'TalentListView',
     # detail - all
-    'TalentDetail',
+    'TalentDetailView',
     # detail - fragments
-    'TalentShortDetail',
-    'CurriculumList',
-    'ClassImageList',
-    'LocationRetrieve',
-    'ClassImageRetrieve',
-    'CurriculumRetrieve',
-    'ReviewRetrieve',
+    'TalentShortDetailView',
+    'CurriculumListView',
+    'ClassImageListView',
+    'LocationRetrieveView',
+    'ClassImageRetrieveView',
+    'CurriculumRetrieveView',
+    'ReviewRetrieveView',
 
     # registration
-    'TalentRegistrationRetrieve',
+    'TalentRegistrationRetrieveView',
 
-    # 'MyWishList',
+    # 'MyWishListRetrieve',
     # 'MyRegistrationList',
     # 'RegistrationList',
 
@@ -42,19 +38,19 @@ User = get_user_model()
 
 
 # talent 전체 api
-class TalentList(generics.ListAPIView):
+class TalentListView(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializer
     # pagination_class = TalentPagination
     lookup_field = 'pk'
 
 
-class LocationRetrieve(generics.RetrieveAPIView):
+class LocationRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = LocationWrapperSerializers
 
 
-class TalentRegistrationRetrieve(generics.RetrieveAPIView):
+class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentRegistrationWrapperSerializer
     #
@@ -77,23 +73,23 @@ class TalentRegistrationRetrieve(generics.RetrieveAPIView):
     #     return Response(serializer.data)
 
 
-class ClassImageRetrieve(generics.RetrieveAPIView):
+class ClassImageRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = ClassImageWrapperSerializers
 
 
-class CurriculumRetrieve(generics.RetrieveAPIView):
+class CurriculumRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = CurriculumWrapperSerializers
 
 
-class TalentShortDetail(generics.RetrieveAPIView):
+class TalentShortDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentShortDetailSerializer
 
 
 # 하나의 talent에 대한 세부 정보 api
-class TalentDetail(generics.RetrieveAPIView):
+class TalentDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
 
@@ -113,30 +109,14 @@ class TalentDetail(generics.RetrieveAPIView):
 #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class CurriculumList(generics.ListCreateAPIView):
+class CurriculumListView(generics.ListCreateAPIView):
     queryset = Curriculum.objects.all()
     serializer_class = CurriculumSerializer
 
 
-class ClassImageList(generics.ListCreateAPIView):
+class ClassImageListView(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()
     serializer_class = ClassImageSerializer
-
-
-# class MyWishList(generics.ListAPIView):
-#     serializer_class = MyWishListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-#
-# class MyRegistrationList(generics.ListAPIView):
-#     serializer_class = MyRegistrationListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
 
 
 # class RegistrationRetrieve(generics.RetrieveAPIView):
@@ -147,11 +127,11 @@ class ClassImageList(generics.ListCreateAPIView):
 #         return Talent.objects.filter(id=self.kwargs['pk'])
 
 
-class ReviewRetrieve(generics.RetrieveAPIView):
+class ReviewRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = ReviewWrapperSerializer
 
 
-class RegistrationList(generics.ListCreateAPIView):
+class RegistrationListView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer

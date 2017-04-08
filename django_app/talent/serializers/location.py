@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from talent.models import Talent, Location
 
-
 __all__ = (
     'LocationSerializer',
     'LocationWrapperSerializers',
@@ -12,6 +11,7 @@ __all__ = (
 )
 
 User = get_user_model()
+
 
 class LocationListSerializer(serializers.RelatedField):
     def to_representation(self, value):
@@ -23,6 +23,7 @@ class LocationSerializer(serializers.ModelSerializer):
     specific_location = serializers.SerializerMethodField(read_only=True)
     day = serializers.SerializerMethodField(read_only=True)
     # registered_student = serializers.SerializerMethodField(read_only=True)
+    time = serializers.SerializerMethodField()
 
     class Meta:
         model = Location
@@ -31,9 +32,9 @@ class LocationSerializer(serializers.ModelSerializer):
             'specific_location',
             # 'registered_student',
             'day',
-            'time',
             'extra_fee',
             'extra_fee_amount',
+            'time',
         )
 
     @staticmethod
@@ -48,11 +49,15 @@ class LocationSerializer(serializers.ModelSerializer):
     def get_day(obj):
         return obj.get_day_display()
 
-    # @staticmethod
-    # def get_registered_student(obj):
-    #     # print(obj.registered_student)
-    #     print(obj.registered_student.values_list('name'))
-    #     return obj.registered_student_display()
+    @staticmethod
+    def get_time(obj):
+        return obj.time_list
+
+        # @staticmethod
+        # def get_registered_student(obj):
+        #     # print(obj.registered_student)
+        #     print(obj.registered_student.values_list('name'))
+        #     return obj.registered_student_display()
 
 
 class LocationTalentSerializers(serializers.ModelSerializer):
