@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only=True, source='username')
     received_registrations = serializers.SerializerMethodField(read_only=True)
     sent_registrations = serializers.SerializerMethodField(read_only=True)
+    wish_list = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -37,12 +38,15 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login',
             'received_registrations',
             'sent_registrations',
+            'wish_list',
         )
 
-    def get_user_type(self, obj):
+    @staticmethod
+    def get_user_type(obj):
         return obj.get_user_type_display()
 
-    def get_received_registrations(self, obj):
+    @staticmethod
+    def get_received_registrations(obj):
         """
         location가 참조하는 talent의 tutor_id가
         현재 obj(로그인 유저)와 일치하는 지 판단
@@ -67,17 +71,27 @@ class UserSerializer(serializers.ModelSerializer):
                 break
         return len(list_registered_students)
 
-    def get_sent_registrations(self, obj):
+    @staticmethod
+    def get_sent_registrations(obj):
         """
         location을 순회하면서 registered_student에 현재 유저가 있는지 체크한다.
         있을 경우 리스트에 해당 수업을 추가하고 최종적으로 리스트의 길이를 반환한다.
         """
         locations = Location.objects.all()
-        talent_list = []
+        count = 0
         for location in locations:
             if obj.id in location.registered_student.values_list('id', flat=True):
-                talent_list.append(location.talent_id)
-        return len(talent_list)
+                count += 1
+        return count
+
+    @staticmethod
+    def get_wish_list(obj):
+        talents = Talent.objects.all()
+        count = 0
+        for talent in talents:
+            if obj.id in talent.wishlist_user.values_list('id', flat=True):
+                count += 1
+        return count
 
     def create(self, validated_data):
         user = User.objects.create(
