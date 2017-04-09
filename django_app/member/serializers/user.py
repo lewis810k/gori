@@ -148,3 +148,13 @@ class TutorSerializer(DynamicFieldsModelSerializer):
             'profile_image',
             'cellphone',
         )
+
+
+class ReviewUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'name',
+            'profile_image',
+        )

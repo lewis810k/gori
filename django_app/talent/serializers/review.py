@@ -1,7 +1,7 @@
 from rest_auth.app_settings import serializers
 from rest_framework import serializers
 
-from member.models import GoriUser
+from member.serializers.user import ReviewUserSerializer
 from talent.models import Review
 from talent.models import Talent
 from utils import review_average_rate
@@ -14,14 +14,15 @@ __all__ = (
 
 class ReviewSerializer(serializers.ModelSerializer):
     talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent.title')
-    name = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
+    # name = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
+    user = ReviewUserSerializer()
 
     class Meta:
         model = Review
         fields = (
             'pk',
             'talent',
-            'name',
+            'user',
             'curriculum',
             'readiness',
             'timeliness',
