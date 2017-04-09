@@ -80,9 +80,16 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
         )
 
     def get_registration(self, obj):
+        registrations = []
+        # test, test2 = obj.locations.values_list('registered_student', 'id')
+        for location in obj.locations.values_list('registered_student', 'id'):
+            if None not in location and location not in registrations:
+                registrations.append(location)
+        # print(registrations)
+
         ret = []
-        for student_id, location_id in obj.locations.values_list('registered_student', 'id'):
-            registration = Registration.objects.get(student_id=student_id, talent_location_id=location_id)
+        for student_id, location_id in registrations:
+            registration = Registration.objects.filter(student_id=student_id, talent_location_id=location_id).first()
             sub_ret = collections.OrderedDict()
             sub_ret["pk"] = registration.id
             sub_ret["name"] = registration.student.name

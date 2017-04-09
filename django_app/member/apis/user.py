@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
@@ -35,6 +36,18 @@ class UserProfileView(APIView):
     def patch(self, request, *args, **kwargs):
         user = request.user
         print(request.data)
+        # 유저에 들어갈 필수 정보들이 있는지 체크. 없으면 에러 출력
+        try:
+            user.nickname = request.data['nickname']
+        except MultiValueDictKeyError:
+            ret = {
+                'non_field_errors': [
+                    '필수 항목을 채워주십시오.',
+                ]
+            }
+            return Response(ret)
+
+        user.save()
         # 여기서 request.data로 넘겨받은 값을 수정
         # 수정된 값에 대해 validate
         # save()
@@ -45,7 +58,10 @@ class UserProfileView(APIView):
     def delete(self, request, format=None):
         user = request.user
         user.delete()
-        return Response('delete')
+        ret = {
+            "detail": "Successfully deleted"
+        }
+        return Response(ret)
 
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
