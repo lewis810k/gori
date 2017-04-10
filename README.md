@@ -1083,6 +1083,12 @@ wish_list|위시리스트 수업 수|Int
 
 - 검색, 필터링에 대한 Url Params 추가
 
+Field|Description|Type
+---|---|---
+| title    | 수업 제목으로 검색                 |String
+| region   | 지역 필터링 (지역에 해당하는 key값)    |String
+| category | 카테고리 필터링 (카테고리에 해당하는 key값) |String
+
 
 ## 수정사항_001
 
