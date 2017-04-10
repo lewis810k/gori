@@ -17,6 +17,7 @@ class Talent(models.Model):
         ('SPO', '스포츠'),
         ('JOB', '전공 / 취업'),
         ('HOB', '이색취미'),
+        ('ETC', '기타'),
     )
     TYPE_CHOICE = (
         (0, '1:1 수업'),
