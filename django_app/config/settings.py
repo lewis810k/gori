@@ -145,7 +145,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 
     'member',
-    'talent',
+    'talent.apps.ClassConfig',
 ]
 
 MIDDLEWARE = [
