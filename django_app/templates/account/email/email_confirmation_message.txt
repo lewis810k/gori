@@ -1,0 +1,10 @@
+{% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}안녕하세요 GORI입니다
+
+{{ user_display }} 에 대해 이메일 인증이 전송되었습니다.
+
+{{ activate_url }} 에서 인증을 완료하세요.
+{% endblocktrans %}{% endautoescape %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+감사합니다
+team GORI
+{% endblocktrans %}
