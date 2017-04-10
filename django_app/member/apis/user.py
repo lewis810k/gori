@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 
 from member.models import Tutor
 from member.serializers import TutorSerializer
-from member.serializers import UserSerializer, CustomLoginSerializer
+from member.serializers import UserSerializer
+from member.serializers.login import CustomRegisterSerializer
 from talent.serializers import MyRegistrationWrapperSerializer
 from talent.serializers.wish_list import MyWishListSerializer
 
@@ -81,7 +82,7 @@ class TutorProfileView(APIView):
 
 
 class CreateDjangoUserView(RegisterView):
-    serializer_class = CustomLoginSerializer
+    serializer_class = CustomRegisterSerializer
 
 
 class MyWishListView(APIView):

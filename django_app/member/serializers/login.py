@@ -1,68 +1,126 @@
-from allauth.account.adapter import get_adapter
-from allauth.account.utils import setup_user_email
 from allauth.socialaccount.helpers import complete_social_login
-
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
 from rest_framework import serializers
 
+try:
+    from allauth.account import app_settings as allauth_settings
+    from allauth.utils import (email_address_exists,
+                               get_username_max_length)
+    from allauth.account.adapter import get_adapter
+    from allauth.account.utils import setup_user_email
+except ImportError:
+    raise ImportError("allauth needs to be added to INSTALLED_APPS.")
+
 __all__ = (
-    'CustomLoginSerializer',
+    # 'CustomLoginSerializer',
     'CustomSocialLoginSerializer',
+    'CustomRegisterSerializer',
 )
 
 User = get_user_model()
 
 
-class CustomLoginSerializer(RegisterSerializer):
+class CustomRegisterSerializer(serializers.Serializer):
+    username = serializers.CharField(
+        max_length=get_username_max_length(),
+        min_length=allauth_settings.USERNAME_MIN_LENGTH,
+        required=allauth_settings.USERNAME_REQUIRED
+    )
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
     name = serializers.CharField(write_only=True)
-    #
-    # def validate_name(self, name):
-    #     name = get_adapter().clean_username(name)
-    #     return name
+
+    def validate_username(self, username):
+        username = get_adapter().clean_username(username)
+        return username
+
+    def validate_password1(self, password):
+        return get_adapter().clean_password(password)
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError(_("The two password fields didn't match."))
+        return data
+
+    def custom_signup(self, request, user):
+        pass
 
     def get_cleaned_data(self):
         return {
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
-            'password2': self.validated_data.get('password2', ''),
-            'name': self.validated_data.get('name', ''),
             'email': self.validated_data.get('email', '')
         }
 
     def save(self, request):
-        print('1')
         adapter = get_adapter()
-        print('2')
         user = adapter.new_user(request)
-        print(user)
         if 'name' in request.POST:
             user.name = request.POST['name']
-        print(user.name)
-            # else:
-            #     raise Exception('test')
-            #     # return HttpResponse('test')
-            # raise MultiValueDictKeyError('test')
-        #
-        # try:
-        #     user.name = request.POST['name']
-        # except MultiValueDictKeyError as ME:
-        #     print(ME)
-        # finally:
-        #     raise ValueError('could not find {} in {}'.format(char, char_string))
-        print('3')
         self.cleaned_data = self.get_cleaned_data()
-        print(self.cleaned_data)
-        print('4')
-        print(request, user)
         adapter.save_user(request, user, self)
-        print('5')
         self.custom_signup(request, user)
-        setup_user_email(request, user, [])
-        print('6')
+        print('data: ', request.data)
+        print(user)
+        user.email = request.data['username']
+        user.save()
+        # setup_user_email(request, user, [])
         return user
+
+
+#
+# class CustomLoginSerializer(RegisterSerializer):
+#     name = serializers.CharField(write_only=True)
+#     email = serializers.EmailField(required=False)
+#
+#     #
+#     # def validate_name(self, name):
+#     #     name = get_adapter().clean_username(name)
+#     #     return name
+#
+#     def get_cleaned_data(self):
+#         return {
+#             'username': self.validated_data.get('username', ''),
+#             'password1': self.validated_data.get('password1', ''),
+#             'password2': self.validated_data.get('password2', ''),
+#             'name': self.validated_data.get('name', ''),
+#             'email': self.validated_data.get('email', '')
+#         }
+#
+#     def save(self, request):
+#         print('1')
+#         adapter = get_adapter()
+#         print('2')
+#         user = adapter.new_user(request)
+#         print(user)
+#         if 'name' in request.POST:
+#             user.name = request.POST['name']
+#         print(user.name)
+#         # else:
+#         #     raise Exception('test')
+#         #     # return HttpResponse('test')
+#         # raise MultiValueDictKeyError('test')
+#         #
+#         # try:
+#         #     user.name = request.POST['name']
+#         # except MultiValueDictKeyError as ME:
+#         #     print(ME)
+#         # finally:
+#         #     raise ValueError('could not find {} in {}'.format(char, char_string))
+#         print('3')
+#         self.cleaned_data = self.get_cleaned_data()
+#         print(self.cleaned_data)
+#         print('4')
+#         print(request, user)
+#         adapter.save_user(request, user, self)
+#         print('5')
+#         self.custom_signup(request, user)
+#         setup_user_email(request, user, [])
+#         print('6')
+#         return user
 
 
 class CustomSocialLoginSerializer(SocialLoginSerializer):

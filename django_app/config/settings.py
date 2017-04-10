@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-DEBUG = False
+DEBUG = True
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = True
@@ -100,6 +100,7 @@ CALLBACK_URL = '/admin/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
