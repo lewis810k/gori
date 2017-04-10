@@ -58,7 +58,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
 
 
 class TalentListSerializer(serializers.ModelSerializer):
-    tutor = TutorSerializer()
+    tutor = TutorSerializer(read_only=True)
     category = serializers.SerializerMethodField(read_only=True)
     # category = serializers.ChoiceField(choices=Talent.CATEGORY, write_only=True)
     # type_name = serializers.SerializerMethodField(read_only=True)
@@ -128,8 +128,9 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
         depth = 1
         model = Talent
         fields = (
-            'tutor',
+            'pk',
             'title',
+            'tutor',
             'category',
             'type',
             'cover_image',
@@ -161,21 +162,22 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
 
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
-    class_image = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
-    curriculum = CurriculumSerializer(many=True, source='curriculum_set', read_only=False, )
+    class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
+    curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=False, )
     category = serializers.SerializerMethodField(read_only=True)
     average_rate = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     # category = serializers.ChoiceField(choices=Talent.CATEGORY)
-    location = LocationSerializer(many=True, source='locations')
+    locations = LocationSerializer(many=True)
     type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         depth = 1
         model = Talent
         fields = (
-            'tutor',
+            'pk',
             'title',
+            'tutor',
             # 'category_name',
             'category',
             'type',
@@ -186,13 +188,13 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'class_info',
             'video1',
             'video2',
-            'location',
+            'locations',
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
             'is_soldout',
-            'class_image',
-            'curriculum',
+            'class_images',
+            'curriculums',
         )
 
     def get_category(self, obj):

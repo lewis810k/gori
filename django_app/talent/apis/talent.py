@@ -1,18 +1,18 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
+from rest_framework import permissions
 
 from talent.models import Talent, Curriculum, ClassImage, Registration
 from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, \
-    CurriculumWrapperSerializers, TalentShortDetailSerializer
+    CurriculumWrapperSerializer, TalentShortDetailSerializer
 from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
 from talent.serializers import ReviewWrapperSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
 from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
-from utils.pagination import TalentPagination
 
 __all__ = (
     # talent
-    'TalentListView',
+    'TalentListCreateView',
     # detail - all
     'TalentDetailView',
     # detail - fragments
@@ -38,11 +38,15 @@ User = get_user_model()
 
 
 # talent 전체 api
-class TalentListView(generics.ListAPIView):
+class TalentListCreateView(generics.ListCreateAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentListSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     # pagination_class = TalentPagination
     lookup_field = 'pk'
+
+    def perform_create(self, serializer):
+        serializer.save(tutor=self.request.user.tutor)
 
 
 class LocationRetrieveView(generics.RetrieveAPIView):
@@ -78,9 +82,14 @@ class ClassImageRetrieveView(generics.RetrieveAPIView):
     serializer_class = ClassImageWrapperSerializers
 
 
+class CurriculumCreateView(generics.CreateAPIView):
+    queryset = Curriculum.objects.all()
+    serializer_class = CurriculumSerializer
+
+
 class CurriculumRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
-    serializer_class = CurriculumWrapperSerializers
+    serializer_class = CurriculumWrapperSerializer
 
 
 class TalentShortDetailView(generics.RetrieveAPIView):

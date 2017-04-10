@@ -67,7 +67,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
 class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    registration = serializers.SerializerMethodField(read_only=True)
+    registrations = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -76,10 +76,11 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'type',
-            'registration',
+            'registrations',
         )
 
-    def get_registration(self, obj):
+    @staticmethod
+    def get_registrations(obj):
         registrations = []
         # test, test2 = obj.locations.values_list('registered_student', 'id')
         for location in obj.locations.values_list('registered_student', 'id'):

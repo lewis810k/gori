@@ -19,16 +19,16 @@ class ClassImageSerializer(serializers.ModelSerializer):
 class ClassImageWrapperSerializers(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    class_image = ClassImageSerializer(many=True, source='classimage_set')
+    class_images = ClassImageSerializer(many=True, source='classimage_set')
 
     class Meta:
         model = Talent
         fields = (
-            'id',
+            'pk',
             'title',
             'category',
             'type',
-            'class_image',
+            'class_images',
         )
 
     @staticmethod
