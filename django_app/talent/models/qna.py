@@ -11,4 +11,9 @@ __all__ = (
 
 class Question(models.Model):
     talent = models.ForeignKey(Talent)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    quesetion = models.CharField(max_length=200)
+    created_date = models.DateTimeField(auto_now_add=True)
 
+class Answer(models.Model):
+    pass
