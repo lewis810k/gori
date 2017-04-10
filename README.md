@@ -22,7 +22,7 @@
 - Talent
 	- [Talent List](#talent-list)
 	- [Talent Detail Retrieve All](#talent-detail-retrieve-all)  
-	 ------- 
+	- . 
 	- [Talent Detail Retrieve Fragments](#talent-detail-retrieve-fragments)
 	- [Talent Detail Short Retrieve](#talent-detail-short-retrieve)
 	- [Talent Location Retrieve](#talent-location-retrieve)
