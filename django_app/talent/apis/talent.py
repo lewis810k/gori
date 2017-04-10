@@ -17,21 +17,15 @@ __all__ = (
     'TalentDetailView',
     # detail - fragments
     'TalentShortDetailView',
-    'CurriculumListView',
     'ClassImageListView',
-    'LocationRetrieveView',
     'ClassImageRetrieveView',
-    'CurriculumRetrieveView',
     'ReviewRetrieveView',
 
     # registration
-    'TalentRegistrationRetrieveView',
 
     # 'MyWishListRetrieve',
     # 'MyRegistrationList',
     # 'RegistrationList',
-
-    # 'LocationList',
 )
 
 User = get_user_model()
@@ -49,14 +43,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
         serializer.save(tutor=self.request.user.tutor)
 
 
-class LocationRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = LocationWrapperSerializers
-
-
-class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = TalentRegistrationWrapperSerializer
     #
     # def get_queryset(self):
     #     return Talent.objects.filter(pk=self.kwargs['pk'])
@@ -82,16 +68,6 @@ class ClassImageRetrieveView(generics.RetrieveAPIView):
     serializer_class = ClassImageWrapperSerializers
 
 
-class CurriculumCreateView(generics.CreateAPIView):
-    queryset = Curriculum.objects.all()
-    serializer_class = CurriculumSerializer
-
-
-class CurriculumRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = CurriculumWrapperSerializer
-
-
 class TalentShortDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentShortDetailSerializer
@@ -103,9 +79,7 @@ class TalentDetailView(generics.RetrieveAPIView):
     serializer_class = TalentDetailSerializer
 
 
-# class LocationList(generics.ListAPIView):
-#     queryset = Location.objects.all()
-#     serializer_class = LocationSerializer
+
 
 # def create(self, request, *args, **kwargs):
 #     serializer = self.get_serializer(data=request.data)
@@ -116,12 +90,6 @@ class TalentDetailView(generics.RetrieveAPIView):
 #     )
 #     headers = self.get_success_headers(serializer.data)
 #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-class CurriculumListView(generics.ListCreateAPIView):
-    queryset = Curriculum.objects.all()
-    serializer_class = CurriculumSerializer
-
 
 class ClassImageListView(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()

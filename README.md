@@ -16,10 +16,22 @@
 - Member
 	- [Signup](#signup)
 	- [Login](#login)
+	- [Facebook Login](#facebook-login)
 	- [Logout](#logout)
 	- [UserDetail](#userdetail)
 - Talent
 	- [Talent List](#talent-list)
+	- [Talent Detail Retrieve All](#talent-detail-retrieve-all)  
+	 ------- 
+	- [Talent Detail Retrieve Fragments](#talent-detail-retrieve-fragments)
+	- [Talent Detail Short Retrieve](#talent-detail-short-retrieve)
+	- [Talent Location Retrieve](#talent-location-retrieve)
+	- [Talent Curriculum Retrieve](#talent-curriculum-retrieve)
+	- [Talent Class Image Retrieve](#talent-class-image-retrieve)
+	- [Talent Review Retrieve](#talent-review-retrieve)
+	- [Talent Registration Retrieve](#talent-registration-retrieve)
+
+- [수정내용](#수정)
 
 - [수정내용](#수정)
 
@@ -159,11 +171,12 @@ Token Key Value
 {
   "password2": [
     "이 항목을 채워주십시오."
+  ],
+  "name": [
+    "이 항목을 채워주십시오."
   ]
 }
 ```
-
-name 필드에 대한 에러메시지 커스터마이징 필요.
 
 ---
 
@@ -217,7 +230,65 @@ Token Key Value
 }
 ```
 
----
+## Facebook Login
+
+### URL
+
+`/member/fb_login/`
+
+### Method
+
+`POST`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+Key|Value
+---|---
+access_token|Token Key Value
+
+### Success Response
+
+- Code: 200
+- Content
+
+Token Key Value
+
+```Json
+{
+  "key": "b8a2ce39a6515dfe26982adbfdb90f59a0c2d653"
+}
+```
+
+### Error Response
+- Code: 400
+	- Reason
+		- 필수항목 누락
+		- 잘못된 토큰 정보
+	- Content
+
+```Json
+{
+  "non_field_errors": [
+    "Incorrect input. access_token is required."
+  ]
+}
+```
+
+```Json
+{
+  "non_field_errors": [
+    "Incorrect value"
+  ]
+}
+```
 
 ## Logout
 
@@ -255,8 +326,22 @@ None
 ```
 
 ### Error Response
-rest-auth에서 자동적으로 Error에 대한 처리를 하지 않기 때문에 커스터마이징 필요
+- Code: 401
+	- Reason
+		- 만료되었거나 잘못된 토큰
+	- Content
 
+```Json
+{
+  "detail": "토큰이 유효하지 않습니다."
+}
+```
+
+```Json
+{
+  "detail": "토큰이 제공되지 않았습니다."
+}
+```
 
 ## User Detail Retrieve
 
@@ -300,7 +385,13 @@ None
   "profile_image": null,
   "joined_date": "2017-04-05T10:04:55.576160Z",
   "last_login": "2017-04-06T09:37:40.312932Z",
+<<<<<<< HEAD
   "received_registrations": 0
+=======
+  "received_registrations": 0,
+  "sent_registrations": 0,
+  "wish_list": 0
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 }
 ```
 
@@ -408,17 +499,561 @@ None
       "regions": [
         "홍익대",
         "용산"
+<<<<<<< HEAD
+=======
       ]
     }
   ]
 }
 ```
 
+## Talent Detail Retrieve All
+
+### URL
+
+`/talent/detail-all/<talent_pk>/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```Json
+{
+  "pk": 1,
+  "title": "네일 고수가 되실 수 있어요",
+  "tutor": {
+    "pk": 6,
+    "user_id": "yuna@gmail.com",
+    "name": "김유나",
+    "nickname": "유나짱",
+    "is_verified": true,
+    "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/nail.jpeg",
+    "cellphone": "01073858237"
+  },
+  "category": "헬스 / 뷰티",
+  "type": "1:1 수업",
+  "average_rate": 0,
+  "review_count": 0,
+  "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/02.jpeg",
+  "tutor_info": "경력 10년차 배테랑입니다",
+  "class_info": "다양한 네일 아트 기술을 배우실 수 있어요",
+  "video1": "",
+  "video2": "",
+  "locations": [
+    {
+      "region": "강남",
+      "specific_location": "협의 후 결정",
+      "day": "월",
+      "extra_fee": "Y",
+      "extra_fee_amount": "3만원",
+      "time": [
+        "14:00-18:00"
+      ]
+    },
+    {
+      "region": "신촌",
+      "specific_location": "협의 후 결정",
+      "day": "화",
+      "extra_fee": "N",
+      "extra_fee_amount": "",
+      "time": [
+        "16:00-22:00"
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
+      ]
+    }
+  ],
+  "price_per_hour": 13000,
+  "hours_per_class": 2,
+  "number_of_class": 4,
+  "is_soldout": false,
+  "class_images": [],
+  "curriculums": [
+    {
+      "information": "1주차는 간단한 풀컬러 네일 수업입니다",
+      "image": null
+    },
+    {
+      "information": "2주차는 프렌치 네일",
+      "image": null
+    },
+    {
+      "information": "3주차는 젤네일",
+      "image": null
+    },
+    {
+      "information": "4주차는 다양한 네일 아트(파티클 붙이기 등)",
+      "image": null
+    }
+  ]
+}
+```
+
+<<<<<<< HEAD
 ---
+=======
+### Error Response
+
+- Code: 404
+  - Reason: Invalid Talent pk
+  - Content
+
+```Json
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Detail Retrieve Fragments
+
+## Talent Detail Short Retrieve
+
+### URL
+
+`/talent/detail/<talent_pk>/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```Json
+{
+  "pk": 3,
+  "title": "C언어 어려워도 쉽게 가르쳐드려요",
+  "tutor": {
+    "pk": 10,
+    "user_id": "jisungpark@naver.com",
+    "name": "박지성",
+    "nickname": "컴신",
+    "is_verified": true,
+    "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/jisung.jpeg",
+    "cellphone": "01056463664"
+  },
+  "category": "컴퓨터",
+  "type": "1:1 수업",
+  "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/%E1%84%8A%E1%85%B5%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A5.png",
+  "tutor_info": "컴공 마스터입니다",
+  "class_info": "c 언어의 기초부터 차근차근 가르쳐드리겠습니다. 교재 따로 필요없이 제가 준비해가는 자료를 기반으로 배우시게 됩니다.",
+  "average_rate": 3.6,
+  "review_count": 0,
+  "video1": "",
+  "video2": "",
+  "price_per_hour": 12000,
+  "hours_per_class": 2,
+  "number_of_class": 8,
+  "is_soldout": false
+}
+```
+
+### Error Response
+
+- Code: 404
+  - Reason: Invalid Talent pk
+  - Content
+
+```Json
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Location Retrieve
+
+### URL
+
+`/talent/detail/<talent_pk>/location/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```Json
+{
+  "pk": 1,
+  "title": "네일 고수가 되실 수 있어요",
+  "category": "헬스 / 뷰티",
+  "type": "1:1 수업",
+  "locations": [
+    {
+      "region": "강남",
+      "specific_location": "협의 후 결정",
+      "day": "월",
+      "extra_fee": "Y",
+      "extra_fee_amount": "3만원",
+      "time": [
+        "14:00-18:00"
+      ]
+    },
+    {
+      "region": "신촌",
+      "specific_location": "협의 후 결정",
+      "day": "화",
+      "extra_fee": "N",
+      "extra_fee_amount": "",
+      "time": [
+        "16:00-22:00"
+      ]
+    }
+  ]
+}
+```
+
+### Error Response
+
+- Code: 404
+  - Reason: Invalid Talent pk
+  - Content
+
+```Json
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Curriculum Retrieve
+
+### URL
+
+`/talent/detail/<talent_pk>/curriculum/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```Json
+{
+  "pk": 1,
+  "title": "네일 고수가 되실 수 있어요",
+  "category": "헬스 / 뷰티",
+  "type": "1:1 수업",
+  "curriculums": [
+    {
+      "information": "1주차는 간단한 풀컬러 네일 수업입니다",
+      "image": "https://projectgori.s3.amazonaws.com/media/talent/curriculum/KakaoTalk_Photo_2017-03-29-23-05-12_76.jpeg"
+    },
+    {
+      "information": "2주차는 프렌치 네일",
+      "image": null
+    },
+    {
+      "information": "3주차는 젤네일",
+      "image": null
+    },
+    {
+      "information": "4주차는 다양한 네일 아트(파티클 붙이기 등)",
+      "image": null
+    }
+  ]
+}
+```
+
+### Error Response
+
+- Code: 404
+  - Reason: Invalid Talent pk
+  - Content
+
+```Json
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Class Image Retrieve
+
+### URL
+
+`/talent/detail/<talent_pk>/class-image/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```Json
+{
+  "pk": 1,
+  "title": "네일 고수가 되실 수 있어요",
+  "category": "헬스 / 뷰티",
+  "type": "1:1 수업",
+  "class_images": [
+    {
+      "image": "https://projectgori.s3.amazonaws.com/media/talent/extra_images/%E1%84%91%E1%85%B3%E1%84%85%E1%85%A6%E1%86%AB%E1%84%8E%E1%85%B5_%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AF.jpg"
+    }
+  ]
+}
+```
+
+### Error Response
+
+- Code: 404
+  - Reason: Invalid Talent pk
+  - Content
+
+```Json
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Review Retrieve
+
+### URL
+
+`talent/detail/<talent_pk>/review/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```
+{
+  "pk": 4,
+  "title": "봉쥬르~불어 어렵지 않아요~",
+  "category": "외국어",
+  "type": "1:1 수업",
+  "average_rate": 3.6,
+  "review_count": 1,
+  "reviews": [
+    {
+      "pk": 1,
+      "talent": "봉쥬르~불어 어렵지 않아요~",
+      "user": {
+        "pk": 9,
+        "name": "최소진",
+        "profile_image": null
+      },
+      "curriculum": 3,
+      "readiness": 2,
+      "timeliness": 4,
+      "delivery": 4,
+      "friendliness": 5,
+      "created_date": "2017-04-07T12:19:45.725675Z",
+      "comment": ""
+    }
+  ]
+}
+```
+
+### Error Response
+- Code: 404
+	- Reason: Invalid Talent pk
+	- Content
+
+```
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+## Talent Registration Retrieve
+
+### URL
+
+`talent/detail/<talent_pk>/registration/`
+
+### Method
+
+`GET`
+
+### Header
+
+None
+
+### URL Params
+
+None
+
+### Data Params
+
+None
+
+### Success Response
+
+- Code: 200
+- Content
+
+```
+{
+  "pk": 3,
+  "title": "C언어 어려워도 쉽게 가르쳐드려요",
+  "category": "컴퓨터",
+  "type": "1:1 수업",
+  "registrations": [
+    {
+      "pk": 1,
+      "name": "a.gori",
+      "talent_location": "홍익대",
+      "student_level": "입문자",
+      "experience_length": 3,
+      "is_confirmed": false,
+      "joined_date": "2017-04-09T06:44:44.335378Z",
+      "message_to_tutor": "초보자입니다. 잘 부탁드립니다."
+    }
+  ]
+}
+```
+
+### Error Response
+- Code: 404
+	- Reason: Invalid Talent pk
+	- Content
+
+```
+{
+  "detail": "찾을 수 없습니다."
+}
+```
+
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 
 
 # 수정
 
+<<<<<<< HEAD
+=======
+## 수정사항_002
+
+- 수정 날짜 : 2017. 04. 10.
+- 수정 내용 
+	- API 추가
+		- Facebook Login 
+		- Talent Detail Retrieve All 
+		- Talent Detail Retrieve Fragments 
+		- Talent Detail Short Retrieve 
+		- Talent Location Retrieve 
+		- Talent Curriculum Retrieve 
+		- Talent Class Image Retrieve 
+		- Talent Review Retrieve 
+		- Talent Registration Retrieve 
+	- API 수정
+
+### # API 수정 내용
+
+### Login
+
+- Method 변경 : `GET` -> `POST`
+- Params 변경 : `Url Params` -> `Data Params`
+
+### Logout
+
+- Error Response 추가
+
+### Signup
+
+- Custom 필드에 대한 Error Response 추가
+
+### User Detail Retrieve
+
+- 필드 추가 
+
+Field|Description|Type
+---|---|---
+sent_registrations|보낸 신청서 수|Int
+wish_list|위시리스트 수업 수|Int
+
+
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 ## 수정사항_001
 
 - 수정 날짜 : 2017. 04. 07.
