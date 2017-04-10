@@ -30,3 +30,4 @@ class Registration(models.Model):
     def __str__(self):
         return '{} 님  {}: {} 수업을 신청하였습니다'.format(self.student.username, self.talent_location.talent.pk,
                                                  self.talent_location.talent.title)
+

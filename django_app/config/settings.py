@@ -15,6 +15,8 @@ import os
 DEBUG = True
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
+# STORAGE_S3 = True
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 STORAGE_S3 = False
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
@@ -143,7 +145,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 
     'member',
-    'talent',
+    'talent.apps.ClassConfig',
 ]
 
 MIDDLEWARE = [
