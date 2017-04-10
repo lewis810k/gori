@@ -18,6 +18,8 @@ DEBUG = os.environ.get('MODE') == 'DEBUG'
 # STORAGE_S3 = False
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # STORAGE_S3 = True
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# DB_RDS = True
 print(DEBUG)
 print(STORAGE_S3)
 
@@ -98,6 +100,7 @@ CALLBACK_URL = '/admin/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -111,7 +114,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    # SearchFilter 사용할 때 param 키워드 default "search"를 "title"로 바꿀때 사용
+    # 'SEARCH_PARAM': 'title',
 }
 
 # Application definition
