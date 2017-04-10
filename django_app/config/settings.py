@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-# DEBUG = True
-DEBUG = os.environ.get('MODE') == 'DEBUG'
+DEBUG = True
+STORAGE_S3 = False
+# DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = True
-STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
-# STORAGE_S3 = False
+# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
 print(DEBUG)
@@ -92,7 +92,7 @@ TEMPLATES_DIR = 'templates'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
-SITE_ID = 2
+SITE_ID = 1
 
 LOGIN_URL = '/admin/'
 CALLBACK_URL = '/admin/'

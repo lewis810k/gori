@@ -26,7 +26,7 @@ __all__ = (
 
     # registration
     'TalentRegistrationRetrieveView',
-
+    # 'Qnalist',
     # 'MyWishListRetrieve',
     # 'MyRegistrationList',
     # 'RegistrationList',
@@ -144,3 +144,7 @@ class ReviewRetrieveView(generics.RetrieveAPIView):
 class RegistrationListView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
+
+    # class Qnalist(generics.ListAPIView):
+    #     queryset = Qna.objects.all()
+    #     serializer_class = QnaSerializer
