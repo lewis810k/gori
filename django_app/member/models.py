@@ -15,7 +15,6 @@ class GoriUser(AbstractUser):
     cellphone = models.CharField(max_length=11, blank=True)
     profile_image = models.ImageField(upload_to='member/profile_image',
                                       blank=True,
-                                      storage=OverwriteStorage(),
                                       )
     user_type = models.CharField(choices=USER_TYPE, max_length=1, default='d')
     joined_date = models.DateTimeField(auto_now_add=True)
