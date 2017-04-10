@@ -175,7 +175,7 @@ name 필드에 대한 에러메시지 커스터마이징 필요.
 
 ### Method
 
-`GET`
+`POST`
 
 ### Header
 
@@ -183,14 +183,14 @@ None
 
 ### URL Params
 
+None
+
+### Data Params
+
 key|Description|Type
 ---|---|---
 **username**|사용자 이메일|String
 **password**|패스워드|String
-
-### Data Params
-
-None
 
 ### Success Response
 - Code: 200
