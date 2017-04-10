@@ -109,7 +109,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    # SearchFilter 사용할 때 param 키워드 default "search"를 "title"로 바꿀때 사용
+    # 'SEARCH_PARAM': 'title',
 }
 
 # Application definition
