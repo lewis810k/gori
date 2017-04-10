@@ -68,7 +68,7 @@ class ClassImageAdmin(admin.ModelAdmin):
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'location', 'tutor', 'students_list')
+    list_display = ('pk', 'title', 'category','location', 'tutor', 'students_list',)
     inlines = [LocationInline, ClassImageInline, CurriculumInline, ]
 
     def tutor(self, talent):
