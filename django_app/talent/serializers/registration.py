@@ -67,7 +67,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
 class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    registration = serializers.SerializerMethodField(read_only=True)
+    registrations = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -76,13 +76,21 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'type',
-            'registration',
+            'registrations',
         )
 
-    def get_registration(self, obj):
+    @staticmethod
+    def get_registrations(obj):
+        registrations = []
+        # test, test2 = obj.locations.values_list('registered_student', 'id')
+        for location in obj.locations.values_list('registered_student', 'id'):
+            if None not in location and location not in registrations:
+                registrations.append(location)
+        # print(registrations)
+
         ret = []
-        for student_id, location_id in obj.locations.values_list('registered_student', 'id'):
-            registration = Registration.objects.get(student_id=student_id, talent_location_id=location_id)
+        for student_id, location_id in registrations:
+            registration = Registration.objects.filter(student_id=student_id, talent_location_id=location_id).first()
             sub_ret = collections.OrderedDict()
             sub_ret["pk"] = registration.id
             sub_ret["name"] = registration.student.name

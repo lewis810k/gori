@@ -20,7 +20,8 @@ class RegistrationInline(admin.TabularInline):
 
 
 class RegistrationAdmin(admin.ModelAdmin):
-    list_display = ('student_name',
+    list_display = ('pk',
+                    'student_name',
                     'title',
                     'location',
                     'joined_date',
@@ -67,7 +68,7 @@ class ClassImageAdmin(admin.ModelAdmin):
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'location', 'tutor', 'students_list')
+    list_display = ('pk', 'title', 'location', 'tutor', 'students_list')
     inlines = [LocationInline, ClassImageInline, CurriculumInline, ]
 
     def tutor(self, talent):
@@ -100,10 +101,31 @@ class LocationAdmin(admin.ModelAdmin):
         # return student
 
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'talent', 'user_name', 'created_date', 'comment_summary')
+    list_filter = ('talent',)
+    list_display_links = ('talent',)
+
+    def user_name(self, review):
+        return review.user.name
+
+    user_name.short_description = 'user'
+
+
+class WishAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'talent', 'user_name', 'added_date')
+    list_filter = ('talent',)
+
+    def user_name(self, wishlist):
+        return wishlist.user.name
+
+    user_name.short_description = 'user'
+
+
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Talent, TalentAdmin)
 admin.site.register(ClassImage, ClassImageAdmin)
 admin.site.register(Registration, RegistrationAdmin)
-admin.site.register(WishList)
+admin.site.register(WishList, WishAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
-admin.site.register(Review)
+admin.site.register(Review, ReviewAdmin)

@@ -85,7 +85,7 @@ class LocationWrapperSerializers(serializers.ModelSerializer):
     class Meta:
         model = Talent
         fields = (
-            'id',
+            'pk',
             'title',
             'category',
             'type',

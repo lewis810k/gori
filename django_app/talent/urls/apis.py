@@ -7,7 +7,7 @@ app_name = 'talent'
 urlpatterns = [
     # url(r'^list/location/$', apis.LocationList.as_view()),
     # url(r'^wishlist/$', apis.WishList.as_view()),
-    url(r'^list/$', apis.TalentListView.as_view(), ),
+    url(r'^list/$', apis.TalentListCreateView.as_view(), ),
     url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentShortDetailView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/location/$', apis.LocationRetrieveView.as_view()),

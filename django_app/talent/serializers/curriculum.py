@@ -4,7 +4,7 @@ from talent.models import Curriculum, Talent
 
 __all__ = (
     'CurriculumSerializer',
-    'CurriculumWrapperSerializers',
+    'CurriculumWrapperSerializer',
 )
 
 
@@ -17,19 +17,19 @@ class CurriculumSerializer(serializers.ModelSerializer):
         )
 
 
-class CurriculumWrapperSerializers(serializers.ModelSerializer):
+class CurriculumWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    curriculum = CurriculumSerializer(many=True, source='curriculum_set')
+    curriculums = CurriculumSerializer(many=True, source='curriculum_set')
 
     class Meta:
         model = Talent
         fields = (
-            'id',
+            'pk',
             'title',
             'category',
             'type',
-            'curriculum',
+            'curriculums',
         )
 
     @staticmethod

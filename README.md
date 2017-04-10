@@ -1,3 +1,8 @@
+# Gori Project API Documentation
+
+굵은 글씨로 표시된 Key는 필수값  
+사용자 인증은 Token Authorization을 사용하며, Header의 Authorizationkey에 Token [Token key value]value를 추가하여 이용한다.
+
 ## Repository
 
 [https://github.com/lewis810k/gori](https://github.com/lewis810k/gori)
@@ -15,6 +20,8 @@
 	- [UserDetail](#userdetail)
 - Talent
 	- [Talent List](#talent-list)
+
+- [수정내용](#수정)
 
 ## Obtain Token
 
@@ -168,7 +175,7 @@ name 필드에 대한 에러메시지 커스터마이징 필요.
 
 ### Method
 
-`GET`
+`POST`
 
 ### Header
 
@@ -176,14 +183,14 @@ None
 
 ### URL Params
 
+None
+
+### Data Params
+
 key|Description|Type
 ---|---|---
 **username**|사용자 이메일|String
 **password**|패스워드|String
-
-### Data Params
-
-None
 
 ### Success Response
 - Code: 200
@@ -281,17 +288,19 @@ None
 
 ```Json
 {
-  "pk": 2,
-  "user_id": "admin",
-  "name": "어드민",
+  "pk": 5,
+  "user_id": "y.gori",
+  "name": "조영나",
+  "nickname": "",
+  "cellphone": "",
   "user_type": "Django",
+  "is_tutor": false,
   "is_staff": true,
   "is_active": true,
-  "cellphone": "01012345678",
-  "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/article.jpg",
-  "joined_date": "2017-03-30T08:45:41.606558Z",
-  "is_tutor": false,
-  "last_login": "2017-04-04T09:09:25Z"
+  "profile_image": null,
+  "joined_date": "2017-04-05T10:04:55.576160Z",
+  "last_login": "2017-04-06T09:37:40.312932Z",
+  "received_registrations": 0
 }
 ```
 
@@ -325,7 +334,7 @@ None
 
 Key|Value
 ---|---
-limit|한 번에 보여줄 아이템 갯수
+limit|한 번에 보여줄 아이템 수
 
 > 한 번에 모든 아이템을 반환하려면 limit를 입력하지 않는다.
 
@@ -341,87 +350,110 @@ None
 ```Json
 {
   "count": 5,
-  "next": "http://localhost:8000/api/talent/list/?limit=3&offset=3",
+  "next": "http://mozzi.co.kr/api/talent/list/?limit=2&offset=2",
   "previous": null,
   "results": [
     {
-      "pk": 1,
+      "pk": 2,
+      "title": "4주만 몸짱을 만들어 드립니다~",
+      "category": "스포츠",
+      "type": "그룹 수업",
       "tutor": {
-        "pk": 2,
-        "user_id": "admin",
-        "name": "어드민",
-        "nickname": "",
-        "is_verified": false,
-        "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/article.jpg",
-        "cellphone": "01012345678"
+        "pk": 8,
+        "user_id": "suji@gmail.com",
+        "name": "박수지",
+        "nickname": "건강지킴이",
+        "is_verified": true,
+        "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/%E1%84%8B%E1%85%A8%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%92%E1%85%AA.jpeg",
+        "cellphone": ""
       },
-      "title": "파이썬 장고",
-      "category_name": "컴퓨터",
-      "type_name": "그룹 수업",
-      "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/article.jpg",
-      "price_per_hour": 1,
+      "is_school": false,
+      "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/%E1%84%92%E1%85%A2%E1%86%AF%E1%84%89%E1%85%B3.jpeg",
+      "price_per_hour": 12000,
       "hours_per_class": 1,
-      "number_of_class": 1,
+      "number_of_class": 8,
       "is_soldout": false,
-      "created_date": "2017-03-31T08:51:55.257701Z",
+      "created_date": "2017-04-05T11:29:52.728809Z",
+      "average_rate": 0,
       "review_count": 0,
-      "locations": [
-        "강남",
+      "registration_count": 0,
+      "regions": [
         "종로"
       ]
     },
     {
-      "pk": 2,
-      "tutor": {
-        "pk": 2,
-        "user_id": "admin",
-        "name": "어드민",
-        "nickname": "",
-        "is_verified": false,
-        "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/article.jpg",
-        "cellphone": "01012345678"
-      },
-      "title": "영화보자",
-      "category_name": "미술 / 음악",
-      "type_name": "원데이 수업",
-      "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/beuxnVcF.jpg",
-      "price_per_hour": 1,
-      "hours_per_class": 1,
-      "number_of_class": 1,
-      "is_soldout": false,
-      "created_date": "2017-03-31T08:58:01.770976Z",
-      "review_count": 0,
-      "locations": [
-        "사당"
-      ]
-    },
-    {
       "pk": 3,
+      "title": "C언어 어려워도 쉽게 가르쳐드려요",
+      "category": "컴퓨터",
+      "type": "1:1 수업",
       "tutor": {
-        "pk": 89,
-        "user_id": "test_api@gmail.com",
-        "name": "lewis",
-        "nickname": "",
+        "pk": 10,
+        "user_id": "jisungpark@naver.com",
+        "name": "박지성",
+        "nickname": "컴신",
         "is_verified": true,
-        "profile_image": null,
-        "cellphone": ""
+        "profile_image": "https://projectgori.s3.amazonaws.com/media/member/profile_image/jisung.jpeg",
+        "cellphone": "01056463664"
       },
-      "title": "바리스타 마스터 코스",
-      "category_name": "이색취미",
-      "type_name": "그룹 수업",
-      "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/article_rEC7reP.jpg",
-      "price_per_hour": 10,
+      "is_school": true,
+      "cover_image": "https://projectgori.s3.amazonaws.com/media/talent/cover_image/%E1%84%8A%E1%85%B5%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A5.png",
+      "price_per_hour": 12000,
       "hours_per_class": 2,
       "number_of_class": 8,
       "is_soldout": false,
-      "created_date": "2017-04-05T05:47:04.488888Z",
-      "review_count": 2,
-      "locations": [
-        "신촌",
-        "사당"
+      "created_date": "2017-04-05T11:57:21.278516Z",
+      "average_rate": 0,
+      "review_count": 0,
+      "registration_count": 0,
+      "regions": [
+        "홍익대",
+        "용산"
       ]
     }
   ]
 }
 ```
 
+---
+
+
+# 수정
+
+## 수정사항_001
+
+- 수정 날짜 : 2017. 04. 07.
+- 수정 내용 
+	- 문서 제목 추가
+	- API 수정
+
+### # API 수정 내용
+
+### User Detail Retrieve
+
+- 필드 순서 재배치
+- 필드 추가 
+
+Field|Description|Type
+---|---|---
+nickname|닉네임|String
+received_registrations|받은 수업 신청서 수|Int
+
+
+### Talent List
+
+- 필드 순서 재배치
+- 필드 추가
+
+Field|Description|Type
+---|---|---
+is_school|장소에 캠퍼스가 속해있는지|Bool
+average_rate|평점|Float
+registration_count|받은 신청서 수|Int
+
+- 필드명 변경
+
+Old Name|New Name
+---|---
+type_name | type
+category_name | category
+locations | regions
