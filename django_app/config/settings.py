@@ -17,7 +17,7 @@ DEBUG = True
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = True
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
-STORAGE_S3 = False
+STORAGE_S3 = True
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
 print(DEBUG)
@@ -96,6 +96,10 @@ SITE_ID = 2
 
 LOGIN_URL = '/admin/'
 CALLBACK_URL = '/admin/'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_REQUIRED = False
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",

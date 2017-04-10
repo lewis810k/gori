@@ -3,8 +3,6 @@ from allauth.account.utils import setup_user_email
 from allauth.socialaccount.helpers import complete_social_login
 
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
@@ -20,24 +18,29 @@ User = get_user_model()
 
 class CustomLoginSerializer(RegisterSerializer):
     name = serializers.CharField(write_only=True)
-
-    def validate_name(self, name):
-        name = get_adapter().clean_username(name)
-        return name
+    #
+    # def validate_name(self, name):
+    #     name = get_adapter().clean_username(name)
+    #     return name
 
     def get_cleaned_data(self):
         return {
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
-            'name': self.validated_data.get('name', '')
+            'password2': self.validated_data.get('password2', ''),
+            'name': self.validated_data.get('name', ''),
+            'email': self.validated_data.get('email', '')
         }
 
     def save(self, request):
+        print('1')
         adapter = get_adapter()
+        print('2')
         user = adapter.new_user(request)
-
+        print(user)
         if 'name' in request.POST:
             user.name = request.POST['name']
+        print(user.name)
             # else:
             #     raise Exception('test')
             #     # return HttpResponse('test')
@@ -49,10 +52,16 @@ class CustomLoginSerializer(RegisterSerializer):
         #     print(ME)
         # finally:
         #     raise ValueError('could not find {} in {}'.format(char, char_string))
+        print('3')
         self.cleaned_data = self.get_cleaned_data()
+        print(self.cleaned_data)
+        print('4')
+        print(request, user)
         adapter.save_user(request, user, self)
+        print('5')
         self.custom_signup(request, user)
         setup_user_email(request, user, [])
+        print('6')
         return user
 
 
