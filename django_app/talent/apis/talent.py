@@ -55,10 +55,14 @@ class TalentListCreateView(generics.ListCreateAPIView):
         queryset = Talent.objects.all()
         title = self.request.query_params.get('title', None)
         region = self.request.query_params.get('region', None)
+        category = self.request.query_params.get('category', None)
         if title is not None:
             queryset = queryset.filter(title__icontains=title)
         if region is not None:
             queryset = queryset.filter(locations__region__icontains=region).distinct('pk')
+        if category is not None:
+            queryset = queryset.filter(category__icontains=category)
+
         return queryset
 
 
