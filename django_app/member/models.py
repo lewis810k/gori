@@ -25,7 +25,7 @@ class GoriUser(AbstractUser):
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
-        return '{} {}'.format(self.username, self.name)
+        return '{}'.format(self.name)
 
     def create_tutor(self, nickname, cellphone, profile_image,
                      verification_method, verification_images,
@@ -66,4 +66,4 @@ class Tutor(models.Model):
     current_status = models.CharField(max_length=1, blank=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
