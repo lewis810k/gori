@@ -8,6 +8,7 @@ __all__ = (
     'LocationWrapperSerializers',
     'LocationListSerializer',
     'LocationTalentSerializers',
+    'LocationCreateSerializer',
 )
 
 User = get_user_model()
@@ -19,15 +20,16 @@ class LocationListSerializer(serializers.RelatedField):
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField(read_only=True)
-    specific_location = serializers.SerializerMethodField(read_only=True)
-    day = serializers.SerializerMethodField(read_only=True)
+    region = serializers.SerializerMethodField()
+    specific_location = serializers.SerializerMethodField()
+    day = serializers.SerializerMethodField()
     # registered_student = serializers.SerializerMethodField(read_only=True)
     time = serializers.SerializerMethodField()
 
     class Meta:
         model = Location
         fields = (
+            'talent',
             'region',
             'specific_location',
             # 'registered_student',
@@ -58,6 +60,23 @@ class LocationSerializer(serializers.ModelSerializer):
         #     # print(obj.registered_student)
         #     print(obj.registered_student.values_list('name'))
         #     return obj.registered_student_display()
+
+
+class LocationCreateSerializer(serializers.ModelSerializer):
+    region = serializers.ChoiceField(choices=Location.REGION)
+    day = serializers.ChoiceField(choices=Location.DAYS_OF_WEEK)
+
+    class Meta:
+        model = Location
+        fields = (
+            'talent',
+            'region',
+            'specific_location',
+            'day',
+            'extra_fee',
+            'extra_fee_amount',
+            'time',
+        )
 
 
 class LocationTalentSerializers(serializers.ModelSerializer):
