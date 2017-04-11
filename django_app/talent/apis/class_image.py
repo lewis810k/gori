@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from member.models import Tutor
 from talent.models import Talent, ClassImage
-from talent.serializers import ClassImageWrapperSerializers, ClassImageSerializer
+from talent.serializers import ClassImageWrapperSerializer, ClassImageSerializer
 from utils import tutor_verify
 
 __all__ = (
@@ -57,4 +57,4 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
 
 class ClassImageRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
-    serializer_class = ClassImageWrapperSerializers
+    serializer_class = ClassImageWrapperSerializer

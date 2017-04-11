@@ -3,20 +3,8 @@ from rest_framework import generics
 from rest_framework import permissions
 
 from talent.models import Talent
+from talent.serializers import TalentDetailSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
-from talent.serializers import TalentDetailSerializer
-from talent.models import Answer
-from talent.models import Question
-from talent.models import Talent, ClassImage, Registration
-from talent.serializers import ClassImageSerializer, TalentListSerializer, \
-    TalentShortDetailSerializer
-from talent.serializers import QnASerializer
-from talent.serializers import QnAWrapperSerializer
-from talent.serializers import QuestionSerializer
-from talent.serializers import ReviewWrapperSerializer
-from talent.serializers import TalentDetailSerializer
-from talent.serializers.class_image import ClassImageWrapperSerializers
-from talent.serializers.registration import TalentRegistrationSerializer
 
 __all__ = (
     'TalentListCreateView',
@@ -24,17 +12,6 @@ __all__ = (
     'TalentDetailView',
     # detail - fragments
     'TalentShortDetailView',
-    'ClassImageListView',
-    'ClassImageRetrieveView',
-    'ReviewRetrieveView',
-
-    # registration
-
-    'Qnalist',
-
-    # 'MyWishListRetrieve',
-    # 'MyRegistrationList',
-    # 'RegistrationList',
 )
 
 User = get_user_model()

@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum,Answer,Question
+from talent.models import Reply
+from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum, Question
 
 
 class LocationInline(admin.TabularInline):
@@ -130,4 +131,4 @@ admin.site.register(WishList, WishAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Question)
-admin.site.register(Answer)
+admin.site.register(Reply)
