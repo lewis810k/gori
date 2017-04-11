@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from talent.models import Talent, Location
-from talent.serializers import LocationWrapperSerializers, LocationCreateSerializer, LocationSerializer
+from talent.serializers import LocationWrapperSerializer, LocationCreateSerializer, LocationSerializer
 
 __all__ = (
     'LocationRetrieveView',
@@ -13,7 +13,7 @@ __all__ = (
 
 class LocationRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
-    serializer_class = LocationWrapperSerializers
+    serializer_class = LocationWrapperSerializer
 
 
 class LocationCreateView(generics.CreateAPIView):

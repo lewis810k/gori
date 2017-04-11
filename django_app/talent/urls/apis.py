@@ -10,7 +10,7 @@ urlpatterns = [
 
     # ##### 생성 #####
     url(r'^create/$', apis.TalentListCreateView.as_view()),
-    url(r'^(?P<pk>[0-9]+)/add/class-image/$', apis.ClassImageListCreateView.as_view()),
+    url(r'^add/class-image/$', apis.ClassImageListCreateView.as_view()),
     url(r'^add/location/$', apis.LocationCreateView.as_view()),
 
     # ##### 리스트 #####
@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
-    url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 
 ]
