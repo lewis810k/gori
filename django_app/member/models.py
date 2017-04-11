@@ -3,7 +3,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from storages.backends.overwrite import OverwriteStorage
 
 
 class CustomUserManager(BaseUserManager):
@@ -49,6 +48,7 @@ class GoriUser(AbstractUser):
     cellphone = models.CharField(max_length=11, blank=True)
     profile_image = models.ImageField(upload_to='member/profile_image',
                                       blank=True,
+                                      default='member/profile_image/default_profile.png'
                                       )
     user_type = models.CharField(choices=USER_TYPE, max_length=1, default='d')
     joined_date = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
+from member import apis as m_apis
 from .. import apis
+
 
 app_name = 'talent'
 
@@ -27,7 +29,7 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
-    # url(r'^registration/$', apis.RegistrationList.as_view()),
-
+    url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
+    url(r'^(?P<pk>[0-9]+)/wishlist/toggle/$', m_apis.WishListToggleView.as_view()),
 ]
 
