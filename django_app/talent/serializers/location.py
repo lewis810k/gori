@@ -5,9 +5,10 @@ from talent.models import Talent, Location
 
 __all__ = (
     'LocationSerializer',
-    'LocationWrapperSerializers',
+    'LocationWrapperSerializer',
     'LocationListSerializer',
-    'LocationTalentSerializers',
+    'LocationTalentSerializer',
+    'LocationCreateSerializer',
 )
 
 User = get_user_model()
@@ -19,15 +20,16 @@ class LocationListSerializer(serializers.RelatedField):
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField(read_only=True)
-    specific_location = serializers.SerializerMethodField(read_only=True)
-    day = serializers.SerializerMethodField(read_only=True)
+    region = serializers.SerializerMethodField()
+    specific_location = serializers.SerializerMethodField()
+    day = serializers.SerializerMethodField()
     # registered_student = serializers.SerializerMethodField(read_only=True)
     time = serializers.SerializerMethodField()
 
     class Meta:
         model = Location
         fields = (
+            'talent',
             'region',
             'specific_location',
             # 'registered_student',
@@ -60,7 +62,24 @@ class LocationSerializer(serializers.ModelSerializer):
         #     return obj.registered_student_display()
 
 
-class LocationTalentSerializers(serializers.ModelSerializer):
+class LocationCreateSerializer(serializers.ModelSerializer):
+    region = serializers.ChoiceField(choices=Location.REGION)
+    day = serializers.ChoiceField(choices=Location.DAYS_OF_WEEK)
+
+    class Meta:
+        model = Location
+        fields = (
+            'talent',
+            'region',
+            'specific_location',
+            'day',
+            'extra_fee',
+            'extra_fee_amount',
+            'time',
+        )
+
+
+class LocationTalentSerializer(serializers.ModelSerializer):
     talent_title = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.title')
     talent_id = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
     talent_category = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.category')
@@ -77,7 +96,7 @@ class LocationTalentSerializers(serializers.ModelSerializer):
         )
 
 
-class LocationWrapperSerializers(serializers.ModelSerializer):
+class LocationWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
     locations = LocationSerializer(many=True, read_only=True)

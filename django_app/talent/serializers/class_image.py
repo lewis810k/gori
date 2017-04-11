@@ -12,6 +12,7 @@ class ClassImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassImage
         fields = (
+            'talent',
             'image',
         )
 
