@@ -13,6 +13,7 @@ from member.serializers.login import CustomRegisterSerializer
 from talent.models import WishList, Talent
 from talent.serializers import MyRegistrationWrapperSerializer
 from talent.serializers.wish_list import MyWishListSerializer
+from utils.remove_all_but_numbers import remove_non_numeric
 
 __all__ = (
     'UserProfileView',
@@ -38,17 +39,16 @@ class UserProfileView(APIView):
 
     def patch(self, request, *args, **kwargs):
         user = request.user
-        print(request.data.keys())
+        if request.data["cellphone"]:
+            request.data["cellphone"] = remove_non_numeric(request.data["cellphone"])
         serializer = UserSerializer(user, data=request.data,
                                     partial=True)
         for request_item in request.data.keys():
-            print(request_item)
             if request_item not in [item for item in UserSerializer(user).fields]:
-                print(UserSerializer(user).fields)
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "잘못된 형식의 data 입니다"})
             elif serializer.is_valid():
                 serializer.save()
-                return Response(status=status.HTTP_202_ACCEPTED, data=UserSerializer(user).data)
+                return Response(status=status.HTTP_200_OK, data=UserSerializer(user).data)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "잘못된 형식의 data 입니다"})
 
     # def patch(self, request, *args, **kwargs):

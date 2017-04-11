@@ -40,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
             'sent_registrations',
             'wish_list',
         )
-        read_only_fields = ('is_active', 'is_staff', 'user_type',)
+        read_only_fields = ('is_active', 'is_staff', 'user_type','is_tutor','joined_date','last_login')
 
     @staticmethod
     def get_user_type(obj):
