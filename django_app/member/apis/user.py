@@ -124,14 +124,14 @@ class WishListToggleView(APIView):
                 if talent.pk in user.my_wishlist.values_list('talent', flat=True):
                     wishlist = WishList.objects.filter(user=user, talent=talent)
                     wishlist.delete()
-                    return Response(status=status.HTTP_200_OK, data=MyWishListSerializer(user).data)
+                    return Response(status=status.HTTP_200_OK, data={'detail': 'wishlist에서 삭제되었습니다'})
                 else:
                     WishList.objects.create(user=user, talent=talent)
                     return Response(status=status.HTTP_201_CREATED, data=MyWishListSerializer(user).data)
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': '본인의 수업을 위시리스트에 담을 수 없습니다.'})
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': '본인의 수업을 위시리스트에 담을 수 없습니다.'})
         except Talent.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND, data={'error': '해당 수업을 찾을 수 없습니다'})
+            return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': '해당 수업을 찾을 수 없습니다'})
 
 
 class MyRegistrationView(APIView):
