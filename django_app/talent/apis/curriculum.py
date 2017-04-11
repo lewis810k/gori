@@ -19,13 +19,20 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         talent = Talent.objects.get(pk=request.data['talent_pk'])
+        image_valid = request.data.get('image', 'none')
         if tutor_verify(request, talent):
             try:
-                Curriculum.objects.create(
-                    talent=talent,
-                    information=request.data['information'],
-                    image=request.FILES['image']
-                )
+                if image_valid == 'none':
+                    Curriculum.objects.create(
+                        talent=talent,
+                        information=request.data['information'],
+                    )
+                else:
+                    Curriculum.objects.create(
+                        talent=talent,
+                        information=request.data['information'],
+                        image=request.FILES['image'],
+                    )
             except MultiValueDictKeyError as e:
                 ret = {
                     'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
