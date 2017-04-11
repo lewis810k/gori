@@ -18,13 +18,13 @@ urlpatterns = [
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
 
     # ##### 리스트 #####
-    url(r'^list/$', apis.TalentListCreateView.as_view()),
+    url(r'^list/$', apis.TalentListCreateView.as_view(),name='talent-list'),
 
     # ##### 전체보기 #####
-    url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view()),
+    url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view(), name='talent-detail-all'),
 
     # ##### 요약 #####
-    url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentShortDetailView.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentShortDetailView.as_view(), name='talent-detail'),
     url(r'^detail/(?P<pk>[0-9]+)/location/$', apis.LocationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieveView.as_view()),

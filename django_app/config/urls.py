@@ -24,7 +24,7 @@ from talent.urls import apis as talent_api_urls
 
 # ##### API URL #####
 api_urlpatterns = [
-    url(r'^member/', include(member_api_urls)),
+    url(r'^member/', include(member_api_urls, namespace='member')),
     url(r'^talent/', include(talent_api_urls, namespace='talent')),
 ]
 
