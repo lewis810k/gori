@@ -1,3 +1,4 @@
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -22,10 +23,16 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         talent = Talent.objects.get(pk=request.data['talent_pk'])
         if tutor_verify(request, talent):
-            ClassImage.objects.create(
-                talent=talent,
-                image=request.FILES['image'],
-            )
+            try:
+                ClassImage.objects.create(
+                    talent=talent,
+                    image=request.FILES['image'],
+                )
+            except MultiValueDictKeyError as e:
+                ret = {
+                    'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
             ret_message = '[{talent}]에 [{image}]가 추가되었습니다.'.format(
                 talent=talent.title,

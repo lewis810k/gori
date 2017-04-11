@@ -32,7 +32,8 @@ class LocationCreateView(generics.CreateAPIView):
                     specific_location=request.data['specific_location'],
                     day=request.data['day'],
                     time=request.data['time'],
-                    extra_fee=request.data.get('extra_fee', 'N'),
+                    extra_fee=request.data['extra_fee'],
+                    # 필수정보가 아닌 경우 아래에 해당
                     extra_fee_amount=request.data.get('extra_fee_amount', ''),
                     location_info=request.data.get('location_info', ''),
                 )
