@@ -132,3 +132,22 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
 
     def get_student_level(self, obj):
         return obj.get_student_level_display()
+
+
+class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
+    student_level = serializers.ChoiceField(choices=Registration.LEVEL)
+
+    class Meta:
+        model = Registration
+        fields = (
+            'student',
+            'talent_location',
+            'joined_date',
+            'is_confirmed',
+            'student_level',
+            'experience_length',
+            'message_to_tutor',
+        )
+
+    def get_student_level(self, obj):
+        return obj.get_student_level_display()

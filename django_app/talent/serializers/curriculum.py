@@ -12,6 +12,7 @@ class CurriculumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curriculum
         fields = (
+            'talent',
             'information',
             'image',
         )

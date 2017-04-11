@@ -72,6 +72,7 @@ class LocationCreateSerializer(serializers.ModelSerializer):
             'talent',
             'region',
             'specific_location',
+            'location_info',
             'day',
             'extra_fee',
             'extra_fee_amount',
