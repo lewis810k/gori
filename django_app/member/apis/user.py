@@ -10,6 +10,7 @@ from member.models import Tutor
 from member.serializers import TutorSerializer
 from member.serializers import UserSerializer
 from member.serializers.login import CustomRegisterSerializer
+from talent.models import WishList, Talent
 from talent.serializers import MyRegistrationWrapperSerializer
 from talent.serializers.wish_list import MyWishListSerializer
 
@@ -20,6 +21,7 @@ __all__ = (
     'CreateDjangoUserView',
     'MyWishListView',
     'MyRegistrationView',
+    'WishListToggleView',
 )
 
 User = get_user_model()
@@ -108,6 +110,28 @@ class MyWishListView(APIView):
         user = User.objects.get(id=request.user.id)
         serializer = MyWishListSerializer(user)
         return Response(serializer.data)
+
+
+# ##### 유저가 wishlist에 담기/빼기 #####
+class WishListToggleView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, pk):
+        user = User.objects.get(id=request.user.id)
+        try:
+            talent = Talent.objects.get(pk=pk)
+            if talent.tutor.user != user:
+                if talent.pk in user.my_wishlist.values_list('talent', flat=True):
+                    wishlist = WishList.objects.filter(user=user, talent=talent)
+                    wishlist.delete()
+                    return Response(status=status.HTTP_200_OK, data=MyWishListSerializer(user).data)
+                else:
+                    WishList.objects.create(user=user, talent=talent)
+                    return Response(status=status.HTTP_201_CREATED, data=MyWishListSerializer(user).data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': '본인의 수업을 위시리스트에 담을 수 없습니다.'})
+        except Talent.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data={'error': '해당 수업을 찾을 수 없습니다'})
 
 
 class MyRegistrationView(APIView):
