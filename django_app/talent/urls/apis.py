@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^add/location/$', apis.LocationCreateView.as_view()),
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view()),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
+    url(r'^add/review/$', apis.ReviewCreateView.as_view()),
 
     # ##### 리스트 #####
     url(r'^list/$', apis.TalentListCreateView.as_view()),
