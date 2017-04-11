@@ -2,17 +2,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework import permissions
 
-from talent.models import Talent, ClassImage, Registration
-from talent.serializers import ClassImageSerializer, TalentListSerializer, \
-    TalentShortDetailSerializer
-from talent.serializers import QnAWrapperSerializer
-from talent.serializers import ReviewWrapperSerializer
-from talent.serializers import TalentDetailSerializer
-from talent.serializers.class_image import ClassImageWrapperSerializers
-from talent.serializers.registration import TalentRegistrationSerializer
 from talent.models import Talent
-from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from talent.serializers import TalentDetailSerializer
+from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 
 __all__ = (
     'TalentListCreateView',
@@ -23,7 +15,7 @@ __all__ = (
 
     # registration
 
-    'Qnalist',
+
 
     # 'MyWishListRetrieve',
     # 'MyRegistrationList',
@@ -71,11 +63,3 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 class TalentDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
-
-
-
-
-
-class Qnalist(generics.ListAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = QnAWrapperSerializer

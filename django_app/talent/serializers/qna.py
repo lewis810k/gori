@@ -14,7 +14,7 @@ __all__ = (
 class ReplySerializer(serializers.ModelSerializer):
     tutor = serializers.PrimaryKeyRelatedField(queryset=Tutor.objects.all(), source='tutor.user.name')
     tutor_image = serializers.ImageField(source='tutor.user.profile_image')
-    content = serializers.CharField(source='answer')
+
 
     class Meta:
         model = Reply
@@ -29,16 +29,16 @@ class ReplySerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
-    answer = ReplySerializer()
+    replys = ReplySerializer(source='reply_set',many=True)
 
     class Meta:
         model = Question
         fields = (
             'user',
             'user_image',
-            'question',
+            'content',
             'created_date',
-            'answer',
+            'replys',
         )
 
         # def get_user_image(self, obj):
@@ -59,7 +59,7 @@ class QnAWrapperSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'type',
-            'QnA'
+            'questions',
         )
 
     def create(self, validated_data):

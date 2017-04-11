@@ -16,6 +16,9 @@ class Question(models.Model):
     content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return 'talent : {} user : {}'.format(self.talent.title, self.user.name)
+
 
 class Reply(models.Model):
     question = models.ForeignKey(Question)
@@ -23,4 +26,5 @@ class Reply(models.Model):
     content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
-
+    def __str__(self):
+        return "question : {}  user : {}".format(self.question.content, self.tutor.user.name)

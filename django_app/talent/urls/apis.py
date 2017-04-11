@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
-    url(r'^qna/$', apis.Qnalist.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentRetrieve.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 
 ]
