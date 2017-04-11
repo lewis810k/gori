@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
     url(r'^(?P<pk>[0-9]+)/wishlist/toggle/$', m_apis.WishListToggleView.as_view()),
+    url(r'^qna/$', apis.Qnalist.as_view()),
 ]
 

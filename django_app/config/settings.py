@@ -13,11 +13,11 @@ import json
 import os
 
 DEBUG = True
+STORAGE_S3 = False
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = True
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
-STORAGE_S3 = False
 # STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 # DB_RDS = True
 print(DEBUG)
@@ -92,7 +92,7 @@ TEMPLATES_DIR = 'templates'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
-SITE_ID = 2
+SITE_ID = 1
 
 LOGIN_URL = '/admin/'
 LOGIN_REDIRECT_URL = '/admin/'
@@ -175,13 +175,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
-# # CORS_ORIGIN_WHITELIST = (
-# #     'localhost:8000',
-# # )
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8080',
+)
 
 ROOT_URLCONF = 'config.urls'
 
