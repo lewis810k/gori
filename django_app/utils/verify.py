@@ -28,3 +28,12 @@ def duplicate_verify(model, data):
         return True, ret
     else:
         return False, {}
+
+
+def verify_instance(instance):
+    if instance.is_verified:
+        instance.is_verified = False
+    else:
+        instance.is_verified = True
+    instance.save()
+    return instance

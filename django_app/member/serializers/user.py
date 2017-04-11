@@ -20,6 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
     received_registrations = serializers.SerializerMethodField(read_only=True)
     sent_registrations = serializers.SerializerMethodField(read_only=True)
     wish_list = serializers.SerializerMethodField(read_only=True)
+    phone_area_code = serializers.CharField(write_only=True)
+    phone_middle = serializers.CharField(write_only=True)
+    phone_last = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
@@ -39,8 +42,11 @@ class UserSerializer(serializers.ModelSerializer):
             'received_registrations',
             'sent_registrations',
             'wish_list',
+            'phone_area_code',
+            'phone_middle',
+            'phone_last',
         )
-        read_only_fields = ('is_active', 'is_staff', 'user_type','is_tutor','joined_date','last_login')
+        read_only_fields = ('is_active', 'is_staff', 'user_type', 'is_tutor', 'joined_date', 'last_login', )
 
     @staticmethod
     def get_user_type(obj):

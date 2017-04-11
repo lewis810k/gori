@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
@@ -13,6 +14,7 @@ from member.serializers.login import CustomRegisterSerializer
 from talent.models import WishList, Talent
 from talent.serializers import MyRegistrationWrapperSerializer
 from talent.serializers.wish_list import MyWishListSerializer
+from utils import verify_instance
 from utils.remove_all_but_numbers import remove_non_numeric
 
 __all__ = (
@@ -23,6 +25,7 @@ __all__ = (
     'MyWishListView',
     'MyRegistrationView',
     'WishListToggleView',
+    'AdminUserToggleTutor',
 )
 
 User = get_user_model()
@@ -39,17 +42,23 @@ class UserProfileView(APIView):
 
     def patch(self, request, *args, **kwargs):
         user = request.user
-        if request.data["cellphone"]:
-            request.data["cellphone"] = remove_non_numeric(request.data["cellphone"])
-        serializer = UserSerializer(user, data=request.data,
-                                    partial=True)
-        for request_item in request.data.keys():
-            if request_item not in [item for item in UserSerializer(user).fields]:
-                return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "잘못된 형식의 data 입니다"})
-            elif serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_200_OK, data=UserSerializer(user).data)
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "잘못된 형식의 data 입니다"})
+        try:
+            area_code = request.data.get("phone_area_code", user.cellphone[0:3])
+            middle = request.data.get("phone_middle", user.cellphone[-5:-9:1])
+            last = request.data.get("phone_last", user.cellphone[-5:-1:-1])
+            if area_code or middle or last:
+                request.data["cellphone"] = str(remove_non_numeric(area_code)) + \
+                                            str(remove_non_numeric(middle)) + str(remove_non_numeric(last))
+            serializer = UserSerializer(user, data=request.data,
+                                        partial=True)
+            for request_item in request.data.keys():
+                if request_item not in [item for item in UserSerializer(user).fields]:
+                    return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "잘못된 형식의 data 입니다"})
+                elif serializer.is_valid():
+                    serializer.save()
+                    return Response(status=status.HTTP_200_OK, data=UserSerializer(user).data)
+        except MultiValueDictKeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "잘못된 형식의 data 입니다"})
 
     # def patch(self, request, *args, **kwargs):
     #     user = request.user
@@ -81,6 +90,22 @@ class UserProfileView(APIView):
             "detail": "Successfully deleted"
         }
         return Response(ret)
+
+
+class AdminUserToggleTutor(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, tutor_pk):
+        user = request.user
+        try:
+            if user.is_staff:
+                tutor = Tutor.objects.get(pk=tutor_pk)
+                tutor = verify_instance(tutor)
+                return Response(status=status.HTTP_200_OK, data=TutorSerializer(tutor).data)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다"})
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "잘못된 요청입니다"})
 
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

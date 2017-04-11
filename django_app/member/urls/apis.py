@@ -17,6 +17,9 @@ urlpatterns = [
     # ##### 유저삭제 #####
     url(r'^delete/user/$', apis.UserProfileView.as_view(), name='user-delete'),
 
+    # ##### staff가 user의 tutor 인증 toggle #####
+    url(r'^admin/toggle/tutor/(?P<tutor_pk>[0-9]+)/$', apis.AdminUserToggleTutor.as_view(), ),
+
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),
     url(r'^logout/$', apis.CustomLogoutView.as_view()),
