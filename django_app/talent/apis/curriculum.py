@@ -19,20 +19,15 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         talent = Talent.objects.get(pk=request.data['talent_pk'])
-        image_valid = request.data.get('image', 'none')
         if tutor_verify(request, talent):
             try:
-                if image_valid == 'none':
-                    Curriculum.objects.create(
-                        talent=talent,
-                        information=request.data['information'],
-                    )
-                else:
-                    Curriculum.objects.create(
-                        talent=talent,
-                        information=request.data['information'],
-                        image=request.FILES['image'],
-                    )
+                # 음.. 여긴 talent만 가리키고 있기 때문에.. 항상 추가만 되는군
+                item, _ = Curriculum.objects.get_or_create(
+                    talent=talent,
+                    information=request.data['information'],
+                    image=request.FILES.get('image', ''),
+                )
+                print(item, _)
             except MultiValueDictKeyError as e:
                 ret = {
                     'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'

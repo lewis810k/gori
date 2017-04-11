@@ -12,3 +12,19 @@ def tutor_verify(request, talent):
         if talent.tutor == user.tutor:
             return True
     return False
+
+
+def duplicate_verify(model, data):
+    """
+    특정 모델을 넘겨 받아 해당 data으로 구성된 아이템이 존재하는지 체크
+    :param model: 중복체크하고자 하는 모델
+    :param data:
+    :return:
+    """
+    ret = {
+        'detail': '이미 존재하는 항목입니다.'
+    }
+    if model.objects.filter(**data).count() > 0:
+        return True, ret
+    else:
+        return False, {}
