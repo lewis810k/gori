@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from talent.models import Talent, Location
-from talent.serializers import LocationWrapperSerializer, LocationCreateSerializer, LocationSerializer
+from talent.serializers import LocationWrapperSerializer, LocationSerializer
 from utils import tutor_verify, duplicate_verify
 
 __all__ = (
@@ -20,7 +20,7 @@ class LocationRetrieveView(generics.RetrieveAPIView):
 
 class LocationCreateView(generics.CreateAPIView):
     queryset = Location.objects.all()
-    serializer_class = LocationCreateSerializer
+    serializer_class = LocationSerializer
 
     def post(self, request, *args, **kwargs):
         """

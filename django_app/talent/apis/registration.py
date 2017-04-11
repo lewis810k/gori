@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
-from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
+from talent.serializers.registration import TalentRegistrationSerializer
 from utils import tutor_verify
 
 __all__ = (

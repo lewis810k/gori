@@ -8,7 +8,6 @@ __all__ = (
     'LocationWrapperSerializer',
     'LocationListSerializer',
     'LocationTalentSerializer',
-    'LocationCreateSerializer',
 )
 
 User = get_user_model()
