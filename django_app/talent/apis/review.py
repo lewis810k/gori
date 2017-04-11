@@ -78,7 +78,7 @@ class ReviewCreateView(generics.CreateAPIView):
             # 자신의 수업에 리뷰를 등록하려는 경우
             else:
                 ret = {
-                    'detail': '자신의 수업에 평점을 리뷰를 등록할 수 없습니다.',
+                    'detail': '자신의 수업에 리뷰를 등록할 수 없습니다.',
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 

@@ -77,10 +77,14 @@ class UserProfileView(APIView):
 
 
     def delete(self, request, format=None):
+        """
+        유저 삭제할 때
+        연결된 tutor, talent, review, qna 모두 삭제.
+        """
         user = request.user
         user.delete()
         ret = {
-            "detail": "Successfully deleted"
+            "detail": "유저가 삭제되었습니다."
         }
         return Response(ret)
 

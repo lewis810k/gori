@@ -18,26 +18,28 @@ class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
         fields = (
+            'pk',
             'tutor',
             'tutor_image',
-            'content',
             'created_date',
+            'content',
         )
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
-    replys = ReplySerializer(source='reply_set', many=True)
+    replies = ReplySerializer(source='reply_set', many=True)
 
     class Meta:
         model = Question
         fields = (
+            'pk',
             'user',
             'user_image',
-            'content',
             'created_date',
-            'replys',
+            'content',
+            'replies',
         )
 
         # def get_user_image(self, obj):
