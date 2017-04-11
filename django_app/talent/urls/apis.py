@@ -17,7 +17,8 @@ urlpatterns = [
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view()),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
     url(r'^add/review/$', apis.ReviewCreateView.as_view()),
-    url(r'^add/question/$', apis.QnACreateView.as_view()),
+    url(r'^add/question/$', apis.QuestionCreateView.as_view()),
+    url(r'^add/reply/$', apis.ReplyCreateView.as_view()),
 
 
     # ##### 리스트 #####

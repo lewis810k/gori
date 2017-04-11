@@ -36,9 +36,14 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             - experience_length : 경력 (개월수)
         """
         try:
-            location = Location.objects.get(pk=request.data['location_pk'])
+            location_pk = request.data['location_pk']
+            location = Location.objects.filter(pk=location_pk).first()
+            if not location:
+                ret = {
+                    'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             talent = location.talent
-            print(dir(Registration.objects))
 
             # 해당 수업에 자신이 튜터라면 등록되지 않도록.
             if tutor_verify(request, talent):
@@ -48,7 +53,7 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             else:
                 # 기존에 존재하는 아이템이면 생성되지 않도록
-                item, _ = Registration.objects.get_or_create(
+                item, created = Registration.objects.get_or_create(
                     student=request.user,
                     talent_location=location,
                     message_to_tutor=request.data['message_to_tutor'],
@@ -57,6 +62,12 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
                     student_level=request.data.get('student_level', 1),
                     experience_length=request.data.get('experience_length', 0),
                 )
+
+                if not created:
+                    ret = {
+                        'detail': '이미 등록된 수업입니다.'
+                    }
+                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
                 ret_message = '[{user}]님이 [{location}] 수업을 추가되었습니다.'.format(
                     user=request.user,

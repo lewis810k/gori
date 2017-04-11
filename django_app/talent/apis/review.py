@@ -48,7 +48,13 @@ class ReviewCreateView(generics.CreateAPIView):
             delivery = request.data['delivery']
             friendliness = request.data['friendliness']
 
-            talent = Talent.objects.get(pk=talent_pk)
+            talent = Talent.objects.filter(pk=talent_pk).first()
+            if not talent:
+                ret = {
+                    'detail': '수업({pk})이 존재하지 않습니다.'.format(pk=talent_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
             # 자신의 수업이 아니어야 등록 가능
             if not tutor_verify(request, talent):
                 item, created = Review.objects.get_or_create(
@@ -75,6 +81,7 @@ class ReviewCreateView(generics.CreateAPIView):
                     'detail': ret_message,
                 }
                 return Response(ret, status=status.HTTP_201_CREATED)
+
             # 자신의 수업에 리뷰를 등록하려는 경우
             else:
                 ret = {

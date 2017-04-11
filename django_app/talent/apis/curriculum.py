@@ -26,35 +26,40 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
         추가정보 :
             - image : 커리큘럼 이미지
         """
-        talent = Talent.objects.get(pk=request.data['talent_pk'])
-        if tutor_verify(request, talent):
-            try:
-                # 음.. 여긴 talent만 가리키고 있기 때문에.. 항상 추가만 되는군
+        try:
+            talent_pk = request.data['talent_pk']
+            talent = Talent.objects.filter(pk=talent_pk).first()
+            if not talent:
+                ret = {
+                    'detail': '수업({pk})이 존재하지 않습니다.'.format(pk=talent_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+            if tutor_verify(request, talent):
                 item, _ = Curriculum.objects.get_or_create(
                     talent=talent,
                     information=request.data['information'],
                     image=request.FILES.get('image', ''),
                 )
-                print(item, _)
-            except MultiValueDictKeyError as e:
+                ret_message = '[{talent}]에 [{information}] 수업이 추가되었습니다.'.format(
+                    talent=talent.title,
+                    information=request.data['information']
+                )
                 ret = {
-                    'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+                    'detail': ret_message,
                 }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+                return Response(ret, status=status.HTTP_201_CREATED)
 
-            ret_message = '[{talent}]에 [{information}] 수업이 추가되었습니다.'.format(
-                talent=talent.title,
-                information=request.data['information']
-            )
             ret = {
-                'detail': ret_message,
+                'detail': '권한이 없습니다.',
             }
-            return Response(ret, status=status.HTTP_201_CREATED)
+            return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
 
-        ret = {
-            'detail': '권한이 없습니다.',
-        }
-        return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
+        except MultiValueDictKeyError as e:
+            ret = {
+                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CurriculumRetrieveView(generics.RetrieveAPIView):
