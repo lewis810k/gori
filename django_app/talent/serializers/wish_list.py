@@ -4,10 +4,13 @@ from rest_framework import serializers
 from talent.models import WishList, Talent
 from talent.serializers import TalentShortInfoSerializer
 
-User = get_user_model()
-
 __all__ = (
+    'WishListSerializer',
+    'MyWishListSerializer',
+
 )
+
+User = get_user_model()
 
 
 class WishListSerializer(serializers.ModelSerializer):

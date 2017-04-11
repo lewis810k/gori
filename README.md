@@ -423,11 +423,53 @@ None
 
 ### URL Params
 
-Key|Value
----|---
-limit|한 번에 보여줄 아이템 수
+| Key      | Value                      |
+| -------- | -------------------------- |
+| limit    | 한 번에 보여줄 아이템 수             |
+| title    | 수업 제목으로 검색                 |
+| region   | 지역 필터링 (지역에 해당하는 key값)    |
+| category | 카테고리 필터링 (카테고리에 해당하는 key값) |
 
-> 한 번에 모든 아이템을 반환하려면 limit를 입력하지 않는다.
+> - 한 번에 모든 아이템을 반환하려면 limit를 입력하지 않는다.
+> - 복수의 params를 적용시 여러 필터링을 거쳐 해당 사항을 모두 만족하는 결과를 반환한다. 
+
+#### Category 
+
+| Key  | Value   |
+| ---- | ------- |
+| HNB  | 헬스 / 뷰티 |
+| LAN  | 외국어     |
+| COM  | 컴퓨터     |
+| ART  | 미술 / 음악 |
+| SPO  | 스포츠     |
+| JOB  | 전공 / 취업 |
+| HOB  | 이색취미    |
+| ETC  | 기타      |
+
+#### Region 
+
+| Key  | Value |
+| ---- | ----- |
+| KOU  | 고려대   |
+| SNU  | 서울대   |
+| YOU  | 연세대   |
+| HOU  | 홍익대   |
+| EWWU | 이화여대  |
+| BSU  | 부산대   |
+| JAU  | 중앙대   |
+| GGU  | 건국대   |
+| HYU  | 한양대   |
+| KN   | 강남    |
+| SC   | 신촌    |
+| SD   | 사당    |
+| JS   | 잠실    |
+| JR   | 종로    |
+| HH   | 혜화    |
+| YS   | 용산    |
+| HJ   | 합정    |
+| MD   | 목동    |
+| ETC  | 기타    |
+
 
 ### Data Params
 
@@ -583,7 +625,11 @@ None
   "hours_per_class": 2,
   "number_of_class": 4,
   "is_soldout": false,
-  "class_images": [],
+  "class_images": [
+    {
+      "image": "https://projectgori.s3.amazonaws.com/media/talent/extra_images/14597239_1856403567907243_4624578483752796160_n.jpg"
+    }
+  ],
   "curriculums": [
     {
       "information": "1주차는 간단한 풀컬러 네일 수업입니다",
@@ -1015,7 +1061,7 @@ None
 ## 수정사항_002
 
 - 수정 날짜 : 2017. 04. 10.
-- 수정 내용 
+- 주요 내용 
 	- API 추가
 		- Facebook Login 
 		- Talent Detail Retrieve All 
@@ -1052,12 +1098,22 @@ Field|Description|Type
 sent_registrations|보낸 신청서 수|Int
 wish_list|위시리스트 수업 수|Int
 
+### Talent List
+
+- 검색, 필터링에 대한 Url Params 추가
+
+Field|Description|Type
+---|---|---
+| title    | 수업 제목으로 검색                 |String
+| region   | 지역 필터링 (지역에 해당하는 key값)    |String
+| category | 카테고리 필터링 (카테고리에 해당하는 key값) |String
+
 
 >>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 ## 수정사항_001
 
 - 수정 날짜 : 2017. 04. 07.
-- 수정 내용 
+- 주요 내용 
 	- 문서 제목 추가
 	- API 수정
 

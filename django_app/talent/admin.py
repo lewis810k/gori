@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum
+from talent.models import Reply
+from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum, Question
 
 
 class LocationInline(admin.TabularInline):
@@ -68,7 +69,7 @@ class ClassImageAdmin(admin.ModelAdmin):
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'category','location', 'tutor', 'students_list',)
+    list_display = ('pk', 'title', 'category', 'location', 'tutor', 'students_list',)
     inlines = [LocationInline, ClassImageInline, CurriculumInline, ]
 
     def tutor(self, talent):
@@ -129,3 +130,5 @@ admin.site.register(Registration, RegistrationAdmin)
 admin.site.register(WishList, WishAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Review, ReviewAdmin)
+admin.site.register(Question)
+admin.site.register(Reply)

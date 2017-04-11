@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from member.models import Tutor
-from talent.models import Registration, Location, Talent
+from talent.models import Location, Talent
 
 __all__ = (
     'UserSerializer',
@@ -40,6 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
             'sent_registrations',
             'wish_list',
         )
+        read_only_fields = ('is_active', 'is_staff', 'user_type',)
 
     @staticmethod
     def get_user_type(obj):

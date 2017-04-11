@@ -2,7 +2,7 @@ from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
-from rest_auth.registration.serializers import RegisterSerializer, SocialLoginSerializer
+from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_framework import serializers
 
 try:
@@ -61,13 +61,14 @@ class CustomRegisterSerializer(serializers.Serializer):
         if 'name' in request.POST:
             user.name = request.POST['name']
         self.cleaned_data = self.get_cleaned_data()
+        print('cleaned: ', self.cleaned_data)
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
         print('data: ', request.data)
         print(user)
         user.email = request.data['username']
         user.save()
-        # setup_user_email(request, user, [])
+        setup_user_email(request, user, [])
         return user
 
 
