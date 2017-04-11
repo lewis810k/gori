@@ -49,9 +49,8 @@ class ReviewCreateView(generics.CreateAPIView):
             friendliness = request.data['friendliness']
 
             talent = Talent.objects.get(pk=talent_pk)
-            # 자신이
+            # 자신의 수업이 아니어야 등록 가능
             if not tutor_verify(request, talent):
-                # 음.. 여긴 talent만 가리키고 있기 때문에.. 항상 추가만 되는군
                 item, created = Review.objects.get_or_create(
                     talent=talent,
                     user=user,
@@ -62,6 +61,7 @@ class ReviewCreateView(generics.CreateAPIView):
                     friendliness=friendliness,
                     comment=request.data.get('comment', ''),
                 )
+                # 이미 리뷰가 존재하면 등록할 수 없음
                 if not created:
                     ret = {
                         'detail': '리뷰는 1개만 등록할 수 있습니다.'
@@ -75,6 +75,7 @@ class ReviewCreateView(generics.CreateAPIView):
                     'detail': ret_message,
                 }
                 return Response(ret, status=status.HTTP_201_CREATED)
+            # 자신의 수업에 리뷰를 등록하려는 경우
             else:
                 ret = {
                     'detail': '자신의 수업에 평점을 리뷰를 등록할 수 없습니다.',

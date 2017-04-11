@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
@@ -22,6 +23,7 @@ __all__ = (
     'MyWishListView',
     'MyRegistrationView',
     'WishListToggleView',
+    'RegisterTutorView',
 )
 
 User = get_user_model()
@@ -101,6 +103,60 @@ class TutorProfileView(APIView):
 
 class CreateDjangoUserView(RegisterView):
     serializer_class = CustomRegisterSerializer
+
+
+class RegisterTutorView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        """
+        튜터 신청.
+        1. 요청한 유저가 이미 튜터인지 확인한다.
+        2. request 정보를 넘겨받아 튜터를 생성한다.
+
+        필수정보 :
+            - verification_method : 인증 수단
+        추가정보 :
+            - verification_images : 인증 이미지
+            - school : 학교
+            - major : 전공
+            - current_status : 재학상태
+        """
+        user = request.user
+
+        # 이미 튜터로 등록되어있는지
+        tutor_list = Tutor.objects.values_list('user_id', flat=True)
+        if user.id in tutor_list:
+            ret = {
+                'detail': '이미 튜터로 등록되어있습니다.'
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            verification_method = request.data['verification_method']
+            verification_images = request.FILES.get('verification_images', '')
+            school = request.data.get('school', '')
+            major = request.data.get('major', '')
+            current_status = request.data.get('current_status', '')
+
+            Tutor.objects.create(
+                user=user,
+                verification_method=verification_method,
+                verification_images=verification_images,
+                school=school,
+                major=major,
+                current_status=current_status,
+            )
+            ret = {
+                'detail': '튜터 신청이 완료되었습니다.'
+            }
+            return Response(ret, status=status.HTTP_201_CREATED)
+
+        except MultiValueDictKeyError as e:
+            ret = {
+                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MyWishListView(APIView):

@@ -25,6 +25,9 @@ urlpatterns = [
     url(r'^wish-list/$', apis.MyWishListView.as_view()),
     url(r'^registrations/$', apis.MyRegistrationView.as_view()),
 
+    # ##### 튜터 등록 #####
+    url(r'^register/tutor/$', apis.RegisterTutorView.as_view()),
+
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.
     # /api/member/login 식으로 들어올 때 여기로 이동함.
