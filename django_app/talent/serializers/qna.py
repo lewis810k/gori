@@ -1,23 +1,23 @@
 from rest_framework import serializers
 
 from member.models import GoriUser, Tutor
-from talent.models import Talent, Answer, Question
+from talent.models import Talent, Question, Reply
 
 __all__ = (
     # 'QnaSerializer',
-    'QnASerializer',
+    'ReplySerializer',
     'QnAWrapperSerializer',
     'QuestionSerializer',
 )
 
 
-class AnswerSerializer(serializers.ModelSerializer):
+class ReplySerializer(serializers.ModelSerializer):
     tutor = serializers.PrimaryKeyRelatedField(queryset=Tutor.objects.all(), source='tutor.user.name')
     tutor_image = serializers.ImageField(source='tutor.user.profile_image')
     content = serializers.CharField(source='answer')
 
     class Meta:
-        model = Answer
+        model = Reply
         fields = (
             'tutor',
             'tutor_image',
@@ -29,7 +29,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
-    answer = AnswerSerializer()
+    answer = ReplySerializer()
 
     class Meta:
         model = Question
@@ -47,21 +47,10 @@ class QuestionSerializer(serializers.ModelSerializer):
         #     return obj.user
 
 
-class QnASerializer(serializers.ModelSerializer):
-    # question1 = QuestionSerializer(source='')
-    question = QuestionSerializer()
-
-    class Meta:
-        model = Question
-        fields = (
-            'question',
-        )
-
-
 class QnAWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
-    QnA = QuestionSerializer(many=True, source='question_set')
+    questions = QuestionSerializer(many=True, source='question_set')
 
     class Meta:
         model = Talent

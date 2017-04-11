@@ -6,21 +6,21 @@ from talent.models import Talent
 
 __all__ = (
     'Question',
-    'Answer',
+    'Reply',
 )
 
 
 class Question(models.Model):
     talent = models.ForeignKey(Talent)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    question = models.CharField(max_length=200)
+    content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
 
-class Answer(models.Model):
-    question = models.OneToOneField(Question)
+class Reply(models.Model):
+    question = models.ForeignKey(Question)
     tutor = models.ForeignKey(Tutor)
-    answer = models.CharField(max_length=200)
+    content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
 

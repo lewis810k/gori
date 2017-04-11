@@ -2,14 +2,10 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework import permissions
 
-from talent.models import Answer
-from talent.models import Question
 from talent.models import Talent, ClassImage, Registration
 from talent.serializers import ClassImageSerializer, TalentListSerializer, \
     TalentShortDetailSerializer
-from talent.serializers import QnASerializer
 from talent.serializers import QnAWrapperSerializer
-from talent.serializers import QuestionSerializer
 from talent.serializers import ReviewWrapperSerializer
 from talent.serializers import TalentDetailSerializer
 from talent.serializers.class_image import ClassImageWrapperSerializers
@@ -139,8 +135,7 @@ class RegistrationListView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
 
+
 class Qnalist(generics.ListAPIView):
     queryset = Talent.objects.all()
     serializer_class = QnAWrapperSerializer
-
-
