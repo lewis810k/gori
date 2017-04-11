@@ -23,6 +23,19 @@ class LocationCreateView(generics.CreateAPIView):
     serializer_class = LocationCreateSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+
+        필수정보 :
+            - talent_pk : 수업 아이디
+            - region : 지역에 대한 키 값
+            - specific_location : 세부 지역에 대한 결정 여부
+            - day : 요일
+            - time : 시간
+            - extra_fee : 추가 요금 있는지 여부
+        추가정보 :
+            - extra_fee_amount : 추가 요금 설명
+            - location_info : 장소 세부 정보
+        """
         try:
             talent_pk = request.data['talent_pk']
             region = request.data['region']

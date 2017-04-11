@@ -62,24 +62,6 @@ class LocationSerializer(serializers.ModelSerializer):
         #     return obj.registered_student_display()
 
 
-class LocationCreateSerializer(serializers.ModelSerializer):
-    region = serializers.ChoiceField(choices=Location.REGION)
-    day = serializers.ChoiceField(choices=Location.DAYS_OF_WEEK)
-
-    class Meta:
-        model = Location
-        fields = (
-            'talent',
-            'region',
-            'specific_location',
-            'location_info',
-            'day',
-            'extra_fee',
-            'extra_fee_amount',
-            'time',
-        )
-
-
 class LocationTalentSerializer(serializers.ModelSerializer):
     talent_title = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.title')
     talent_id = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')

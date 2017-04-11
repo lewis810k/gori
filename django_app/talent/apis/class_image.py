@@ -21,6 +21,12 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
+        """
+
+        필수정보 :
+            - talent_pk : 수업 아이디
+            - image : 커리큘럼 이미지
+        """
         talent = Talent.objects.get(pk=request.data['talent_pk'])
         if tutor_verify(request, talent):
             try:
