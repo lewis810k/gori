@@ -16,21 +16,27 @@ urlpatterns = [
     url(r'^add/location/$', apis.LocationCreateView.as_view()),
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view()),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
+    url(r'^add/review/$', apis.ReviewCreateView.as_view()),
+    url(r'^add/question/$', apis.QuestionCreateView.as_view()),
+    url(r'^add/reply/$', apis.ReplyCreateView.as_view()),
+
 
     # ##### 리스트 #####
-    url(r'^list/$', apis.TalentListCreateView.as_view()),
+    url(r'^list/$', apis.TalentListCreateView.as_view(),name='talent-list'),
 
     # ##### 전체보기 #####
-    url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view()),
+    url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view(), name='talent-detail-all'),
 
     # ##### 요약 #####
-    url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentShortDetailView.as_view()),
+    url(r'^detail/(?P<pk>[0-9]+)/$', apis.TalentShortDetailView.as_view(), name='talent-detail'),
     url(r'^detail/(?P<pk>[0-9]+)/location/$', apis.LocationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentRetrieveView.as_view()),
-    url(r'^(?P<pk>[0-9]+)/wishlist/toggle/$', m_apis.WishListToggleView.as_view()),
+
+    # ##### 위시리스트 추가/삭제 #####
+    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 ]

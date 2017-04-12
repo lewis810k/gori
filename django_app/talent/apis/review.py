@@ -37,21 +37,27 @@ class ReviewCreateView(generics.CreateAPIView):
         추가정보 :
             - comment : 코멘트
         """
-        talent_pk = request.data['talent_pk']
-        user = request.user
+        try:
 
-        curriculum = request.data['curriculum']
-        readiness = request.data['readiness']
-        timeliness = request.data['timeliness']
-        delivery = request.data['delivery']
-        friendliness = request.data['friendliness']
+            talent_pk = request.data['talent_pk']
+            user = request.user
 
-        talent = Talent.objects.get(pk=talent_pk)
-        # 자신이
-        if not tutor_verify(request, talent):
-            try:
-                # 음.. 여긴 talent만 가리키고 있기 때문에.. 항상 추가만 되는군
-                item, _ = Review.objects.get_or_create(
+            curriculum = request.data['curriculum']
+            readiness = request.data['readiness']
+            timeliness = request.data['timeliness']
+            delivery = request.data['delivery']
+            friendliness = request.data['friendliness']
+
+            talent = Talent.objects.filter(pk=talent_pk).first()
+            if not talent:
+                ret = {
+                    'detail': '수업({pk})이 존재하지 않습니다.'.format(pk=talent_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+            # 자신의 수업이 아니어야 등록 가능
+            if not tutor_verify(request, talent):
+                item, created = Review.objects.get_or_create(
                     talent=talent,
                     user=user,
                     curriculum=curriculum,
@@ -61,23 +67,30 @@ class ReviewCreateView(generics.CreateAPIView):
                     friendliness=friendliness,
                     comment=request.data.get('comment', ''),
                 )
-                print(item, _)
-            except MultiValueDictKeyError as e:
+                # 이미 리뷰가 존재하면 등록할 수 없음
+                if not created:
+                    ret = {
+                        'detail': '리뷰는 1개만 등록할 수 있습니다.'
+                    }
+                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+                ret_message = '[{talent}]에 review가 추가되었습니다.'.format(
+                    talent=talent.title,
+                )
                 ret = {
-                    'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+                    'detail': ret_message,
+                }
+                return Response(ret, status=status.HTTP_201_CREATED)
+
+            # 자신의 수업에 리뷰를 등록하려는 경우
+            else:
+                ret = {
+                    'detail': '자신의 수업에 리뷰를 등록할 수 없습니다.',
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-            ret_message = '[{talent}]에 [{information}] 수업이 추가되었습니다.'.format(
-                talent=talent.title,
-                information=request.data['information']
-            )
+        except MultiValueDictKeyError as e:
             ret = {
-                'detail': ret_message,
+                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
-            return Response(ret, status=status.HTTP_201_CREATED)
-
-        ret = {
-            'detail': '권한이 없습니다.',
-        }
-        return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)

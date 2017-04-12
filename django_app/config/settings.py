@@ -106,7 +106,6 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_PASSWORD = config["gmail"]["password"]
@@ -114,8 +113,6 @@ EMAIL_HOST_USER = config["gmail"]["email"]
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[GORI team]"
-
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -241,9 +238,3 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
