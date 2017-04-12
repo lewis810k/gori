@@ -2,6 +2,8 @@ from django.conf.urls import url, include
 
 from .. import apis
 
+app_name = 'member'
+
 urlpatterns = [
     # ##### 회원가입 #####
     # 페이스북은 유저생성과 로그인을 fb_login에서 일괄적으로 처리함
@@ -38,7 +40,7 @@ urlpatterns = [
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.
     # /api/member/login 식으로 들어올 때 여기로 이동함.
-    url(r'^', include('rest_auth.urls'),),
+    url(r'^', include('rest_auth.urls'), ),
 
     # ##### 토큰 #####
     url(r'^token-auth/$', apis.ObtainAuthToken.as_view(), name='user-token'),
