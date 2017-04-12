@@ -1,15 +1,11 @@
 import os
-from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
-from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from talent.models import Location
-from talent.models import Talent
+from talent.models import Talent, Location
 
 User = get_user_model()
 
@@ -20,20 +16,8 @@ class APITest_User_Login(object):
     test_password2 = 'testpw12'
     test_name = 'testname'
 
-    def create_user(self):
-        data = {
-            'username': self.test_user,
-            'password1': self.test_password1,
-            'password2': self.test_password2,
-            'name': self.test_name,
-        }
-        url = reverse('api:member:user-signup')
-        self.client.post(url, data, format='json')
-        user = User.objects.first()
-        return user
-
     def create_user_and_login(self):
-        user = self.signup()
+        user = self.create_user()
         data = {
             'username': user.username,
             'password': 'testpw12',
@@ -43,11 +27,32 @@ class APITest_User_Login(object):
         print(response)
         return user
 
-    def create_tutor(self,user):
+    def obtain_token(self):
+        user = self.create_user()
+        data = {
+            'username': user.username,
+            'password': 'testpw12',
+        }
+        user_token_url = reverse('api:member:user-token')
+        response = self.client.post(user_token_url, data, format='json')
+        return user, response.data.get('token')
 
+    def create_user(self):
+        data = {
+            'username': self.test_user,
+            'password1': self.test_password1,
+            'password2': self.test_password2,
+            'name': self.test_name,
+        }
+        url = reverse('api: member:user - signup')
+        self.client.post(url, data, format='json')
+        user = User.objects.first()
+        return user
+
+    def create_tutor(self, user):
         file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
         test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-                                        content_type='image/jpeg')
+                                        content_type='image / jpeg')
         tutor = Tutor.objects.create(
             user=user,
             is_verified=True,
@@ -56,11 +61,10 @@ class APITest_User_Login(object):
         )
         return tutor
 
-    def create_talent(self,tutor):
-
+    def create_talent(self, tutor):
         file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
         test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-                                        content_type='image/jpeg')
+                                        content_type='image / jpeg')
         talent = Talent.objects.create(
             tutor=tutor,
             title='test',
