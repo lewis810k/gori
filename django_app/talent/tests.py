@@ -6,6 +6,15 @@ from utils import APITest_User_Login
 
 
 class GoriTest(APILiveServerTestCase, APITest_User_Login):
+    def test_token_create(self):
+
+        response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+
+    def test_talent_create(self):
+        token = self.create_user()
+        data = {
+
+        }
     def test_talent_list(self):
         """
         params : resgion:SD 은 사당으로 검색하기에

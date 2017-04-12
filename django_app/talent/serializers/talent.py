@@ -33,12 +33,12 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
             'cover_image',
             'price_per_hour',
             'is_soldout',
+            'is_verified',
             'created_date',
             'average_rate',
             'review_count',
             'registration_count',
             'regions',
-            'is_verified',
         )
 
     def get_category(self, obj):
@@ -84,13 +84,15 @@ class TalentListSerializer(serializers.ModelSerializer):
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
+            'min_number_student',
+            'max_number_student',
+            'is_verified',
             'is_soldout',
             'created_date',
             'average_rate',
             'review_count',
             'registration_count',
             'regions',
-            'is_verified',
 
         )
 
@@ -146,6 +148,8 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
+            'min_number_student',
+            'max_number_student',
             'is_soldout',
             'is_verified',
 
@@ -197,6 +201,8 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
+            'min_number_student',
+            'max_number_student',
             'is_soldout',
             'is_verified',
             'class_images',
@@ -301,6 +307,8 @@ class TalentCrateSerializers(serializers.ModelSerializer):
             'price_per_hour',
             'hours_per_class',
             'number_of_class',
+            'min_number_student',
+            'max_number_student',
             'is_soldout',
             'is_verified',
         )

@@ -44,7 +44,7 @@ class APITest_User_Login(object):
             'password2': self.test_password2,
             'name': self.test_name,
         }
-        url = reverse('api: member:user - signup')
+        url = reverse('api:member:user-signup')
         self.client.post(url, data, format='json')
         user = User.objects.first()
         return user
