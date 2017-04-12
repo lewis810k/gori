@@ -180,7 +180,7 @@ class RegisterTutorView(APIView):
 
         try:
             verification_method = request.data['verification_method']
-            verification_images = request.FILES.get('verification_images', '')
+            verification_images = request.FILES['verification_images']
             school = request.data.get('school', '')
             major = request.data.get('major', '')
             current_status = request.data.get('current_status', '')
