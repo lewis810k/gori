@@ -61,6 +61,7 @@ class UserProfileView(APIView):
             else:
                 serializer = UserSerializer(user, data=request.data, partial=True)
                 if serializer.is_valid():
+                    user.save()
                     serializer.save()
                     return Response(status=status.HTTP_200_OK, data=UserSerializer(user).data)
                 else:

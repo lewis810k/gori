@@ -1,5 +1,6 @@
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -22,6 +23,7 @@ class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
 class RegistrationListCreateView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """
