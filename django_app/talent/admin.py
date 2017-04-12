@@ -123,6 +123,15 @@ class WishAdmin(admin.ModelAdmin):
     user_name.short_description = 'user'
 
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'talent', 'content_summry', 'created_date')
+    list_filter = ('talent',)
+
+
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'content_summry', 'question', 'created_date')
+
+
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Talent, TalentAdmin)
 admin.site.register(ClassImage, ClassImageAdmin)
@@ -130,5 +139,5 @@ admin.site.register(Registration, RegistrationAdmin)
 admin.site.register(WishList, WishAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Review, ReviewAdmin)
-admin.site.register(Question)
-admin.site.register(Reply)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Reply, ReplyAdmin)

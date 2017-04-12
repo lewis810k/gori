@@ -2,8 +2,10 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
+from utils import APITest_User_Login
 
-class GoriTest(APILiveServerTestCase):
+
+class GoriTest(APILiveServerTestCase, APITest_User_Login):
     def create_post(self, num=1):
         # Post를 만들 유저를 생성 및 로그인
 
@@ -12,6 +14,10 @@ class GoriTest(APILiveServerTestCase):
             response = self.client.post(url)
             if num == 1:
                 return response
+    def test_talent_list(self):
+
+        url = reverse('api:talent:talent-list')
+
 
     def test_url_exist(self):
 
@@ -26,12 +32,6 @@ class GoriTest(APILiveServerTestCase):
         self.assertEqual(talent_list.status_code, status.HTTP_200_OK)
         self.assertEqual(talent_detail_all.status_code, status.HTTP_200_OK)
         self.assertEqual(talent_detail.status_code, status.HTTP_200_OK)
-
-    def test_talent_detailall_url_exist(self):
-        talent = self.test_create_talent()
-        url = 'http://127.0.0.1:8000/api/talent/detail-all/{}/'.format(talent.pk)
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_class_image_url_exist(self):
         # talent = self.test_create_talent()

@@ -7,10 +7,12 @@ from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
+from utils import APITest_User_Login
+
 User = get_user_model()
 
 
-class MemberTest(APILiveServerTestCase):
+class MemberTest(APILiveServerTestCase,APITest_User_Login):
     test_user = 'test'
     test_password1 = 'qwer1234'
     test_password2 = 'qwer1234'
@@ -21,27 +23,26 @@ class MemberTest(APILiveServerTestCase):
         for i in range(num):
             user = User.objects.create_user(
                 username='test_username{}'.format(i + 1),
-                name='test',
+                name='test{}'.format(i + 1),
                 password='votmxmzoa',
             )
             users.append(user)
-
         if num == 1:
             return user
 
-    # def test_signup(self):
-    #     data = {
-    #         'username': self.test_user,
-    #         'password1': self.test_password1,
-    #         'password2': self.test_password2,
-    #         'name': self.test_name,
-    #     }
-    #     url = reverse('api:member:user-signup')
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(User.objects.count(), 1)
-    #     self.assertEqual(Token.objects.count(), 1)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     return response.data
+    def test_signup(self):
+        data = {
+            'username': self.test_user,
+            'password1': self.test_password1,
+            'password2': self.test_password2,
+            'name': self.test_name,
+        }
+        url = reverse('api:member:user-signup')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(Token.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        return response
 
     def test_obtain_token(self):
         user = self.create_user()
@@ -53,6 +54,7 @@ class MemberTest(APILiveServerTestCase):
         url = reverse('api:member:user-token')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response
 
     def test_login(self):
         user = self.create_user()
@@ -61,11 +63,27 @@ class MemberTest(APILiveServerTestCase):
             'username': user.username,
             'password': 'votmxmzoa',
         }
-        url = reverse('api:member/login')
-        print(url)
+        url = reverse('api:member:rest_login')
         response = self.client.post(url, data, format='json')
         # print(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_logout(self):
+        token = self.test_obtain_token()
+        print(token.data.get('token'))
+        self.assertEqual(User.objects.count(), 1)
+        url = reverse('api:member:rest_logout')
+        response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_detail_url_exist(self):
+        token = self.test_obtain_token()
+        url = reverse('api:member:user-detail')
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+
 
 # def test_create_and_register_user(self):
 #     """

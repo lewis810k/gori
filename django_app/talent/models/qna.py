@@ -17,8 +17,10 @@ class Question(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'talent : {} user : {}'.format(self.talent.title, self.user.name)
+        return 'Talent : {} User : {}'.format(self.talent.title, self.user.name)
 
+    def content_summry(self):
+        return '{}...'.format(self.content[:10])
 
 class Reply(models.Model):
     question = models.ForeignKey(Question)
@@ -27,4 +29,7 @@ class Reply(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "question : {}  user : {}".format(self.question.content, self.tutor.user.name)
+        return "question : {}  user : {}".format(self.question.content[:10], self.tutor.user.name)
+
+    def content_summry(self):
+        return '{}...'.format(self.content[:10])
