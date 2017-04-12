@@ -31,13 +31,14 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = (
-            'talent',
+            'pk',
             'registered_location',
             'is_confirmed',
             'student_level',
             'joined_date',
             'experience_length',
             'message_to_tutor',
+            'talent',
             'tutor_info',
         )
 
@@ -46,7 +47,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    registration_info = MyRegistrationSerializer(many=True, source='registrations')
+    registrations = MyRegistrationSerializer(many=True)
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -59,7 +60,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'cellphone',
             'profile_image',
             'joined_date',
-            'registration_info',
+            'registrations',
         )
 
 

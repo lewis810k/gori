@@ -9,10 +9,11 @@ __all__ = (
 
 
 class CurriculumSerializer(serializers.ModelSerializer):
+    talent_pk = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
     class Meta:
         model = Curriculum
         fields = (
-            'talent',
+            'talent_pk',
             'information',
             'image',
         )
