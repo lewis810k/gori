@@ -1,9 +1,5 @@
 from django.contrib.auth import get_user_model
-
-# Create your tests here.
-
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
@@ -12,10 +8,10 @@ from utils import APITest_User_Login
 User = get_user_model()
 
 
-class MemberTest(APILiveServerTestCase,APITest_User_Login):
+class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
     test_user = 'test'
-    test_password1 = 'qwer1234'
-    test_password2 = 'qwer1234'
+    test_password1 = 'testpw12'
+    test_password2 = 'testpw12'
     test_name = 'testname'
 
     def create_user(self, num=1):
@@ -24,11 +20,11 @@ class MemberTest(APILiveServerTestCase,APITest_User_Login):
             user = User.objects.create_user(
                 username='test_username{}'.format(i + 1),
                 name='test{}'.format(i + 1),
-                password='votmxmzoa',
+                password='testpw12',
             )
             users.append(user)
-        if num == 1:
-            return user
+            if num == 1:
+                return user
 
     def test_signup(self):
         data = {
@@ -49,10 +45,11 @@ class MemberTest(APILiveServerTestCase,APITest_User_Login):
         self.assertEqual(User.objects.count(), 1)
         data = {
             'username': user.username,
-            'password': 'votmxmzoa',
+            'password': 'testpw12',
         }
         url = reverse('api:member:user-token')
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response
 
@@ -61,29 +58,60 @@ class MemberTest(APILiveServerTestCase,APITest_User_Login):
         self.assertEqual(User.objects.count(), 1)
         data = {
             'username': user.username,
-            'password': 'votmxmzoa',
+            'password': 'testpw12',
         }
         url = reverse('api:member:rest_login')
         response = self.client.post(url, data, format='json')
-        # print(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_logout(self):
         token = self.test_obtain_token()
-        print(token.data.get('token'))
         self.assertEqual(User.objects.count(), 1)
         url = reverse('api:member:rest_logout')
         response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_user_detail_url_exist(self):
-        token = self.test_obtain_token()
+
+class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
+    def test_user_detail_retrieve(self):
+        user, token = self.obtain_token()
         url = reverse('api:member:user-detail')
-        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('user_id'), user.username)
+        invalid_token = "asdf"
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token + invalid_token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-
+    def test_user_detail_update(self):
+        user, token = self.obtain_token()
+        patch_user_url = reverse('api:member:user-patch')
+        new_nickname = "영나"
+        new_name = "new_test_name"
+        new_cellphone = "01099937576"
+        data = {
+            'nickname': new_nickname,
+            "cellphone": new_cellphone,
+            "name": new_name,
+        }
+        response = self.client.patch(patch_user_url, data=data, HTTP_AUTHORIZATION='Token ' + token)
+        user = User.objects.get(username=user.username)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(user.cellphone, new_cellphone)
+        self.assertEqual(user.nickname, new_nickname)
+        self.assertEqual(user.name, new_name)
+        invalid_cellphone = "99djhjhgsdf32"
+        invalid_data_1 = {
+            "cellphone": invalid_cellphone,
+        }
+        response = self.client.patch(patch_user_url, invalid_data_1, HTTP_AUTHORIZATION='Token ' + token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        invalid_data_2 = {
+            "nickname123": new_nickname
+        }
+        response = self.client.patch(patch_user_url, invalid_data_2, HTTP_AUTHORIZATION='Token ' + token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 # def test_create_and_register_user(self):
 #     """

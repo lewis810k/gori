@@ -90,6 +90,8 @@ class TalentListSerializer(serializers.ModelSerializer):
             'review_count',
             'registration_count',
             'regions',
+            'is_verified',
+
         )
 
     def get_category(self, obj):
@@ -145,6 +147,8 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
             'hours_per_class',
             'number_of_class',
             'is_soldout',
+            'is_verified',
+
         )
 
     def get_category(self, obj):
@@ -194,6 +198,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'hours_per_class',
             'number_of_class',
             'is_soldout',
+            'is_verified',
             'class_images',
             'curriculums',
         )
@@ -297,4 +302,5 @@ class TalentCrateSerializers(serializers.ModelSerializer):
             'hours_per_class',
             'number_of_class',
             'is_soldout',
+            'is_verified',
         )
