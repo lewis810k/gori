@@ -17,6 +17,13 @@ urlpatterns = [
     # ##### 유저삭제 #####
     url(r'^delete/user/$', apis.UserProfileView.as_view(), name='user-delete'),
 
+    # ##### staff가 tutor/talent 인증 (취소) #####
+    url(r'^staff/verify/tutor/(?P<tutor_pk>[0-9]+)/$', apis.StaffUserVerifyTutorView.as_view(), ),
+    url(r'^staff/verify/talent/(?P<talent_pk>[0-9]+)/$', apis.StaffUserVerifyTalentView.as_view(), ),
+
+    # ##### tutor가 수업신청 인증 (취소) #####
+    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(), ),
+
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),
     url(r'^logout/$', apis.CustomLogoutView.as_view()),
@@ -24,6 +31,9 @@ urlpatterns = [
     # ##### 마이페이지 관련 #####
     url(r'^wish-list/$', apis.MyWishListView.as_view()),
     url(r'^registrations/$', apis.MyRegistrationView.as_view()),
+
+    # ##### 튜터 등록 #####
+    url(r'^register/tutor/$', apis.RegisterTutorView.as_view()),
 
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.

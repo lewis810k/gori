@@ -43,7 +43,13 @@ class LocationCreateView(generics.CreateAPIView):
             day = request.data['day']
             time = request.data['time']
             extra_fee = request.data['extra_fee']
-            talent = Talent.objects.get(pk=talent_pk)
+
+            talent = Talent.objects.filter(pk=talent_pk).first()
+            if not talent:
+                ret = {
+                    'detail': '수업({pk})이 존재하지 않습니다.'.format(pk=talent_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
             data = {
                 'talent': talent,

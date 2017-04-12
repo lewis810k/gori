@@ -24,11 +24,13 @@ class LocationSerializer(serializers.ModelSerializer):
     day = serializers.SerializerMethodField()
     # registered_student = serializers.SerializerMethodField(read_only=True)
     time = serializers.SerializerMethodField()
+    talent_pk = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
 
     class Meta:
         model = Location
         fields = (
-            'talent',
+            'pk',
+            'talent_pk',
             'region',
             'specific_location',
             # 'registered_student',

@@ -19,8 +19,9 @@ class Question(models.Model):
     def __str__(self):
         return 'Talent : {} User : {}'.format(self.talent.title, self.user.name)
 
-    def content_summry(self):
+    def content_summary(self):
         return '{}...'.format(self.content[:10])
+
 
 class Reply(models.Model):
     question = models.ForeignKey(Question)
@@ -31,5 +32,5 @@ class Reply(models.Model):
     def __str__(self):
         return "question : {}  user : {}".format(self.question.content[:10], self.tutor.user.name)
 
-    def content_summry(self):
+    def content_summary(self):
         return '{}...'.format(self.content[:10])

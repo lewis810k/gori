@@ -19,7 +19,7 @@ class Registration(models.Model):
     talent_location = models.ForeignKey(Location,
                                         related_name='registrations')
     joined_date = models.DateTimeField(auto_now_add=True)
-    is_confirmed = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     student_level = models.IntegerField(choices=LEVEL,
                                         help_text="레벨 선택", default=1)
     experience_length = models.IntegerField(default=0, blank=True,

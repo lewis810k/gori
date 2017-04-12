@@ -31,13 +31,14 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = (
-            'talent',
+            'pk',
             'registered_location',
-            'is_confirmed',
+            'is_verified',
             'student_level',
             'joined_date',
             'experience_length',
             'message_to_tutor',
+            'talent',
             'tutor_info',
         )
 
@@ -46,7 +47,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    registration_info = MyRegistrationSerializer(many=True, source='registrations')
+    registrations = MyRegistrationSerializer(many=True)
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -59,7 +60,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'cellphone',
             'profile_image',
             'joined_date',
-            'registration_info',
+            'registrations',
         )
 
 
@@ -97,7 +98,7 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
             sub_ret["talent_location"] = registration.talent_location.get_region_display()
             sub_ret["student_level"] = registration.get_student_level_display()
             sub_ret["experience_length"] = registration.experience_length
-            sub_ret["is_confirmed"] = registration.is_confirmed
+            sub_ret["is_verified"] = registration.is_verified
             sub_ret["joined_date"] = registration.joined_date
             sub_ret["message_to_tutor"] = registration.message_to_tutor
             ret.append(sub_ret)
@@ -120,11 +121,11 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = (
-            'id'
+            'id',
             'student',
             'talent_location',
             'joined_date',
-            'is_confirmed',
+            'is_verified',
             'student_level',
             'experience_length',
             'message_to_tutor',

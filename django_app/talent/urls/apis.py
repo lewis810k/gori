@@ -16,6 +16,10 @@ urlpatterns = [
     url(r'^add/location/$', apis.LocationCreateView.as_view()),
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view()),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
+    url(r'^add/review/$', apis.ReviewCreateView.as_view()),
+    url(r'^add/question/$', apis.QuestionCreateView.as_view()),
+    url(r'^add/reply/$', apis.ReplyCreateView.as_view()),
+
 
     # ##### 리스트 #####
     url(r'^list/$', apis.TalentListCreateView.as_view(),name='talent-list'),
@@ -31,6 +35,8 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentRetrieveView.as_view()),
-    url(r'^(?P<pk>[0-9]+)/wishlist/toggle/$', m_apis.WishListToggleView.as_view()),
+
+    # ##### 위시리스트 추가/삭제 #####
+    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 ]
