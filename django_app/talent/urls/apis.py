@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.TalentRegistrationRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewRetrieveView.as_view()),
     url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentRetrieveView.as_view()),
-    url(r'^(?P<pk>[0-9]+)/wishlist/toggle/$', m_apis.WishListToggleView.as_view()),
+
+    # ##### 위시리스트 추가/삭제 #####
+    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view()),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 ]

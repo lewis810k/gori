@@ -17,8 +17,12 @@ urlpatterns = [
     # ##### 유저삭제 #####
     url(r'^delete/user/$', apis.UserProfileView.as_view(), name='user-delete'),
 
-    # ##### staff가 user의 tutor 인증 toggle #####
-    url(r'^admin/toggle/tutor/(?P<tutor_pk>[0-9]+)/$', apis.AdminUserToggleTutor.as_view(), ),
+    # ##### staff가 tutor/talent 인증 (취소) #####
+    url(r'^staff/verify/tutor/(?P<tutor_pk>[0-9]+)/$', apis.StaffUserVerifyTutorView.as_view(), ),
+    url(r'^staff/verify/talent/(?P<talent_pk>[0-9]+)/$', apis.StaffUserVerifyTalentView.as_view(), ),
+
+    # ##### tutor가 수업신청 인증 (취소) #####
+    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(), ),
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),
