@@ -24,6 +24,7 @@ class Talent(models.Model):
         (1, '그룹 수업'),
         (2, '원데이 수업'),
     )
+
     tutor = models.ForeignKey(Tutor)
     wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
     created_date = models.DateTimeField(auto_now_add=True)
