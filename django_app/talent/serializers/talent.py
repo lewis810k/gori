@@ -38,6 +38,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
             'review_count',
             'registration_count',
             'regions',
+            'is_verified',
         )
 
     def get_category(self, obj):

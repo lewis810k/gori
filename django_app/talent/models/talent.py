@@ -39,6 +39,7 @@ class Talent(models.Model):
     hours_per_class = models.IntegerField(blank=False, help_text='기본 수업 시간')
     number_of_class = models.IntegerField(blank=False, help_text='한달 기준 총 수업 일')
     is_soldout = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return '{}'.format(self.title)

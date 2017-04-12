@@ -28,3 +28,15 @@ def duplicate_verify(model, data):
         return True, ret
     else:
         return False, {}
+
+
+def verify_instance(model, pk):
+    instance = model.objects.get(pk=pk)
+    if instance.is_verified:
+        instance.is_verified = False
+        detail = "인증 취소되었습니다."
+    else:
+        instance.is_verified = True
+        detail = "인증 되었습니다."
+    instance.save()
+    return instance, detail

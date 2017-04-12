@@ -26,7 +26,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'title',
                     'location',
                     'joined_date',
-                    'is_confirmed',
+                    'is_verified',
                     'student_level',
                     'experience_length',)
     list_filter = ('student', 'talent_location')

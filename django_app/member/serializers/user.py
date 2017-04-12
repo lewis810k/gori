@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only=True, source='username')
     received_registrations = serializers.SerializerMethodField(read_only=True)
     sent_registrations = serializers.SerializerMethodField(read_only=True)
-    wish_list = serializers.SerializerMethodField(read_only=True)
+    wish_list = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -28,6 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
             'user_id',
             'name',
             'nickname',
+
             'cellphone',
             'user_type',
             'is_tutor',
@@ -40,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
             'sent_registrations',
             'wish_list',
         )
-        read_only_fields = ('is_active', 'is_staff', 'user_type',)
+        read_only_fields = ('is_active', 'is_staff', 'user_type', 'is_tutor', 'joined_date', 'last_login')
 
     @staticmethod
     def get_user_type(obj):
@@ -87,12 +88,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_wish_list(obj):
-        talents = Talent.objects.all()
-        count = 0
-        for talent in talents:
-            if obj.id in talent.wishlist_user.values_list('id', flat=True):
-                count += 1
-        return count
+        # talents = Talent.objects.all()
+        # count = 0
+        # for talent in talents:
+        #     if obj.id in talent.wishlist_user.values_list('id', flat=True):
+        #         count += 1
+        return obj.my_wishlist.count()
 
     def create(self, validated_data):
         user = User.objects.create(
