@@ -1,64 +1,66 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
+from talent.models import WishList
 from utils import APITest_User_Login
 
 User = get_user_model()
 
 
-class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
-    test_user = 'test'
-    test_password1 = 'testpw12'
-    test_password2 = 'testpw12'
-    test_name = 'testname'
-
-    def test_signup(self):
-        data = {
-            'username': self.test_user,
-            'password1': self.test_password1,
-            'password2': self.test_password2,
-            'name': self.test_name,
-        }
-        url = reverse('api:member:user-signup')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(User.objects.count(), 1)
-        self.assertEqual(Token.objects.count(), 1)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        return response
-
-    def test_obtain_token(self):
-        user = self.create_user()
-        self.assertEqual(User.objects.count(), 1)
-        data = {
-            'username': user.username,
-            'password': 'testpw12',
-        }
-        url = reverse('api:member:user-token')
-        response = self.client.post(url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        return response
-
-    def test_login(self):
-        user = self.create_user()
-        self.assertEqual(User.objects.count(), 1)
-        data = {
-            'username': user.username,
-            'password': 'testpw12',
-        }
-        url = reverse('api:member:rest_login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_logout(self):
-        token = self.test_obtain_token()
-        self.assertEqual(User.objects.count(), 1)
-        url = reverse('api:member:rest_logout')
-        response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+#
+#
+# class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
+#     test_user = 'test'
+#     test_password1 = 'testpw12'
+#     test_password2 = 'testpw12'
+#     test_name = 'testname'
+#
+#     def test_signup(self):
+#         data = {
+#             'username': self.test_user,
+#             'password1': self.test_password1,
+#             'password2': self.test_password2,
+#             'name': self.test_name,
+#         }
+#         url = reverse('api:member:user-signup')
+#         response = self.client.post(url, data, format='json')
+#         self.assertEqual(User.objects.count(), 1)
+#         self.assertEqual(Token.objects.count(), 1)
+#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+#         return response
+#
+#     def test_obtain_token(self):
+#         user = self.create_user()
+#         self.assertEqual(User.objects.count(), 1)
+#         data = {
+#             'username': user.username,
+#             'password': 'testpw12',
+#         }
+#         url = reverse('api:member:user-token')
+#         response = self.client.post(url, data, format='json')
+#
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         return response
+#
+#     def test_login(self):
+#         user = self.create_user()
+#         self.assertEqual(User.objects.count(), 1)
+#         data = {
+#             'username': user.username,
+#             'password': 'testpw12',
+#         }
+#         url = reverse('api:member:rest_login')
+#         response = self.client.post(url, data, format='json')
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#
+#     def test_logout(self):
+#         token = self.test_obtain_token()
+#         self.assertEqual(User.objects.count(), 1)
+#         url = reverse('api:member:rest_logout')
+#         response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
@@ -73,7 +75,7 @@ class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_user_detail_update(self):
-        user, token = self.obtain_token()
+        user, token = self.obtain_token(1)
         patch_user_url = reverse('api:member:user-patch')
         new_nickname = "영나"
         new_name = "new_test_name"
@@ -100,6 +102,17 @@ class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
         }
         response = self.client.patch(patch_user_url, invalid_data_2, HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class UserWishlistTest(APILiveServerTestCase, APITest_User_Login):
+    def test_user_wishlist_toggle(self):
+        user, token = self.obtain_token(1)
+        user2, token2 = self.obtain_token(2)
+        tutor = self.create_tutor(user2)
+        talent = self.create_talent(tutor)
+
+        wishlist = WishList.objects.create(talent=talent,wishlist=user)
+
 
 # def test_create_and_register_user(self):
 #     """

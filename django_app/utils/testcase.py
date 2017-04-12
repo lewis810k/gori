@@ -27,8 +27,20 @@ class APITest_User_Login(object):
         print(response)
         return user
 
-    def obtain_token(self):
-        user = self.create_user()
+    def create_user(self, number=None):
+        data = {
+            'username': self.test_user + str(number),
+            'password1': self.test_password1,
+            'password2': self.test_password2,
+            'name': self.test_name,
+        }
+        url = reverse('api:member:user-signup')
+        self.client.post(url, data, format='json')
+        user = User.objects.first()
+        return user
+
+    def obtain_token(self, number=None):
+        user = self.create_user(number)
         data = {
             'username': user.username,
             'password': 'testpw12',
@@ -37,22 +49,10 @@ class APITest_User_Login(object):
         response = self.client.post(user_token_url, data, format='json')
         return user, response.data.get('token')
 
-    def create_user(self):
-        data = {
-            'username': self.test_user,
-            'password1': self.test_password1,
-            'password2': self.test_password2,
-            'name': self.test_name,
-        }
-        url = reverse('api: member:user - signup')
-        self.client.post(url, data, format='json')
-        user = User.objects.first()
-        return user
-
     def create_tutor(self, user):
         file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
         test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-                                        content_type='image / jpeg')
+                                        content_type='image/jpeg')
         tutor = Tutor.objects.create(
             user=user,
             is_verified=True,
