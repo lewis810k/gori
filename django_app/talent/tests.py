@@ -1,3 +1,6 @@
+import os
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
@@ -6,40 +9,54 @@ from utils import APITest_User_Login
 
 
 class GoriTest(APILiveServerTestCase, APITest_User_Login):
-    def create_post(self, num=1):
-        # Post를 만들 유저를 생성 및 로그인
 
-        url = reverse('api:post-list')
-        for i in range(num):
-            response = self.client.post(url)
-            if num == 1:
-                return response
     def test_talent_list(self):
-
-        url = reverse('api:talent:talent-list')
-
-
-    def test_url_exist(self):
-
-        talent_list_url = reverse('api:talent:talent-list')
-        talent_detail_url = reverse('api:talent:talent-detail')
-        talent_detail_all_url = reverse('api:talent:talent-detail-all')
-
-        talent_list = self.client.get(talent_list_url)
-        talent_detail = self.client.get(talent_detail_url)
-        talent_detail_all = self.client.get(talent_detail_all_url)
-
-        self.assertEqual(talent_list.status_code, status.HTTP_200_OK)
-        self.assertEqual(talent_detail_all.status_code, status.HTTP_200_OK)
-        self.assertEqual(talent_detail.status_code, status.HTTP_200_OK)
-
-    def test_class_image_url_exist(self):
-        # talent = self.test_create_talent()
-        class_image = self.test_create_class_image()
-        print(class_image.talent.pk)
-        url = 'http://127.0.0.1:8000/api/talent/detail/{}/class-image/'.format(class_image.talent.pk)
-        response = self.client.get(url)
+        """
+        params : resgion:SD 은 사당으로 검색하기에
+        :return:
+        """
+        user = self.signup()
+        tutor = self.create_tutor(user)
+        talent = self.create_talent(tutor)
+        self.create_location(talent)
+        params = {
+            'region':'SD'
+        }
+        url = reverse('api:talent:list',)
+        print(url)
+        response = self.client.get(url,params)
+        self.assertEqual(len(response.data), 0)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        params = {
+            'title':'test'
+        }
+        url = reverse('api:talent:list')
+        response = self.client.get(url, params)
+        print(response.data)
+        self.assertEqual(len(response.data), 0)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # def test_url_exist(self):
+    #     talent = self.create_talent()
+    #     talent_list_url = reverse('api:talent:talent-list')
+    #     talent_detail_url = reverse('api:talent:talent-detail')
+    #     talent_detail_all_url = reverse('api:talent:talent-detail-all')
+    #
+    #     talent_list = self.client.get(talent_list_url)
+    #     talent_detail = self.client.get(talent_detail_url)
+    #     talent_detail_all = self.client.get(talent_detail_all_url)
+    #
+    #     self.assertEqual(talent_list.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(talent_detail_all.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(talent_detail.status_code, status.HTTP_200_OK)
+
+    # def test_class_image_url_exist(self):
+    #     # talent = self.test_create_talent()
+    #     class_image = self.test_create_class_image()
+    #     print(class_image.talent.pk)
+    #     url = 'http://127.0.0.1:8000/api/talent/detail/{}/class-image/'.format(class_image.talent.pk)
+    #     response = self.client.get(url)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # def create_user(self, num=1):
         # users = []
