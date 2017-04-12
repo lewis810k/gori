@@ -124,12 +124,12 @@ class WishAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent', 'content_summry', 'created_date')
+    list_display = ('pk', 'talent', 'content_summary', 'created_date')
     list_filter = ('talent',)
 
 
 class ReplyAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'content_summry', 'question', 'created_date')
+    list_display = ('pk', 'content_summary', 'question', 'created_date')
 
 
 admin.site.register(Location, LocationAdmin)

@@ -19,7 +19,7 @@ class Question(models.Model):
     def __str__(self):
         return 'Talent : {} User : {}'.format(self.talent.title, self.user.name)
 
-    def content_summry(self):
+    def content_summary(self):
         return '{}...'.format(self.content[:10])
 
 
