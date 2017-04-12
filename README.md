@@ -28,6 +28,7 @@
 	- [Talent Location Retrieve](#talent-location-retrieve)
 	- [Talent Curriculum Retrieve](#talent-curriculum-retrieve)
 	- [Talent Class Image Retrieve](#talent-class-image-retrieve)
+	- .
 	- [Talent Review Retrieve](#talent-review-retrieve)
 	- [Talent Registration Retrieve](#talent-registration-retrieve)
 
@@ -542,6 +543,8 @@ None
 ```
 
 ## Talent Detail Retrieve All
+
+> talent의 기본정보에서 location, curriculum, class_image가 포함되어있다.
 
 ### URL
 
