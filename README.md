@@ -616,7 +616,11 @@ None
   "hours_per_class": 2,
   "number_of_class": 4,
   "is_soldout": false,
-  "class_images": [],
+  "class_images": [
+    {
+      "image": "https://projectgori.s3.amazonaws.com/media/talent/extra_images/14597239_1856403567907243_4624578483752796160_n.jpg"
+    }
+  ],
   "curriculums": [
     {
       "information": "1주차는 간단한 풀컬러 네일 수업입니다",

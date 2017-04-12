@@ -1,32 +1,21 @@
 from django.contrib.auth import get_user_model
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework import filters
+from rest_framework import status
+from rest_framework.response import Response
 
-from talent.models import Talent, Curriculum, ClassImage, Registration
-from talent.serializers import CurriculumSerializer, ClassImageSerializer, TalentListSerializer, \
-    CurriculumWrapperSerializer, TalentShortDetailSerializer
-from talent.serializers import LocationWrapperSerializers, TalentDetailSerializer
-from talent.serializers import ReviewWrapperSerializer
-from talent.serializers.class_image import ClassImageWrapperSerializers
-from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationWrapperSerializer
+from talent.models import Talent
+from talent.serializers import TalentDetailSerializer
+from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
+from utils import duplicate_verify, tutor_verify, Tutor
 
 __all__ = (
-    # talent
     'TalentListCreateView',
     # detail - all
     'TalentDetailView',
     # detail - fragments
     'TalentShortDetailView',
-    'ClassImageListView',
-    'ClassImageRetrieveView',
-    'ReviewRetrieveView',
-
-    # registration
-
-    # 'MyWishListRetrieve',
-    # 'MyRegistrationList',
-    # 'RegistrationList',
 )
 
 User = get_user_model()
@@ -36,14 +25,92 @@ User = get_user_model()
 class TalentListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentListSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     # pagination_class = TalentPagination
 
     # rest_framework의 SearchFilter 사용시
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('title', 'class_info')
 
-    def perform_create(self, serializer):
-        serializer.save(tutor=self.request.user.tutor)
+    def post(self, request, *args, **kwargs):
+        """
+
+        필수정보 :
+            - title : 수업 제목
+            - category : 카테고리
+            - type : 수업 형태
+            - cover_image : 수업 이미지
+            - tutor_info : 튜터 자기소개
+            - class_info : 수업 소개
+            - number_of_class : 한달기준 수업횟수
+            - price_per_hour : 시간당 금액
+            - hours_per_class : 회당 수업시간
+        추가정보 :
+            - video1 : 비디오링크 1
+            - video2 : 비디오링크 2
+        """
+        try:
+            print('a')
+            title = request.data['title']
+            category = request.data['category']
+            type = request.data['type']
+            cover_image = request.FILES['cover_image']
+            tutor_info = request.data['tutor_info']
+            class_info = request.data['class_info']
+            number_of_class = request.data['number_of_class']
+            price_per_hour = request.data['price_per_hour']
+            hours_per_class = request.data['hours_per_class']
+            video1 = request.data.get('video1', '')
+            video2 = request.data.get('video2', '')
+
+            user = request.user
+
+            tutor_list = Tutor.objects.values_list('user_id', flat=True)
+            print(tutor_list)
+
+            # 요청하는 유저가 튜터인지 체크
+            if user.id in tutor_list:
+                # 이미 같은 이름의 수업이 존재하면 400 리턴
+                data = {
+                    'title': title,
+                }
+                is_dup, msg = duplicate_verify(Talent, data)
+                if is_dup:
+                    return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+
+                Talent.objects.create(
+                    tutor=user.tutor,
+                    title=title,
+                    category=category,
+                    type=type,
+                    tutor_info=tutor_info,
+                    class_info=class_info,
+                    number_of_class=number_of_class,
+                    price_per_hour=price_per_hour,
+                    hours_per_class=hours_per_class,
+                    cover_image=cover_image,
+                    video1=video1,
+                    video2=video2,
+                )
+
+                ret_message = '[{talent}] 수업이 추가되었습니다.'.format(
+                    talent=title,
+                )
+                ret = {
+                    'detail': ret_message,
+                }
+                return Response(ret, status=status.HTTP_201_CREATED)
+
+            ret = {
+                'detail': '권한이 없습니다.',
+            }
+            return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
+
+        except MultiValueDictKeyError as e:
+            ret = {
+                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = Talent.objects.all()
@@ -60,36 +127,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
         return queryset
 
 
-
-
-
-
-    #
-    # def get_queryset(self):
-    #     return Talent.objects.filter(pk=self.kwargs['pk'])
-    # pagination_class = RegistrationPagination
-
-    # def get(self, request, *args, **kwargs):
-    #     registration = []
-    #     locations = Location.objects.filter(talent=kwargs['pk'])
-    #     print(locations)
-    #     for location in locations:
-    #         registration = location.registration_set.all()
-    #     # page = self.paginate_queryset(registration)
-    #     # if page is not None:
-    #     #     serializer = self.get_serializer(page, many=True)
-    #     #     return self.get_paginated_response(serializer.data)
-    #
-    #     serializer = RegistrationWrapperSerializers(registration, many=True)
-    #     return Response(serializer.data)
-
-
-class ClassImageRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = ClassImageWrapperSerializers
-
-
-
 class TalentShortDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentShortDetailSerializer
@@ -99,38 +136,3 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 class TalentDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
-
-
-
-
-# def create(self, request, *args, **kwargs):
-#     serializer = self.get_serializer(data=request.data)
-#     serializer.is_valid(raise_exception=True)
-#
-#     serializer.save(
-#         photo_set=request.data.getlist('photo')
-#     )
-#     headers = self.get_success_headers(serializer.data)
-#     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class ClassImageListView(generics.ListCreateAPIView):
-    queryset = ClassImage.objects.all()
-    serializer_class = ClassImageSerializer
-
-
-# class RegistrationRetrieve(generics.RetrieveAPIView):
-#     queryset = Talent.objects.all()
-#     serializer_class = RegistrationWrapperSerializers
-#
-#     def get_queryset(self):
-#         return Talent.objects.filter(id=self.kwargs['pk'])
-
-
-class ReviewRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = ReviewWrapperSerializer
-
-
-class RegistrationListView(generics.ListCreateAPIView):
-    queryset = Registration.objects.all()
-    serializer_class = TalentRegistrationSerializer

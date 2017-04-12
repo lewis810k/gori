@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum
+from talent.models import Reply
+from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum, Question
 
 
 class LocationInline(admin.TabularInline):
@@ -25,7 +26,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'title',
                     'location',
                     'joined_date',
-                    'is_confirmed',
+                    'is_verified',
                     'student_level',
                     'experience_length',)
     list_filter = ('student', 'talent_location')
@@ -68,7 +69,7 @@ class ClassImageAdmin(admin.ModelAdmin):
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'category','location', 'tutor', 'students_list',)
+    list_display = ('pk', 'title', 'category', 'location', 'tutor', 'students_list',)
     inlines = [LocationInline, ClassImageInline, CurriculumInline, ]
 
     def tutor(self, talent):
@@ -122,6 +123,15 @@ class WishAdmin(admin.ModelAdmin):
     user_name.short_description = 'user'
 
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'talent', 'content_summary', 'created_date')
+    list_filter = ('talent',)
+
+
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'content_summary', 'question', 'created_date')
+
+
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Talent, TalentAdmin)
 admin.site.register(ClassImage, ClassImageAdmin)
@@ -129,3 +139,5 @@ admin.site.register(Registration, RegistrationAdmin)
 admin.site.register(WishList, WishAdmin)
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Review, ReviewAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Reply, ReplyAdmin)

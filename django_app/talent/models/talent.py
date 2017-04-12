@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from config import settings
@@ -24,6 +25,7 @@ class Talent(models.Model):
         (1, '그룹 수업'),
         (2, '원데이 수업'),
     )
+
     tutor = models.ForeignKey(Tutor)
     wishlist_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='WishList')
     created_date = models.DateTimeField(auto_now_add=True)
@@ -39,6 +41,9 @@ class Talent(models.Model):
     hours_per_class = models.IntegerField(blank=False, help_text='기본 수업 시간')
     number_of_class = models.IntegerField(blank=False, help_text='한달 기준 총 수업 일')
     is_soldout = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    min_number_student = models.IntegerField(default=1, validators=[MaxValueValidator(9), MinValueValidator(1)])
+    max_number_student = models.IntegerField(default=1, validators=[MaxValueValidator(9), MinValueValidator(1)])
 
     def __str__(self):
         return '{}'.format(self.title)

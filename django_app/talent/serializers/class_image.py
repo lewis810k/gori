@@ -4,19 +4,23 @@ from talent.models import ClassImage, Talent
 
 __all__ = (
     'ClassImageSerializer',
-    'ClassImageWrapperSerializers',
+    'ClassImageWrapperSerializer',
 )
 
 
 class ClassImageSerializer(serializers.ModelSerializer):
+    talent_pk = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
+
     class Meta:
         model = ClassImage
         fields = (
+            'pk',
+            'talent_pk',
             'image',
         )
 
 
-class ClassImageWrapperSerializers(serializers.ModelSerializer):
+class ClassImageWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
     class_images = ClassImageSerializer(many=True, source='classimage_set')
