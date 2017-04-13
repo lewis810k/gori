@@ -1,4 +1,5 @@
 from member.models import Tutor
+from talent.models import Talent
 
 
 def tutor_verify(request, model):
@@ -40,3 +41,14 @@ def verify_instance(model, pk):
         detail = "인증 되었습니다."
     instance.save()
     return instance, detail
+
+def switch_sales_status(pk):
+    talent = Talent.objects.get(pk=pk)
+    if talent.is_soldout:
+        talent.is_soldout = False
+        detail = "SOLD OUT 취소되었습니다."
+    else:
+        talent.is_soldout = True
+        detail = "SOLD OUT 되었습니다."
+    talent.save()
+    return talent, detail
