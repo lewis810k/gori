@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from talent.models import Talent, Location, Curriculum
+from talent.models import Talent, Location, Curriculum, Review, Question
 from utils.upload import image_upload
 
 User = get_user_model()
@@ -137,14 +137,49 @@ class APITest_User_Login(object):
         location = Location.objects.get(region=region, day=day, time=time)
         return location
 
-    def create_curriculum(self,talent,token=None):
+    def create_curriculum(self, talent, token=None):
         test_image = image_upload()
         data = {
-            'talent_pk':talent.pk,
-            'information':'test_information',
-            'image':test_image,
+            'talent_pk': talent.pk,
+            'information': 'test_information',
+            'image': test_image,
         }
         url = reverse('api:talent:curriculum-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        curriculum = Curriculum.objects.get(talent_pk=talent.pk)
+        curriculum = Curriculum.objects.get(talent_id=talent.pk)
         return curriculum
+
+    def create_review(self, talent, token=None):
+        data = {
+            'talent_pk': talent.pk,
+            'curriculum': 5,
+            'readiness': 5,
+            'timeliness': 5,
+            'delivery': 5,
+            'friendliness': 5,
+            'comment': 'test_comment'
+        }
+        url = reverse('api:talent:review-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        review = Review.objects.get(talent_id=talent.pk)
+        return review
+
+    def create_qestion(self, talent, token=None):
+        data = {
+            'talent_pk': talent.pk,
+            'coment': 'test_coment'
+        }
+        url = reverse('api:talent:question-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        question = Question.objects.get(talent_id=talent.pk)
+        return question
+
+    def create_reply(self, question, token=None):
+        data = {
+            'question_pk': question.pk,
+            'content': 'test_content'
+        }
+        url = reverse('api:talent:reply-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        reply = Question.objects.get(question_id=question.pk)
+        return reply
