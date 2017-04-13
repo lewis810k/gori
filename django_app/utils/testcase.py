@@ -155,3 +155,6 @@ class APITest_User_Login(object):
         print(response.data)
         location = Location.objects.get(region=region, day=day, time=time)
         return location
+
+    def create_curriculum(self):
+        pass

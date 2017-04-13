@@ -115,18 +115,10 @@ class TalentTest(APILiveServerTestCase, APITest_User_Login):
                       'profile_image', 'cellphone', 'is_school', 'cover_image', 'price_per_hour', 'hours_per_class',
                       'number_of_class', 'min_number_student', 'max_number_student', 'is_soldout', 'created_date',
                       'average_rate', 'review_count', 'registration_count', 'regions']
-        # self.assertIn(['pk'],response.data)
-        # talent_key = Talent.objects.first()
-        response_list = list(response.data[0].keys())+list(response.data[0]["tutor"])
-        list1 = list(response.data[0].keys())
-        list2 = list(response.data[0]["tutor"])
-        list1.extend(list2)
-        print(list1)
-        print(list2)
-        print(response_list)
+        response_list = list(response.data[0].keys()) + list(response.data[0]["tutor"])
 
         for field in field_list:
-            self.assertIn(field,response_list)
+            self.assertIn(field, response_list)
 
         params_list = [
             ({'region': 'KN'}, 1),
@@ -143,8 +135,46 @@ class TalentTest(APILiveServerTestCase, APITest_User_Login):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_talent_detail_retrieve_all_url_exist(self):
-        talent = Talent.objects.first()
-        print('talnet{}'.format(talent.title))
+        user, user_token = self.obtain_token()
+        tutor = self.register_tutor(user, user_token)
+        talent = self.create_talent(tutor, user_token)
+        url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
+        response = self.client.get(url)
+        field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
+                      'profile_image', 'cellphone', 'cover_image', 'price_per_hour', 'hours_per_class',
+                      'number_of_class', 'min_number_student', 'max_number_student',
+                      'average_rate', 'review_count']
+        # 'registration_count', 모델다시 해놓고 바꿔줄것
+        response_list = list(response.data) + list(response.data["tutor"])
+
+        for field in field_list:
+            self.assertIn(field, response_list)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = reverse('api:talent:detail-all', kwargs={'pk': 999})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_talent_detail_short_retrieve_url_exist(self):
+        user, user_token = self.obtain_token()
+        tutor = self.register_tutor(user, user_token)
+        talent = self.create_talent(tutor, user_token)
+        url = reverse('api:talent:detail-short', kwargs={'pk': talent.pk})
+        response = self.client.get(url)
+        field_list = ['max_number_student', 'price_per_hour', 'is_verified', 'category', 'number_of_class',
+                      'hours_per_class', 'is_soldout', 'class_info', 'video1', 'video2', 'pk', 'title', 'tutor',
+                      'user_id', 'name', 'nickname', 'profile_image', 'cellphone', 'type', 'cover_image',
+                      'tutor_info', 'average_rate', 'review_count', 'min_number_student']
+        response_list = list(response.data) + list(response.data["tutor"])
+
+        for field in field_list:
+            self.assertIn(field, response_list)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = reverse('api:talent:detail-all', kwargs={'pk': 999})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+
         # def test_create_curriculum(self):
         #     talent = self.test_create_talent()
         #     talent_pk = talent[0].pk
