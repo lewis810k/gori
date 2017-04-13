@@ -158,13 +158,13 @@ class APITest_User_Login(object):
         return location
 
     def create_registration(self, location, token=None):
+        user = Token.objects.get(key=token).user
         data = {
             "location_pk": location.pk,
             "student_level": 1,
-            "message_to_tutor": "잘부탁드립니다",
+            "message_to_tutor": "잘부탁드립니다 user{}".format(user.pk),
         }
         url = reverse('api:talent:registration-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        user = User.objects.get(Token.objects.get(key=token).user)
-        registration = Registration.objects.get(student=user,talent_location=location)
+        registration = Registration.objects.get(student=user, talent_location=location)
         return registration
