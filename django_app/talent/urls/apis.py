@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view(), name='registration-create'),
     url(r'^add/review/$', apis.ReviewCreateView.as_view(), name='review-create'),
     url(r'^add/question/$', apis.QuestionCreateView.as_view(), name='question-create'),
-    url(r'^add/reply/$', apis.ReplyCreateView.as_view()),
+    url(r'^add/reply/$', apis.ReplyCreateView.as_view(), name='reply-create'),
 
 
     # ##### 리스트 #####

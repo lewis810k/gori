@@ -8,6 +8,7 @@ from talent.models import Curriculum
 from talent.models import Location
 from talent.models import Question
 from talent.models import Registration
+from talent.models import Reply
 from talent.models import Review
 from talent.models import Talent
 from utils import APITest_User_Login
@@ -108,7 +109,7 @@ class GoriTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ClassImage.objects.count(), 1)
 
-    def test_registration_create(self):
+    def test_create_registration(self):
         location = self.test_create_location()
         location_pk = location[0].pk
         user = self.create_user(2)
@@ -123,7 +124,7 @@ class GoriTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Registration.objects.count(), 1)
 
-    def test_review_create(self):
+    def test_create_review(self):
         talent = self.test_create_talent()
         talent_pk = talent[0].pk
         user = self.create_user(2)
@@ -142,20 +143,38 @@ class GoriTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Review.objects.count(), 1)
 
-    def test_question_create(self):
+    def test_create_question(self):
         talent = self.test_create_talent()
         talent_pk = talent[0].pk
         user = self.create_user(2)
         token = self.obtain_token(user)
 
-        data= {
-            'talent_pk':talent_pk,
-            'content':'test_comment'
+        data = {
+            'talent_pk': talent_pk,
+            'content': 'test_comment'
         }
         url = reverse('api:talent:question-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Question.objects.count(), 1)
+        question = Question.objects.first()
+        return question
+
+    def test_create_reply(self):
+        talent = self.test_create_talent()
+        question = self.test_create_question()
+        question_pk = question.pk
+        token = talent[1]
+        print('토큰{}'.format(token))
+        data = {
+            'question_pk': question_pk,
+            'content': 'test_content'
+        }
+        url = reverse('api:talent:reply-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        print('이게뭘까{}'.format(response.data))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Reply.objects.count(), 1)
 
     def test_talent_list(self):
         """
