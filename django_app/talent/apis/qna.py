@@ -1,5 +1,6 @@
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -22,6 +23,7 @@ class QnATalentRetrieveView(generics.RetrieveAPIView):
 
 class QuestionCreateView(APIView):
     queryset = Question.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
         """
@@ -75,6 +77,7 @@ class QuestionCreateView(APIView):
 
 class ReplyCreateView(APIView):
     queryset = Reply.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
         """
@@ -88,7 +91,6 @@ class ReplyCreateView(APIView):
             question_pk = request.data['question_pk']
             user = request.user
             content = request.data['content']
-
             question = Question.objects.filter(pk=question_pk).first()
 
             if not question:
@@ -108,7 +110,7 @@ class ReplyCreateView(APIView):
                     tutor=user.tutor,
                     content=content,
                 )
-                ret_message = '질문[{pk}]에 답변이 추가되었습니다.'.format(
+                ret_message = '질문[{pk}]에 댓글이 추가되었습니다.'.format(
                     pk=question_pk,
                 )
                 ret = {

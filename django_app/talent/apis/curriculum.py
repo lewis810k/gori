@@ -41,7 +41,7 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
                     information=request.data['information'],
                     image=request.FILES.get('image', ''),
                 )
-                ret_message = '[{talent}]에 [{information}] 수업이 추가되었습니다.'.format(
+                ret_message = '[{talent}]에 수업이 추가되었습니다.'.format(
                     talent=talent.title,
                     information=request.data['information']
                 )

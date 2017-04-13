@@ -9,6 +9,7 @@ from talent.models import Talent
 from talent.serializers import TalentDetailSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import duplicate_verify, tutor_verify, Tutor
+from utils.pagination import LargeResultsSetPagination
 
 __all__ = (
     'TalentListCreateView',
@@ -25,8 +26,7 @@ User = get_user_model()
 class TalentListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentListSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    # pagination_class = TalentPagination
+    pagination_class = LargeResultsSetPagination
 
     # rest_framework의 SearchFilter 사용시
     # filter_backends = (filters.SearchFilter,)
@@ -48,9 +48,11 @@ class TalentListCreateView(generics.ListCreateAPIView):
         추가정보 :
             - video1 : 비디오링크 1
             - video2 : 비디오링크 2
+            - min_number_student : 최소 인원수
+            - max_number_student : 최대 인원수
+
         """
         try:
-            print('a')
             title = request.data['title']
             category = request.data['category']
             type = request.data['type']
@@ -62,6 +64,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
             hours_per_class = request.data['hours_per_class']
             video1 = request.data.get('video1', '')
             video2 = request.data.get('video2', '')
+            min_student_number = request.data.get('min_student_number', 1)
+            max_student_number = request.data.get('max_student_number', 1)
 
             user = request.user
 
@@ -91,6 +95,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
                     cover_image=cover_image,
                     video1=video1,
                     video2=video2,
+                    min_student_number=min_student_number,
+                    max_student_number=max_student_number,
                 )
 
                 ret_message = '[{talent}] 수업이 추가되었습니다.'.format(

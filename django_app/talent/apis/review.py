@@ -1,5 +1,6 @@
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -21,6 +22,7 @@ class ReviewRetrieveView(generics.RetrieveAPIView):
 class ReviewCreateView(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request, *args, **kwargs):
         """
@@ -74,7 +76,7 @@ class ReviewCreateView(generics.CreateAPIView):
                     }
                     return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-                ret_message = '[{talent}]에 review가 추가되었습니다.'.format(
+                ret_message = '[{talent}]에 리뷰가 추가되었습니다.'.format(
                     talent=talent.title,
                 )
                 ret = {
