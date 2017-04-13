@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from talent.models import Talent
 from talent.serializers import TalentDetailSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
-from utils import duplicate_verify, tutor_verify, Tutor
+from utils import duplicate_verify, Tutor
 
 __all__ = (
     'TalentListCreateView',
@@ -50,7 +50,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
             - video2 : 비디오링크 2
         """
         try:
-            print('a')
             title = request.data['title']
             category = request.data['category']
             type = request.data['type']
@@ -66,7 +65,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
             user = request.user
 
             tutor_list = Tutor.objects.values_list('user_id', flat=True)
-            print(tutor_list)
 
             # 요청하는 유저가 튜터인지 체크
             if user.id in tutor_list:
