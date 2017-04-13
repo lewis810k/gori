@@ -15,6 +15,18 @@ class APITest_User_Login(object):
     test_password1 = 'testpw12'
     test_password2 = 'testpw12'
     test_name = 'testname'
+    def create_user(self, num=1):
+
+        data = {
+            'username': 'test{}'.format(num),
+            'password1': self.test_password1,
+            'password2': self.test_password2,
+            'name': self.test_name,
+        }
+        url = reverse('api:member:user-signup')
+        self.client.post(url, data, format='json')
+        user = User.objects.get(username='test{}'.format(num))
+        return user
 
     def create_user_and_login(self):
         user = self.create_user()
@@ -24,30 +36,18 @@ class APITest_User_Login(object):
         }
         url = reverse('api:member:rest_login')
         response = self.client.post(url, data, format='json')
-        print(response)
         return user
 
-    def obtain_token(self):
-        user = self.create_user()
+    def obtain_token(self,user):
         data = {
             'username': user.username,
             'password': 'testpw12',
         }
         user_token_url = reverse('api:member:user-token')
         response = self.client.post(user_token_url, data, format='json')
-        return user, response.data.get('token')
+        return response.data.get('token')
 
-    def create_user(self):
-        data = {
-            'username': self.test_user,
-            'password1': self.test_password1,
-            'password2': self.test_password2,
-            'name': self.test_name,
-        }
-        url = reverse('api:member:user-signup')
-        self.client.post(url, data, format='json')
-        user = User.objects.first()
-        return user
+
 
     def create_tutor(self, user):
         file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')

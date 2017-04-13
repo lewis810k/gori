@@ -11,13 +11,13 @@ urlpatterns = [
     # url(r'^wishlist/$', apis.WishList.as_view()),
 
     # ##### 생성 #####
-    url(r'^create/$', apis.TalentListCreateView.as_view()),
-    url(r'^add/class-image/$', apis.ClassImageListCreateView.as_view()),
-    url(r'^add/location/$', apis.LocationCreateView.as_view()),
-    url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view()),
-    url(r'^add/registration/$', apis.RegistrationListCreateView.as_view()),
-    url(r'^add/review/$', apis.ReviewCreateView.as_view()),
-    url(r'^add/question/$', apis.QuestionCreateView.as_view()),
+    url(r'^create/$', apis.TalentListCreateView.as_view(), name='create'),
+    url(r'^add/class-image/$', apis.ClassImageListCreateView.as_view(), name='class-image-create'),
+    url(r'^add/location/$', apis.LocationCreateView.as_view(), name='location-create'),
+    url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view(), name='curriculum-create'),
+    url(r'^add/registration/$', apis.RegistrationListCreateView.as_view(), name='registration-create'),
+    url(r'^add/review/$', apis.ReviewCreateView.as_view(), name='review-create'),
+    url(r'^add/question/$', apis.QuestionCreateView.as_view(), name='question-create'),
     url(r'^add/reply/$', apis.ReplyCreateView.as_view()),
 
 

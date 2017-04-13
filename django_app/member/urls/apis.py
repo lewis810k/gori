@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^registrations/$', apis.MyRegistrationView.as_view()),
 
     # ##### 튜터 등록 #####
-    url(r'^register/tutor/$', apis.RegisterTutorView.as_view()),
+    url(r'^register/tutor/$', apis.RegisterTutorView.as_view(), name='tutor-register'),
 
     # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     # rest_auth.urls에 login, logout, user, password 등의 뷰가 존재함.
