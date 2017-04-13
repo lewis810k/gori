@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from talent.models import Talent, Location
+from talent.models import Talent, Location, Curriculum
 from utils.upload import image_upload
 
 User = get_user_model()
@@ -97,24 +97,6 @@ class APITest_User_Login(object):
         tutor = Tutor.objects.get(user=user)
         return tutor
 
-    # def create_talent(self, tutor):
-    #     file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
-    #     test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-    #                                     content_type='image / jpeg')
-    #     talent = Talent.objects.create(
-    #         tutor=tutor,
-    #         title='test',
-    #         category='COM',
-    #         type='0',
-    #         cover_image=test_image,
-    #         tutor_info='test',
-    #         class_info='test',
-    #         price_per_hour='10000',
-    #         hours_per_class='1000',
-    #         number_of_class='10',
-    #     )
-    #     return talent
-
     def create_talent(self, tutor, token=None):
         file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
         test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
@@ -152,9 +134,17 @@ class APITest_User_Login(object):
         }
         url = reverse('api:talent:location-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        print(response.data)
         location = Location.objects.get(region=region, day=day, time=time)
         return location
 
-    def create_curriculum(self):
-        pass
+    def create_curriculum(self,talent,token=None):
+        test_image = image_upload()
+        data = {
+            'talent_pk':talent.pk,
+            'information':'test_information',
+            'image':test_image,
+        }
+        url = reverse('api:talent:curriculum-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        curriculum = Curriculum.objects.get(talent_pk=talent.pk)
+        return curriculum

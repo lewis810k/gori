@@ -174,161 +174,202 @@ class TalentTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
+class CurriculumCreateTest(APILiveServerTestCase, APITest_User_Login):
+    def test_create_curriculum(self):
+        user, user_token = self.obtain_token(2)
+        tutor = self.register_tutor(user[0], user_token[0])
+        talent = self.create_talent(tutor, user_token[0])
+        test_image = image_upload()
+        data = {
+            'talent_pk': talent.pk,
+            'information': 'test_information',
+            'image': test_image,
+        }
+        url = reverse('api:talent:curriculum-create')
+        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[0])
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('detail', response.data)
+        fail_list = [
+            ['talent_pk', 555],
+            ["", ""]
+        ]
+        for fail_item in fail_list:
+            fail_data = {
+                fail_item[0]: fail_item[1],
+                'information': 'test_information',
+                'image': test_image,
+            }
+            url = reverse('api:talent:curriculum-create')
+            response = self.client.post(url, fail_data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[0])
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            if fail_item[0] == "":
+                self.assertIn('non_field_error', response.data)
+            else:
+                self.assertIn('detail', response.data)
+        fail_token = [
+            user_token[1],
+            ""
+        ]
+        for fail_item in fail_token:
+            url = reverse('api:talent:curriculum-create')
+            response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + fail_item)
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # def test_create_curriculum(self):
-        #     talent = self.test_create_talent()
-        #     talent_pk = talent[0].pk
-        #     token = talent[1]
-        #     test_image = image_upload()
-        #     data = {
-        #         'talent_pk': talent_pk,
-        #         'information': 'test_information',
-        #         'image': test_image,
-        #     }
-        #     url = reverse('api:talent:curriculum-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Curriculum.objects.count(), 1)
-        #
-        # def test_create_location(self):
-        #     talent = self.test_create_talent()
-        #     talent_pk = talent[0].pk
-        #     token = talent[1]
-        #
-        #     data = {
-        #         'talent_pk': talent_pk,
-        #         'region': 'EWWU',
-        #         'specific_location': 'SELF',
-        #         'day': 'MO',
-        #         'time': '12~16시',
-        #         'extra_fee': 'Y',
-        #         'extra_fee_amount': 'extra',
-        #         'location_info': 'location',
-        #     }
-        #     url = reverse('api:talent:location-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Location.objects.count(), 1)
-        #     location = Location.objects.first()
-        #     return location, token
-        #
-        # def test_create_class_image(self):
-        #     talent = self.test_create_talent()
-        #     talent_pk = talent[0].pk
-        #     token = talent[1]
-        #     test_image = image_upload()
-        #     data = {
-        #         'talent_pk': talent_pk,
-        #         'image': test_image
-        #     }
-        #     url = reverse('api:talent:class-image-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(ClassImage.objects.count(), 1)
-        #
-        # def test_create_registration(self):
-        #     location = self.test_create_location()
-        #     location_pk = location[0].pk
-        #     user = self.create_user(2)
-        #     token = self.obtain_token(user)
-        #     data = {
-        #         'location_pk': location_pk,
-        #         'student_level': 3,
-        #         'message_to_tutor': 'test_message'
-        #     }
-        #     url = reverse('api:talent:registration-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Registration.objects.count(), 1)
-        #
-        # def test_create_review(self):
-        #     talent = self.test_create_talent()
-        #     talent_pk = talent[0].pk
-        #     user = self.create_user(2)
-        #     token = self.obtain_token(user)
-        #     data = {
-        #         'talent_pk': talent_pk,
-        #         'curriculum': 5,
-        #         'readiness': 5,
-        #         'timeliness': 5,
-        #         'delivery': 5,
-        #         'friendliness': 5,
-        #         'comment': 'test'
-        #     }
-        #     url = reverse('api:talent:review-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Review.objects.count(), 1)
-        #
-        # def test_create_question(self):
-        #     talent = self.test_create_talent()
-        #     talent_pk = talent[0].pk
-        #     user = self.create_user(2)
-        #     token = self.obtain_token(user)
-        #
-        #     data = {
-        #         'talent_pk': talent_pk,
-        #         'content': 'test_comment'
-        #     }
-        #     url = reverse('api:talent:question-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Question.objects.count(), 1)
-        #     question = Question.objects.first()
-        #     return question
-        #
-        # def test_create_reply(self):
-        #     tutor = self.test_tutor_register()
-        #     question = self.test_create_question()
-        #     question_pk = question.pk
-        #     token = tutor[1]
-        #     print('토큰{}'.format(token))
-        #     data = {
-        #         'question_pk': question_pk,
-        #         'content': 'test_content'
-        #     }
-        #     url = reverse('api:talent:reply-create')
-        #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        #     print('이게뭘까{}'.format(response.data))
-        #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        #     self.assertEqual(Reply.objects.count(), 1)
-        #
-        # def test_talent_list(self):
-        #     """
-        #     params : resgion:SD 은 사당으로 검색하기에
-        #     :return:
-        #     """
-        #     #
-        #     user = self.create_user()
-        #     tutor = self.create_tutor(user)
-        #     talent = self.create_talent(tutor)
-        #     self.create_location(talent)
-        #     params = {
-        #         'region': 'SD'
-        #     }
-        #     url = reverse('api:talent:list')
-        #     print(url)
-        #     response = self.client.get(url, params)
-        #     self.assertEqual(len(response.data), 0)
-        #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-        #
-        #     # 어떤 테스트인지
-        #     params = {
-        #         'title': 'test1'
-        #     }
-        #     response = self.client.get(url, params)
-        #     self.assertEqual(len(response.data), 0)
-        #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # def test_url_exist(self):
-        #     talent = self.create_talent()
-        #     talent_list_url = reverse('api:talent:talent-list')
-        #     talent_detail_url = reverse('api:talent:talent-detail')
-        #     talent_detail_all_url = reverse('api:talent:talent-detail-all')
-        #
-        #     talent_list = self.client.get(talent_list_url)
-        #     talent_detail = self.client.get(talent_detail_url)
-        #     talent_detail_all = self.client.get(talent_detail_all_url)
-        #
-        #     self.assertEqual(talent_list.status_code, status.HTTP_200_OK)
-        #     self.assertEqual(talent_detail_all.status_code, status.HTTP_200_OK)
-        #     self.assertEqual(talent_detail.status_code, status.HTTP_200_OK)
+
+                # def test_create_curriculum(self):
+                #     talent = self.test_create_talent()
+                #     talent_pk = talent[0].pk
+                #     token = talent[1]
+                #     test_image = image_upload()
+                #     data = {
+                #         'talent_pk': talent_pk,
+                #         'information': 'test_information',
+                #         'image': test_image,
+                #     }
+                #     url = reverse('api:talent:curriculum-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Curriculum.objects.count(), 1)
+                #
+                # def test_create_location(self):
+                #     talent = self.test_create_talent()
+                #     talent_pk = talent[0].pk
+                #     token = talent[1]
+                #
+                #     data = {
+                #         'talent_pk': talent_pk,
+                #         'region': 'EWWU',
+                #         'specific_location': 'SELF',
+                #         'day': 'MO',
+                #         'time': '12~16시',
+                #         'extra_fee': 'Y',
+                #         'extra_fee_amount': 'extra',
+                #         'location_info': 'location',
+                #     }
+                #     url = reverse('api:talent:location-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Location.objects.count(), 1)
+                #     location = Location.objects.first()
+                #     return location, token
+                #
+                # def test_create_class_image(self):
+                #     talent = self.test_create_talent()
+                #     talent_pk = talent[0].pk
+                #     token = talent[1]
+                #     test_image = image_upload()
+                #     data = {
+                #         'talent_pk': talent_pk,
+                #         'image': test_image
+                #     }
+                #     url = reverse('api:talent:class-image-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(ClassImage.objects.count(), 1)
+                #
+                # def test_create_registration(self):
+                #     location = self.test_create_location()
+                #     location_pk = location[0].pk
+                #     user = self.create_user(2)
+                #     token = self.obtain_token(user)
+                #     data = {
+                #         'location_pk': location_pk,
+                #         'student_level': 3,
+                #         'message_to_tutor': 'test_message'
+                #     }
+                #     url = reverse('api:talent:registration-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Registration.objects.count(), 1)
+                #
+                # def test_create_review(self):
+                #     talent = self.test_create_talent()
+                #     talent_pk = talent[0].pk
+                #     user = self.create_user(2)
+                #     token = self.obtain_token(user)
+                #     data = {
+                #         'talent_pk': talent_pk,
+                #         'curriculum': 5,
+                #         'readiness': 5,
+                #         'timeliness': 5,
+                #         'delivery': 5,
+                #         'friendliness': 5,
+                #         'comment': 'test'
+                #     }
+                #     url = reverse('api:talent:review-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Review.objects.count(), 1)
+                #
+                # def test_create_question(self):
+                #     talent = self.test_create_talent()
+                #     talent_pk = talent[0].pk
+                #     user = self.create_user(2)
+                #     token = self.obtain_token(user)
+                #
+                #     data = {
+                #         'talent_pk': talent_pk,
+                #         'content': 'test_comment'
+                #     }
+                #     url = reverse('api:talent:question-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Question.objects.count(), 1)
+                #     question = Question.objects.first()
+                #     return question
+                #
+                # def test_create_reply(self):
+                #     tutor = self.test_tutor_register()
+                #     question = self.test_create_question()
+                #     question_pk = question.pk
+                #     token = tutor[1]
+                #     print('토큰{}'.format(token))
+                #     data = {
+                #         'question_pk': question_pk,
+                #         'content': 'test_content'
+                #     }
+                #     url = reverse('api:talent:reply-create')
+                #     response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+                #     print('이게뭘까{}'.format(response.data))
+                #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                #     self.assertEqual(Reply.objects.count(), 1)
+                #
+                # def test_talent_list(self):
+                #     """
+                #     params : resgion:SD 은 사당으로 검색하기에
+                #     :return:
+                #     """
+                #     #
+                #     user = self.create_user()
+                #     tutor = self.create_tutor(user)
+                #     talent = self.create_talent(tutor)
+                #     self.create_location(talent)
+                #     params = {
+                #         'region': 'SD'
+                #     }
+                #     url = reverse('api:talent:list')
+                #     print(url)
+                #     response = self.client.get(url, params)
+                #     self.assertEqual(len(response.data), 0)
+                #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+                #
+                #     # 어떤 테스트인지
+                #     params = {
+                #         'title': 'test1'
+                #     }
+                #     response = self.client.get(url, params)
+                #     self.assertEqual(len(response.data), 0)
+                #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+                # def test_url_exist(self):
+                #     talent = self.create_talent()
+                #     talent_list_url = reverse('api:talent:talent-list')
+                #     talent_detail_url = reverse('api:talent:talent-detail')
+                #     talent_detail_all_url = reverse('api:talent:talent-detail-all')
+                #
+                #     talent_list = self.client.get(talent_list_url)
+                #     talent_detail = self.client.get(talent_detail_url)
+                #     talent_detail_all = self.client.get(talent_detail_all_url)
+                #
+                #     self.assertEqual(talent_list.status_code, status.HTTP_200_OK)
+                #     self.assertEqual(talent_detail_all.status_code, status.HTTP_200_OK)
+                #     self.assertEqual(talent_detail.status_code, status.HTTP_200_OK)
