@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
@@ -6,19 +7,31 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from talent.models import Talent, Question, Reply
-from talent.serializers import QnAWrapperSerializer
-from utils import tutor_verify
+from talent.serializers import QuestionSerializer
+from utils import tutor_verify, LargeResultsSetPagination
 
 __all__ = (
-    'QnATalentRetrieveView',
+    'QnATalentListView',
     'QuestionCreateView',
     'ReplyCreateView',
+    'QuestionDeleteView',
 )
 
 
-class QnATalentRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = QnAWrapperSerializer
+class QnATalentListView(generics.ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return Question.objects.filter(talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 class QuestionCreateView(APIView):
@@ -73,6 +86,39 @@ class QuestionCreateView(APIView):
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+
+class QuestionDeleteView(generics.DestroyAPIView):
+    queryset = Question.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def delete(self, request):
+        pk = request.data['pk']
+        try:
+            question = Question.objects.get(pk=pk)
+        except Question.DoesNotExist as e:
+            ret = {
+                'detail': '질문[{}]이 존재하지 않습니다.'.format(pk)
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        # 지우려고 하는 question과 현재 유저가 같은지 확인
+        if question.user == user:
+            question.delete()
+            ret_msg = '질문[{}]이 삭제되었습니다.'.format(pk)
+            return_status = status.HTTP_200_OK
+        else:
+            ret_msg = '권한이 없습니다.'
+            return_status = status.HTTP_400_BAD_REQUEST
+
+        ret = {
+            'detail': ret_msg,
+        }
+        return Response(ret, status=return_status)
+
+
+
 
 
 class ReplyCreateView(APIView):

@@ -5,11 +5,10 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Location
 from talent.serializers import LocationWrapperSerializer, LocationSerializer
-from utils import tutor_verify, duplicate_verify
+from utils import tutor_verify, duplicate_verify, LargeResultsSetPagination
 
 __all__ = (
-    'LocationRetrieveView',
-    'LocationCreateView',
+    'LocationListCreateView',
 )
 
 
@@ -18,9 +17,21 @@ class LocationRetrieveView(generics.RetrieveAPIView):
     serializer_class = LocationWrapperSerializer
 
 
-class LocationCreateView(generics.CreateAPIView):
+class LocationListCreateView(generics.ListCreateAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return Location.objects.filter(talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
 
     def post(self, request, *args, **kwargs):
         """
