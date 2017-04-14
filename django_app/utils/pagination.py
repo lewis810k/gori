@@ -3,6 +3,7 @@ from rest_framework.pagination import CursorPagination, LimitOffsetPagination, P
 __all__ = (
     'TalentPagination',
     'RegistrationPagination',
+    'LargeResultsSetPagination',
 )
 
 

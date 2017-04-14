@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
 from talent.serializers.registration import TalentRegistrationSerializer
-from utils import tutor_verify
+from utils import tutor_verify, LargeResultsSetPagination
 
 __all__ = (
     'TalentRegistrationRetrieveView',
@@ -23,7 +23,19 @@ class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
 class RegistrationListCreateView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = LargeResultsSetPagination
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
 
     def post(self, request, *args, **kwargs):
         """

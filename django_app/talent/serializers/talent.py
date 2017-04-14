@@ -2,10 +2,12 @@ from rest_framework import serializers
 
 from member.serializers import TutorSerializer
 from talent.models import Talent, Curriculum, Location
-from talent.serializers import LocationSerializer
 from utils import review_average_rate
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
+from .review import ReviewSerializer, AverageRatesSerializer
+from .qna import QuestionSerializer
+from .location import LocationSerializer
 
 __all__ = (
     'TalentListSerializer',
@@ -127,7 +129,7 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
-    average_rate = serializers.SerializerMethodField(read_only=True)
+    average_rates = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         depth = 1
@@ -141,7 +143,7 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
             'cover_image',
             'tutor_info',
             'class_info',
-            'average_rate',
+            'average_rates',
             'review_count',
             'video1',
             'video2',
@@ -165,16 +167,18 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
         return obj.reviews.count()
 
     @staticmethod
-    def get_average_rate(obj):
-        return review_average_rate(obj.reviews)
+    def get_average_rates(obj):
+        return AverageRatesSerializer(obj).data
 
 
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
-    class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
-    curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=False, )
+    class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=True)
+    curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
+    qna = QuestionSerializer(many=True, source='question_set', read_only=True)
     category = serializers.SerializerMethodField(read_only=True)
-    average_rate = serializers.SerializerMethodField(read_only=True)
+    average_rates = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     # category = serializers.ChoiceField(choices=Talent.CATEGORY)
     locations = LocationSerializer(many=True)
@@ -190,13 +194,13 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             # 'category_name',
             'category',
             'type',
-            'average_rate',
             'review_count',
             'cover_image',
             'tutor_info',
             'class_info',
             'video1',
             'video2',
+            'average_rates',
             'locations',
             'price_per_hour',
             'hours_per_class',
@@ -207,14 +211,16 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'is_verified',
             'class_images',
             'curriculums',
+            'qna',
+            'reviews',
         )
 
     def get_category(self, obj):
         return obj.get_category_display()
 
     @staticmethod
-    def get_average_rate(obj):
-        return review_average_rate(obj.reviews)
+    def get_average_rates(obj):
+        return AverageRatesSerializer(obj).data
 
     def get_review_count(self, obj):
         return obj.reviews.count()
@@ -242,22 +248,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             item.image = image
             # item.image = new_image
             item.save()
-            # print(image)
-            # print(self.initial_data['curriculum1'])
-            # photos = self.initial_data['curriculum_set']
-            # print(photos)
-            # if validated_data:
-            #     print("vd {}".format(validated_data))
-            # class_images = validated_data.get('classimage_set', instance.classimage_set)
-            # print("cl {} ".format(class_images))
-            # if validated_data.get['classimage_set']:
-            #     for index, new_class_image in enumerate(validated_data['classimage_set']):
-            #         new_image = new_class_image.get["image"]
-            #         item = ClassImage.objects.filter(talent=instance)[index]
-            #         item.image = new_image
-            #         item.save()
 
-            # if validated_data['curriculum_set']:
         for index, new_curriculum_item in enumerate(validated_data.pop('curriculum_set')):
             print(new_curriculum_item)
             new_info = new_curriculum_item["information"]
@@ -268,27 +259,6 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             item.save()
 
         return instance
-
-
-#
-# class TalentListingField(serializers.RelatedField):
-#     @staticmethod
-#     def get_choices_value(key, CHOICE):
-#         for item in CHOICE:
-#             if key in item:
-#                 _, value = item
-#                 return value
-#
-#     def to_representation(self, value):
-#         category = self.get_choices_value(value.category, Talent.CATEGORY)
-#         class_type = self.get_choices_value(value.class_type, Talent.CLASS_TYPE_CHOICE)
-#         custom_fields = {
-#             'id': value.id,
-#             'title': value.class_title,
-#             'category': category,
-#             'class_type': class_type,
-#         }
-#         return custom_fields
 
 
 class TalentCrateSerializers(serializers.ModelSerializer):

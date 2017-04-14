@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from talent.models import Talent, ClassImage
 from talent.serializers import ClassImageWrapperSerializer, ClassImageSerializer
-from utils import tutor_verify
+from utils import tutor_verify, LargeResultsSetPagination
 
 __all__ = (
     'ClassImageListCreateView',
@@ -17,7 +17,18 @@ __all__ = (
 class ClassImageListCreateView(generics.ListCreateAPIView):
     queryset = ClassImage.objects.all()
     serializer_class = ClassImageSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return ClassImage.objects.filter(talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
