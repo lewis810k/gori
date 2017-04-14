@@ -57,22 +57,20 @@
             margin: 10px;
             padding: 0;
             text-align: center;
-            color: red;
+            color: white;
             > img {
               width: 36px;
               height: 36px;
               display: block;
               margin: 0 auto;
             }
-            &.nav-btn-word {
+            .nav-btn-word {
               margin-top: 5px;
               display: inline-block;
-              color: red;
             }
-            // &.nav-btn-word {
-            //   display: inline-block;
-            //   background-color: red;
-            // }
+            &:hover {
+              color: #eee;
+            }
           }
         }
       }

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
 from talent.serializers.registration import TalentRegistrationSerializer
-from utils import tutor_verify
+from utils import tutor_verify, LargeResultsSetPagination
 
 __all__ = (
     'TalentRegistrationRetrieveView',
@@ -23,7 +23,19 @@ class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
 class RegistrationListCreateView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = LargeResultsSetPagination
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
 
     def post(self, request, *args, **kwargs):
         """
@@ -41,13 +53,15 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             location_pk = request.data['location_pk']
             locations = Location.objects.filter(pk=location_pk)
             location = locations.first()
+            user = request.user
             if not location:
                 ret = {
                     'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-            if locations.count() > 0:
+            # 이미 등록했었는지 체크
+            if user.id in location.registered_student.values_list('id', flat=True):
                 ret = {
                     'detail': '이미 등록된 수업입니다.'
                 }
