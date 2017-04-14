@@ -47,7 +47,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    registrations = MyRegistrationSerializer(many=True)
+    results = MyRegistrationSerializer(many=True,source="registrations")
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -60,7 +60,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'cellphone',
             'profile_image',
             'joined_date',
-            'registrations',
+            'results',
         )
 
 
