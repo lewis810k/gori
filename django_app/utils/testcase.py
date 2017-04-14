@@ -98,8 +98,9 @@ class APITest_User_Login(object):
         }
         url = reverse('api:talent:create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        print('432143214321',response.data)
         talent = Talent.objects.last()
+        talent.is_verified = True
+        talent.save()
         return talent
 
     def create_location(self, talent, token=None):
