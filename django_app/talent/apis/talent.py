@@ -70,7 +70,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
             user = request.user
 
             tutor_list = Tutor.objects.values_list('user_id', flat=True)
-            print(tutor_list)
 
             # 요청하는 유저가 튜터인지 체크
             if user.id in tutor_list:
