@@ -4,19 +4,21 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from talent.models import Talent
 from talent.serializers import TalentDetailSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
-from utils import duplicate_verify, tutor_verify, Tutor
-from utils.pagination import LargeResultsSetPagination
+from utils import *
 
 __all__ = (
     'TalentListCreateView',
+    'UnverifiedTalentListView',
     # detail - all
     'TalentDetailView',
     # detail - fragments
     'TalentShortDetailView',
+    'TalentSalesStatusToggleView',
 )
 
 User = get_user_model()
@@ -70,7 +72,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
             user = request.user
 
             tutor_list = Tutor.objects.values_list('user_id', flat=True)
-            print(tutor_list)
 
             # 요청하는 유저가 튜터인지 체크
             if user.id in tutor_list:
@@ -129,8 +130,15 @@ class TalentListCreateView(generics.ListCreateAPIView):
             queryset = queryset.filter(locations__region__icontains=region).distinct('pk')
         if category is not None:
             queryset = queryset.filter(category__icontains=category)
-
+        queryset = queryset.filter(is_verified=True)
         return queryset
+
+
+# 인증 승인이 필요한 talent list api
+class UnverifiedTalentListView(generics.ListAPIView):
+    permission_classes = (custom_permission.CustomerIsAdminAccessPermission,)
+    queryset = Talent.objects.filter(is_verified=False)
+    serializer_class = TalentListSerializer
 
 
 class TalentShortDetailView(generics.RetrieveAPIView):
@@ -142,3 +150,25 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 class TalentDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
+
+
+# talent의 is_soldout 상태 toggle
+class TalentSalesStatusToggleView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, pk):
+        user = request.user
+        if hasattr(user, 'tutor'):
+            tutor = request.user.tutor
+            try:
+                talent = Talent.objects.get(pk=pk)
+                if talent in tutor.talent_set.all():
+                    talent, detail = switch_sales_status(pk)
+                    return Response(status=status.HTTP_200_OK,
+                                    data={"detail": detail})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+            except Talent.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수업 내역을 찾을 수 없습니다."})
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})

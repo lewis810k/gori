@@ -1,0 +1,126 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="navbar-logo" href="#">
+        <div class="main-logo">
+          <a href=""><img src="" alt=""></a>
+          <div class="logo-text">
+            배움이 쉽고 즐거워진다
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#" class="nav-search">
+            <img src="../../static/images/icon_search_on.png" alt="">
+            <div class="nav-btn-word">강의검색</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-tutor">
+            <img src="../../static/images/icon_tutor_on.png" alt="">
+            <div class="nav-btn-word">튜터등록</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-info">
+            <img src="../../static/images/icon_info_on.png" alt="">
+            <div class="nav-btn-word">서비스소개</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-join">
+            <img src="../../static/images/icon_join_on.png" alt="">
+            <div class="nav-btn-word">회원가입</div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-login">
+            <img src="../../static/images/icon_login_on.png" alt="">
+            <div class="nav-btn-word">로그인</div>
+          </a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+<div class='test-container'>
+</div>
+<script>
+  var place = 0;
+  function placeDiv() {
+    var d = document.getElementById('nav-ul');
+    if (place == 0) {
+      d.style.right = 20+'px';
+      d.style.top = 90+'px';
+      place = 1;
+    }
+    else {
+      d.style.right = 20+'px';
+      d.style.top = 10+'px';
+      place = 0;
+    }
+  }
+
+  function test(){
+    console.log('abc');
+    var url = 'http://localhost:8000/api/talent/list/';
+    $.ajax({
+      url: url,
+      method: "GET",
+      dataType: "json",
+    })
+    .done(function(data){
+      length = data.results.length;
+      results = data.results;
+      // length만큼 반복
+
+      for(i = 0; i < length; i++){
+        // wrapper div를 새로 만든다.
+        var newDom = $('<div class="test-wrapper"></div>');
+        newDom.attr('id', 'post-' + results[i].pk);
+
+        newDom.append('<div class="test-inside"></div>');
+        newDom.find('.test-inside').text(results[i].title);
+        $('.test-container').append(newDom);
+
+      }
+
+        // 세부 div를 만든다.
+        // 각 아이템마다 제목을 따와서 div에 추가한다.
+      // wrapper에 세부 div를 추가한다.
+
+      // container에 wrapper를 추가한다.
+
+      console.log('aaa');
+      console.log(data);
+      console.log(data.results[0].title);
+      console.log(length);
+    })
+    .fail(function(data){
+      console.log('서버연동실패');
+    });
+  }
+  // test();
+
+</script>
+{% endblock %}

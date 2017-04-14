@@ -16,8 +16,8 @@ import os
 DEBUG = os.environ.get('MODE') == 'DEBUG'
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
-STORAGE_S3 = False
-# STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
+# STORAGE_S3 = False
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 print(DEBUG)
 print(STORAGE_S3)
 
@@ -176,6 +176,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'localhost:8080',
+    'localhost:8000',
 )
 
 ROOT_URLCONF = 'config.urls'
