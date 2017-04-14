@@ -6,23 +6,41 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Review
 from talent.serializers import ReviewWrapperSerializer, ReviewSerializer
-from utils import tutor_verify
+from utils import tutor_verify, LargeResultsSetPagination
 
 __all__ = (
     'ReviewRetrieveView',
     'ReviewCreateView',
+    'ReviewListView',
 )
 
 
+#
 class ReviewRetrieveView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = ReviewWrapperSerializer
 
 
+class ReviewListView(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return Review.objects.filter(talent_id=self.kwargs['pk'])
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
 class ReviewCreateView(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """
