@@ -9,7 +9,7 @@ class TutorInline(admin.TabularInline):
 
 
 class GoriUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_active',
+    list_display = ('pk', 'username', 'email', 'is_staff', 'is_active',
                     'joined_date', 'is_tutor', 'get_tutor_info',)
     inlines = [TutorInline, RegistrationInline]
 
@@ -18,7 +18,7 @@ class GoriUserAdmin(admin.ModelAdmin):
 
 
 class TutorAdmin(admin.ModelAdmin):
-    list_display = ('user', 'talent_title',)
+    list_display = ('pk', 'user', 'talent_title',)
 
     def talent_title(self, tutor):
         title_list = []
