@@ -160,3 +160,20 @@ class ReviewUserSerializer(serializers.ModelSerializer):
             'name',
             'profile_image',
         )
+
+class TutorInfoSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(source='user.profile_image')
+    nickname = serializers.ImageField(source='user.nickname')
+    cellphone = serializers.ImageField(source='user.cellphone')
+    class Meta:
+        model = Tutor
+        fields = (
+            'profile_image',
+            'nickname',
+            'cellphone',
+            'verification_method',
+            'verification_images',
+            'school',
+            'major',
+            'current_status',
+        )

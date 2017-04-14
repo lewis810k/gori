@@ -4,6 +4,7 @@ from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -149,6 +150,34 @@ class TutorProfileView(APIView):
         user = request.user
         serializer = TutorSerializer(Tutor.objects.get(user_id=user.id))
         return Response(serializer.data)
+
+
+class TutorInfoUpdateView(UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated)
+
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        if hasattr(user, 'tutor'):
+            try:
+                tutor = user.tutor
+                nickname = request.data.get('nickname', user.nickname)
+                profile_image = request.data.FILES('profile_image', user.profile_image)
+                cellphone = request.data.get('cellphone', user.cellphone)
+                verification_method = request.data.get('verification_method', tutor.verification_method)
+                verification_images = request.FILES.get('verification_images', tutor.verification_images)
+                school = request.data.get('school', tutor.school)
+                major = request.data.get('major', tutor.major)
+                current_status = request.data.get('current_status', tutor.current_status)
+                if verification_method == 'UN' or 'GR':
+                    if school == None or major == None:
+                        return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "학교를 입력해주세요"})
+
+
+
+            except:
+                pass
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': "튜터로 등록되어 있지 않습니다"})
 
 
 class CreateDjangoUserView(RegisterView):
