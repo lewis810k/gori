@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-# DEBUG = True
-DEBUG = os.environ.get('MODE') == 'DEBUG'
+DEBUG = True
+# DEBUG = os.environ.get('MODE') == 'DEBUG'
 # DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = False

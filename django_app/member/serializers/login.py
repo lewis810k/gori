@@ -52,7 +52,7 @@ class CustomRegisterSerializer(serializers.Serializer):
         return {
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
-            'email': self.validated_data.get('email', '')
+            # 'email': self.validated_data.get('email', '')
         }
 
     def save(self, request):
@@ -60,7 +60,7 @@ class CustomRegisterSerializer(serializers.Serializer):
         user = adapter.new_user(request)
         if 'name' in request.POST:
             user.name = request.POST['name']
-        user.name = user.name.encode('utf-8')
+        # user.name = user.name.encode('utf-8')
         self.cleaned_data = self.get_cleaned_data()
         print('cleaned: ', self.cleaned_data)
         adapter.save_user(request, user, self)
@@ -69,7 +69,7 @@ class CustomRegisterSerializer(serializers.Serializer):
         print(user)
         user.email = request.data['username']
         user.save()
-        setup_user_email(request, user, [])
+        # setup_user_email(request, user, )
         return user
 
 
