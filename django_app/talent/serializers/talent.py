@@ -173,8 +173,8 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
 
 class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
-    class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=False)
-    curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=False, )
+    class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=True)
+    curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=True)
     category = serializers.SerializerMethodField(read_only=True)
     average_rate = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)

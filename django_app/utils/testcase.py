@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from talent.models import Talent, Location, Registration, Curriculum, Review, Question
+from talent.models import Talent, Location, Registration, Curriculum, Review, Question, Reply
 from utils.upload import image_upload
 
 User = get_user_model()
@@ -147,10 +147,10 @@ class APITest_User_Login(object):
         review = Review.objects.get(talent_id=talent.pk)
         return review
 
-    def create_qestion(self, talent, token=None):
+    def create_question(self, talent, token=None):
         data = {
             'talent_pk': talent.pk,
-            'coment': 'test_coment'
+            'content': 'test_content',
         }
         url = reverse('api:talent:question-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
@@ -164,7 +164,7 @@ class APITest_User_Login(object):
         }
         url = reverse('api:talent:reply-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        reply = Question.objects.get(question_id=question.pk)
+        reply = Reply.objects.get(question_id=question.pk)
         return reply
 
     def create_registration(self, location, token=None):
