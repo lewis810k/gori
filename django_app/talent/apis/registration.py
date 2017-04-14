@@ -39,10 +39,17 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         """
         try:
             location_pk = request.data['location_pk']
-            location = Location.objects.filter(pk=location_pk).first()
+            locations = Location.objects.filter(pk=location_pk)
+            location = locations.first()
             if not location:
                 ret = {
                     'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
+            if locations.count() > 0:
+                ret = {
+                    'detail': '이미 등록된 수업입니다.'
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             talent = location.talent
