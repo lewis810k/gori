@@ -166,5 +166,6 @@ class APITest_User_Login(object):
         }
         url = reverse('api:talent:registration-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        user.refresh_from_db()
         registration = Registration.objects.get(student=user, talent_location=location)
         return registration

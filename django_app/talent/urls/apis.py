@@ -37,6 +37,6 @@ urlpatterns = [
 
     # ##### 위시리스트 추가/삭제 #####
     url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view(), name='wishlist-toggle'),
-    url(r'^(?P<pk>[0-9]+)/sales-status/toggle/$', apis.TalentSalesStatusToggleView.as_view(), name='wishlist-toggle'),
+    url(r'^(?P<pk>[0-9]+)/sales-status/toggle/$', apis.TalentSalesStatusToggleView.as_view(), name='sales-toggle'),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 ]

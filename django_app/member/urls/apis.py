@@ -25,7 +25,7 @@ urlpatterns = [
         name='talent-verify'),
 
     # ##### tutor가 수업신청 인증 (취소) #####
-    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(), ),
+    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(),name='registration-verify' ),
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),

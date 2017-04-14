@@ -193,4 +193,5 @@ class UserWishlistTest(APILiveServerTestCase, APITest_User_Login):
         response = self.client.get(wishlist_url, HTTP_AUTHORIZATION='Token ' + tokens[1])
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
+    def test_my_wishlist_view(self):
+        pass

@@ -13,7 +13,6 @@ from member.serializers import UserSerializer
 from member.serializers.login import CustomRegisterSerializer
 from talent.models import WishList, Talent, Registration
 from talent.serializers import MyRegistrationWrapperSerializer, TalentShortInfoSerializer
-from talent.serializers.registration import TalentRegistrationSerializer
 from talent.serializers.wish_list import MyWishListSerializer
 from utils import verify_instance
 from utils.remove_all_but_numbers import remove_non_numeric
@@ -107,7 +106,8 @@ class StaffUserVerifyTutorView(APIView):
             if user.is_staff:
                 tutor, detail = verify_instance(Tutor, tutor_pk)
                 return Response(status=status.HTTP_200_OK,
-                                data={"detail": detail, "result": TutorSerializer(tutor).data})
+                                data={"detail": detail})
+                # data={"detail": detail, "result": TutorSerializer(tutor).data})
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
         except Tutor.DoesNotExist:
@@ -119,16 +119,20 @@ class TutorVerifyRegistrationView(APIView):
 
     def get(self, request, registration_pk):
         user = request.user
-        try:
-            registration = Registration.objects.get(pk=registration_pk)
-            if registration.talent_location.talent in user.talent_set.all():
-                registration, detail = verify_instance(Registration, registration_pk)
-                return Response(status=status.HTTP_200_OK,
-                                data={"detail": detail, "result": TalentRegistrationSerializer(registration).data})
-            else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
-        except Registration.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 신청 내역을 찾을 수 없습니다."})
+        if hasattr(request.user, 'tutor'):
+            try:
+                registration = Registration.objects.get(pk=registration_pk)
+                if registration.talent_location.talent in user.tutor.talent_set.all():
+                    registration, detail = verify_instance(Registration, registration_pk)
+                    return Response(status=status.HTTP_200_OK,
+                                    data={"detail": detail})
+                    # data={"detail": detail, "result": TalentRegistrationSerializer(registration).data})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+            except Registration.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 신청 내역을 찾을 수 없습니다."})
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
 
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
@@ -226,10 +230,12 @@ class WishListToggleView(APIView):
                 if talent.pk in user.my_wishlist.values_list('talent', flat=True):
                     wishlist = WishList.objects.filter(user=user, talent=talent)
                     wishlist.delete()
-                    return Response(status=status.HTTP_200_OK, data={'detail': 'wishlist에서 삭제되었습니다.'})
+                    return Response(status=status.HTTP_200_OK,
+                                    data={'detail': '수업 [{}]이(가) wishlist에서 삭제되었습니다.'.format(talent.title)})
                 else:
                     WishList.objects.create(user=user, talent=talent)
-                    return Response(status=status.HTTP_201_CREATED, data=MyWishListSerializer(user).data)
+                    return Response(status=status.HTTP_201_CREATED,
+                                    data={'detail': '수업 [{}]이(가) wishlist에 추가되었습니다.'.format(talent.title)})
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': '본인의 수업을 위시리스트에 담을 수 없습니다.'})
         except Talent.DoesNotExist:
