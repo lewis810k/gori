@@ -142,6 +142,7 @@ class UnverifiedTalentListView(generics.ListAPIView):
     permission_classes = (custom_permission.CustomerIsAdminAccessPermission,)
     queryset = Talent.objects.filter(is_verified=False)
     serializer_class = TalentListSerializer
+    pagination_class = LargeResultsSetPagination
 
 
 class TalentShortDetailView(generics.RetrieveAPIView):
