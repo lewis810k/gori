@@ -93,12 +93,12 @@ class APITest_User_Login(object):
             'price_per_hour': '10000',
             'hours_per_class': '1000',
             'number_of_class': '10',
-            'min_student_number': '1',
-            'max_student_number': '1',
+            'tutor_message':'test_message'
 
         }
         url = reverse('api:talent:create')
-        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + token)
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        print('432143214321',response.data)
         talent = Talent.objects.last()
         return talent
 
