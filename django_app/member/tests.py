@@ -8,96 +8,96 @@ from utils import APITest_User_Login
 
 User = get_user_model()
 
-#
-# class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
-#     test_user = 'test'
-#     test_password1 = 'testpw12'
-#     test_password2 = 'testpw12'
-#     test_name = 'testname'
-#
-#     def test_signup(self):
-#         data = {
-#             'username': self.test_user,
-#             'password1': self.test_password1,
-#             'password2': self.test_password2,
-#             'name': self.test_name,
-#         }
-#         url = reverse('api:member:user-signup')
-#         response = self.client.post(url, data, format='json')
-#         self.assertEqual(User.objects.count(), 1)
-#         self.assertEqual(Token.objects.count(), 1)
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         return response
-#
-#     def test_obtain_token(self):
-#         user = self.create_user()
-#         self.assertEqual(User.objects.count(), 1)
-#         data = {
-#             'username': user.username,
-#             'password': 'testpw12',
-#         }
-#         url = reverse('api:member:user-token')
-#         response = self.client.post(url, data, format='json')
-#
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         return response
-#
-#     def test_login(self):
-#         user = self.create_user()
-#         self.assertEqual(User.objects.count(), 1)
-#         data = {
-#             'username': user.username,
-#             'password': 'testpw12',
-#         }
-#         url = reverse('api:member:rest_login')
-#         response = self.client.post(url, data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#
-#     def test_logout(self):
-#         token = self.test_obtain_token()
-#         self.assertEqual(User.objects.count(), 1)
-#         url = reverse('api:member:rest_logout')
-#         response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#
-#
-# class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
-#     def test_user_detail_retrieve(self):
-#         user, token = self.obtain_token()
-#         url = reverse('api:member:user-detail')
-#         response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.data.get('user_id'), user.username)
-#         invalid_token = "asdf"
-#         response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token + invalid_token)
-#         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-#
-#     def test_user_detail_update(self):
-#         user, token = self.obtain_token(1)
-#         patch_user_url = reverse('api:member:user-patch')
-#         new_nickname = "영나"
-#         new_name = "new_test_name"
-#         new_cellphone = "01099937576"
-#         data = {
-#             'nickname': new_nickname,
-#             "cellphone": new_cellphone,
-#             "name": new_name,
-#         }
-#         response = self.client.patch(patch_user_url, data=data, HTTP_AUTHORIZATION='Token ' + token)
-#         user = User.objects.get(username=user.username)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(user.cellphone, new_cellphone)
-#         self.assertEqual(user.nickname, new_nickname)
-#         self.assertEqual(user.name, new_name)
-#         invalid_cellphone = "99djhjhgsdf32"
-#         invalid_data = [
-#             {"cellphone": invalid_cellphone, },
-#             {"nickname123": new_nickname, }, ]
-#         for item in invalid_data:
-#             response = self.client.patch(patch_user_url, item, HTTP_AUTHORIZATION='Token ' + token)
-#             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#
-#
+
+class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
+    test_user = 'test'
+    test_password1 = 'testpw12'
+    test_password2 = 'testpw12'
+    test_name = 'testname'
+
+    def test_signup(self):
+        data = {
+            'username': self.test_user,
+            'password1': self.test_password1,
+            'password2': self.test_password2,
+            'name': self.test_name,
+        }
+        url = reverse('api:member:user-signup')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(Token.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        return response
+
+    def test_obtain_token(self):
+        user = self.create_user()
+        self.assertEqual(User.objects.count(), 1)
+        data = {
+            'username': user.username,
+            'password': 'testpw12',
+        }
+        url = reverse('api:member:user-token')
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response
+
+    def test_login(self):
+        user = self.create_user()
+        self.assertEqual(User.objects.count(), 1)
+        data = {
+            'username': user.username,
+            'password': 'testpw12',
+        }
+        url = reverse('api:member:rest_login')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_logout(self):
+        token = self.test_obtain_token()
+        self.assertEqual(User.objects.count(), 1)
+        url = reverse('api:member:rest_logout')
+        response = self.client.post(url, HTTP_AUTHORIZATION='Token ' + token.data.get('token'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
+    def test_user_detail_retrieve(self):
+        user, token = self.obtain_token()
+        url = reverse('api:member:user-detail')
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('user_id'), user.username)
+        invalid_token = "asdf"
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token + invalid_token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_detail_update(self):
+        user, token = self.obtain_token(1)
+        patch_user_url = reverse('api:member:user-patch')
+        new_nickname = "영나"
+        new_name = "new_test_name"
+        new_cellphone = "01099937576"
+        data = {
+            'nickname': new_nickname,
+            "cellphone": new_cellphone,
+            "name": new_name,
+        }
+        response = self.client.patch(patch_user_url, data=data, HTTP_AUTHORIZATION='Token ' + token)
+        user = User.objects.get(username=user.username)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(user.cellphone, new_cellphone)
+        self.assertEqual(user.nickname, new_nickname)
+        self.assertEqual(user.name, new_name)
+        invalid_cellphone = "99djhjhgsdf32"
+        invalid_data = [
+            {"cellphone": invalid_cellphone, },
+            {"nickname123": new_nickname, }, ]
+        for item in invalid_data:
+            response = self.client.patch(patch_user_url, item, HTTP_AUTHORIZATION='Token ' + token)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
 class VerfiyFunctionTest(APILiveServerTestCase, APITest_User_Login):
     def test_staff_verify_tutor(self):
         users, tokens = self.obtain_token(2)
@@ -173,8 +173,6 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITest_User_Login):
         response = self.client.get(registration_verify_url,
                                    HTTP_AUTHORIZATION='Token ' + tokens[1])
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
 
 
 class UserWishlistTest(APILiveServerTestCase, APITest_User_Login):
