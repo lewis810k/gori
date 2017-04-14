@@ -67,8 +67,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
             hours_per_class = request.data['hours_per_class']
             video1 = request.data.get('video1', '')
             video2 = request.data.get('video2', '')
-            min_student_number = request.data.get('min_student_number', 1)
-            max_student_number = request.data.get('max_student_number', 1)
+            min_number_student = request.data.get('min_number_student', 3)
+            max_number_student = request.data.get('max_number_student', 3)
             tutor_message = request.data.get('tutor_message', '')
 
             user = request.user
@@ -98,8 +98,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
                     cover_image=cover_image,
                     video1=video1,
                     video2=video2,
-                    min_student_number=min_student_number,
-                    max_student_number=max_student_number,
+                    min_number_student=1,
+                    max_number_student=3,
                     tutor_message=tutor_message,
                 )
 
