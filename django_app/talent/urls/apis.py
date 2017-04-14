@@ -12,7 +12,7 @@ urlpatterns = [
     # ##### 생성 #####
     url(r'^create/$', apis.TalentListCreateView.as_view(), name='create'),
     url(r'^add/class-image/$', apis.ClassImageListCreateView.as_view(), name='class-image-create'),
-    url(r'^add/location/$', apis.LocationCreateView.as_view(), name='location-create'),
+    url(r'^add/location/$', apis.LocationListCreateView.as_view(), name='location-create'),
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view(), name='curriculum-create'),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view(), name='registration-create'),
     url(r'^add/review/$', apis.ReviewCreateView.as_view(), name='review-create'),
