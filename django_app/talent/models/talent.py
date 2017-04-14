@@ -44,7 +44,7 @@ class Talent(models.Model):
     is_verified = models.BooleanField(default=False)
     min_number_student = models.IntegerField(default=1, validators=[MaxValueValidator(9), MinValueValidator(1)])
     max_number_student = models.IntegerField(default=1, validators=[MaxValueValidator(9), MinValueValidator(1)])
-    tutor_message = models.TextField(blank=True)
+    tutor_message = models.IntegerField(blank=True)
 
     def __str__(self):
         return '{}'.format(self.title)
