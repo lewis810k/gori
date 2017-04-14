@@ -1,13 +1,10 @@
-import os
-
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from utils.upload import image_upload
 from talent.models import Talent, Location, Registration, Curriculum, Review, Question
+from utils.upload import image_upload
 
 User = get_user_model()
 
@@ -70,7 +67,7 @@ class APITest_User_Login(object):
 
         return users, tokens
 
-    def create_tutor(self, user, token=None):
+    def register_tutor(self, user, token=None):
         test_image = image_upload()
         data = {
             "user": user,
@@ -96,6 +93,8 @@ class APITest_User_Login(object):
             'price_per_hour': '10000',
             'hours_per_class': '1000',
             'number_of_class': '10',
+            'min_student_number': '1',
+            'max_student_number': '1',
 
         }
         url = reverse('api:talent:create')
