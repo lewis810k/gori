@@ -21,6 +21,7 @@ urlpatterns = [
 
     # ##### 리스트 #####
     url(r'^list/$', apis.TalentListCreateView.as_view(), name='list'),
+    url(r'^list/unverified/$', apis.UnverifiedTalentListView.as_view(), name='list-unverified'),
 
     # ##### 전체보기 #####
     url(r'^detail-all/(?P<pk>[0-9]+)/$', apis.TalentDetailView.as_view(), name='detail-all'),
@@ -36,6 +37,7 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentRetrieveView.as_view(), name='qna-retrieve'),
 
     # ##### 위시리스트 추가/삭제 #####
-    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view()),
+    url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view(), name='wishlist-toggle'),
+    url(r'^(?P<pk>[0-9]+)/sales-status/toggle/$', apis.TalentSalesStatusToggleView.as_view(), name='sales-toggle'),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 ]

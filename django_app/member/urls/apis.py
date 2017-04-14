@@ -20,11 +20,12 @@ urlpatterns = [
     url(r'^delete/user/$', apis.UserProfileView.as_view(), name='user-delete'),
 
     # ##### staff가 tutor/talent 인증 (취소) #####
-    url(r'^staff/verify/tutor/(?P<tutor_pk>[0-9]+)/$', apis.StaffUserVerifyTutorView.as_view(), ),
-    url(r'^staff/verify/talent/(?P<talent_pk>[0-9]+)/$', apis.StaffUserVerifyTalentView.as_view(), ),
+    url(r'^staff/verify/tutor/(?P<tutor_pk>[0-9]+)/$', apis.StaffUserVerifyTutorView.as_view(), name='tutor-verify'),
+    url(r'^staff/verify/talent/(?P<talent_pk>[0-9]+)/$', apis.StaffUserVerifyTalentView.as_view(),
+        name='talent-verify'),
 
     # ##### tutor가 수업신청 인증 (취소) #####
-    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(), ),
+    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(),name='registration-verify' ),
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),

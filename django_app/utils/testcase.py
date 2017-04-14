@@ -2,11 +2,12 @@ import os
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 from member.models import Tutor
-from talent.models import Talent, Location, Curriculum, Review, Question
 from utils.upload import image_upload
+from talent.models import Talent, Location, Registration, Curriculum, Review, Question
 
 User = get_user_model()
 
@@ -69,22 +70,7 @@ class APITest_User_Login(object):
 
         return users, tokens
 
-    # def create_tutor(self, user):
-    #     file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
-    #     test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-    #                                     content_type='image/jpeg')
-    #     tutor = Tutor.objects.create(
-    #         user=user,
-    #         is_verified=True,
-    #         verification_method='UN',
-    #         verification_images=test_image
-    #     )
-    #     return tutor
-
-    def register_tutor(self, user, token=None):
-        # file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
-        # test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-        #                                 content_type='image/jpeg')
+    def create_tutor(self, user, token=None):
         test_image = image_upload()
         data = {
             "user": user,
@@ -98,9 +84,7 @@ class APITest_User_Login(object):
         return tutor
 
     def create_talent(self, tutor, token=None):
-        file_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
-        test_image = SimpleUploadedFile(name='test_image.jpg', content=open(file_path, 'rb').read(),
-                                        content_type='image / jpeg', )
+        test_image = image_upload()
         data = {
             'tutor': tutor,
             'title': 'test',
@@ -115,7 +99,6 @@ class APITest_User_Login(object):
 
         }
         url = reverse('api:talent:create')
-        print(url)
         response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + token)
         talent = Talent.objects.last()
         return talent
@@ -183,3 +166,16 @@ class APITest_User_Login(object):
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
         reply = Question.objects.get(question_id=question.pk)
         return reply
+
+    def create_registration(self, location, token=None):
+        user = Token.objects.get(key=token).user
+        data = {
+            "location_pk": location.pk,
+            "student_level": 1,
+            "message_to_tutor": "잘부탁드립니다 user{}".format(user.pk),
+        }
+        url = reverse('api:talent:registration-create')
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
+        user.refresh_from_db()
+        registration = Registration.objects.get(student=user, talent_location=location)
+        return registration
