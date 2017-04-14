@@ -33,6 +33,8 @@
 
 - [수정내용](#수정)
 
+- [수정내용](#수정)
+
 ## Obtain Token
 
 ### URL
@@ -383,9 +385,13 @@ None
   "profile_image": null,
   "joined_date": "2017-04-05T10:04:55.576160Z",
   "last_login": "2017-04-06T09:37:40.312932Z",
+<<<<<<< HEAD
+  "received_registrations": 0
+=======
   "received_registrations": 0,
   "sent_registrations": 0,
   "wish_list": 0
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 }
 ```
 
@@ -535,6 +541,8 @@ None
       "regions": [
         "홍익대",
         "용산"
+<<<<<<< HEAD
+=======
       ]
     }
   ]
@@ -609,6 +617,7 @@ None
       "extra_fee_amount": "",
       "time": [
         "16:00-22:00"
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
       ]
     }
   ],
@@ -642,6 +651,9 @@ None
 }
 ```
 
+<<<<<<< HEAD
+---
+=======
 ### Error Response
 
 - Code: 404
@@ -1039,10 +1051,13 @@ None
 }
 ```
 
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 
 
 # 수정
 
+<<<<<<< HEAD
+=======
 ## 수정사항_002
 
 - 수정 날짜 : 2017. 04. 10.
@@ -1094,6 +1109,7 @@ Field|Description|Type
 | category | 카테고리 필터링 (카테고리에 해당하는 key값) |String
 
 
+>>>>>>> e75abcc4ae789ce9fbbd7be29932b5947d25555e
 ## 수정사항_001
 
 - 수정 날짜 : 2017. 04. 07.

@@ -6,9 +6,7 @@ RUN         apt-get -y install python3
 RUN         apt-get -y install python3-pip
 RUN         apt-get -y install nginx
 RUN         apt-get -y install supervisor
-RUN         apt-get -y install language-pack-ko
 
-RUN         pip3 install django
 RUN         pip3 install uwsgi
 
 COPY        . /srv/app
