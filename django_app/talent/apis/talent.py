@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from talent.models import Talent
 from talent.serializers import TalentDetailSerializer
-from talent.serializers import TalentListSerializer, TalentShortDetailSerializer, TalentShortInfoSerializer
+from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import duplicate_verify, Tutor, custom_permission, switch_sales_status
 
 __all__ = (
@@ -151,14 +151,18 @@ class TalentSalesStatusToggleView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, pk):
-        tutor = request.user.tutor
-        try:
-            talent = Talent.objects.get(pk=pk)
-            if talent in tutor.talent_set.all():
-                talent, detail = switch_sales_status(pk)
-                return Response(status=status.HTTP_200_OK,
-                                data={"detail": detail, "result": TalentShortInfoSerializer(talent).data})
-            else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
-        except Talent.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수 내역을 찾을 수 없습니다."})
+        user = request.user
+        if hasattr(user, 'tutor'):
+            tutor = request.user.tutor
+            try:
+                talent = Talent.objects.get(pk=pk)
+                if talent in tutor.talent_set.all():
+                    talent, detail = switch_sales_status(pk)
+                    return Response(status=status.HTTP_200_OK,
+                                    data={"detail": detail})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+            except Talent.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수업 내역을 찾을 수 없습니다."})
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
