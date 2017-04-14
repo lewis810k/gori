@@ -52,6 +52,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
             - video2 : 비디오링크 2
             - min_number_student : 최소 인원수
             - max_number_student : 최대 인원수
+            - tutor_message : 튜터 메시지
 
         """
         try:
@@ -68,6 +69,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
             video2 = request.data.get('video2', '')
             min_student_number = request.data.get('min_student_number', 1)
             max_student_number = request.data.get('max_student_number', 1)
+            tutor_message = request.data.get('tutor_message', '')
 
             user = request.user
 
@@ -98,6 +100,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
                     video2=video2,
                     min_student_number=min_student_number,
                     max_student_number=max_student_number,
+                    tutor_message=tutor_message,
                 )
 
                 ret_message = '[{talent}] 수업이 추가되었습니다.'.format(
