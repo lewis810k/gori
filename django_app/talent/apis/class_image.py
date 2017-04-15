@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
@@ -10,6 +11,7 @@ from utils import *
 
 __all__ = (
     'ClassImageListCreateView',
+    'ClassImageDeleteView',
 )
 
 
@@ -47,3 +49,11 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ClassImageDeleteView(generics.DestroyAPIView):
+    queryset = ClassImage.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return ClassImage.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
