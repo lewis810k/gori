@@ -136,15 +136,15 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
 
 
 class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
-    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    talent_location = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='student')
+    location_pk = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), source='talent_location')
 
     class Meta:
         model = Registration
         fields = (
             'id',
-            'student',
-            'talent_location',
+            'user',
+            'location_pk',
             'student_level',
             'experience_length',
             'message_to_tutor',

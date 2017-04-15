@@ -38,7 +38,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
-    talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all())
+    talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     # name = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
@@ -46,7 +46,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = (
-            'talent',
+            'talent_pk',
             'user',
             'curriculum',
             'readiness',

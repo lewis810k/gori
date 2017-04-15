@@ -4,8 +4,8 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from talent.models import Talent, Location
-from talent.serializers import LocationWrapperSerializer, LocationSerializer
-from utils import verify_tutor, verify_duplicate, LargeResultsSetPagination
+from talent.serializers import LocationSerializer, LocationCreateSerializer
+from utils import *
 
 __all__ = (
     'LocationListCreateView',
@@ -19,6 +19,40 @@ class LocationListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Location.objects.filter(talent_id=self.kwargs['pk'])
+
+    def create(self, request, *args, **kwargs):
+        # 생성 전용 시리얼라이저 사용
+        serializer = LocationCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # ##### 추가 검증 절차 #####
+        talent = Talent.objects.get(pk=request.data['talent_pk'])
+
+        # ##### 자신의 수업이면 등록 불가능 #####
+        if verify_tutor(request, talent):
+            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # ##### 이미 리뷰가 존재하면 등록 불가능#####
+        data = {
+            'talent': talent,
+            'user': request.user,
+        }
+        if verify_duplicate(Review, data=data):
+            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # ##### 추가 검증 끝  #####
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        # 성공 메시지 출력
+        ret_message = '[{talent}]에 리뷰가 추가되었습니다.'.format(
+            talent=talent.title,
+        )
+        ret = {
+            'detail': ret_message,
+        }
+        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
     def post(self, request, *args, **kwargs):
         """

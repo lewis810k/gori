@@ -23,6 +23,23 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         return Review.objects.filter(talent_id=self.kwargs['pk'])
 
     def create(self, request, *args, **kwargs):
+        """
+        특정 수업에 대해 리뷰를 작성한다.
+        자신의 수업에 대해서는 리뷰를 작성할 수 없도록 한다.
+
+        필수정보 :
+            - talent_pk : 수업 아이디
+        추가정보 :
+            - (점수들은 default=1을 가짐)
+            - curriculum : 커리큘럼에 대한 점수
+            - readiness : 준비성에 대한 점수
+            - timeliness : 시간을 잘 지켰는지에 대한 점수
+            - delivery : 전달력에 대한 점수
+            - friendliness : 친근감?에 대한 점수
+            - comment : 코멘트
+        """
+        request.data['user'] = request.user.id
+
         # 생성 전용 시리얼라이저 사용
         serializer = ReviewCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -55,29 +72,3 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             'detail': ret_message,
         }
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
-
-    def post(self, request, *args, **kwargs):
-        """
-        특정 수업에 대해 리뷰를 작성한다.
-        자신의 수업에 대해서는 리뷰를 작성할 수 없도록 한다.
-
-        필수정보 :
-            - talent_pk : 수업 아이디
-        추가정보 :
-            - (점수들은 default=1을 가짐)
-            - curriculum : 커리큘럼에 대한 점수
-            - readiness : 준비성에 대한 점수
-            - timeliness : 시간을 잘 지켰는지에 대한 점수
-            - delivery : 전달력에 대한 점수
-            - friendliness : 친근감?에 대한 점수
-            - comment : 코멘트
-        """
-        try:
-            # primary key로 연결되는 값 설정
-            request.data['talent'] = request.data['talent_pk']
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-        return self.create(request, *args, **kwargs)

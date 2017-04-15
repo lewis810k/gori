@@ -5,9 +5,9 @@ from talent.models import Talent, Location
 
 __all__ = (
     'LocationSerializer',
-    'LocationWrapperSerializer',
     'LocationListSerializer',
     'LocationTalentSerializer',
+    'LocationCreateSerializer',
 )
 
 User = get_user_model()
@@ -80,25 +80,18 @@ class LocationTalentSerializer(serializers.ModelSerializer):
         )
 
 
-class LocationWrapperSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField(read_only=True)
-    type = serializers.SerializerMethodField(read_only=True)
-    locations = LocationSerializer(many=True, read_only=True)
+class LocationCreateSerializer(serializers.ModelSerializer):
+    talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all())
 
     class Meta:
-        model = Talent
+        model = Location
         fields = (
-            'pk',
-            'title',
-            'category',
-            'type',
-            'locations',
+            'talent',
+            'region',
+            'specific_location',
+            'location_info',
+            'extra_fee',
+            'extra_fee_amount',
+            'day',
+            'time',
         )
-
-    @staticmethod
-    def get_category(obj):
-        return obj.get_category_display()
-
-    @staticmethod
-    def get_type(obj):
-        return obj.get_type_display()
