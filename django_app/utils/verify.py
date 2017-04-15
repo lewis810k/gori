@@ -1,7 +1,7 @@
 from member.models import Tutor
 
 
-def tutor_verify(request, model):
+def verify_tutor(request, model):
     """
     1. 요청하는 유저가 튜터인지 확인을 먼저 한 후
     2. 추가하고자 하는 talent의 튜터와 요청하는 유저(튜터)의 정보가 같은지 확인한다.
@@ -14,7 +14,7 @@ def tutor_verify(request, model):
     return False
 
 
-def duplicate_verify(model, data):
+def verify_duplicate(model, data):
     """
     특정 모델을 넘겨 받아 해당 data으로 구성된 아이템이 존재하는지 체크
     :param model: 중복체크하고자 하는 모델
@@ -40,3 +40,29 @@ def verify_instance(model, pk):
         detail = "인증 되었습니다."
     instance.save()
     return instance, detail
+
+
+def verify_data(data, type):
+    """
+    post 요청으로 넘겨받은 데이터의 유효성을 점검한다.
+    A. 빈 값 체크
+    B. 숫자형태 체크
+
+    type == 1 : A, B
+    type == 2 : A
+
+    :param data: response.data
+    :param type: 검증 형태
+    :return:
+    """
+    if type == 1:
+        for key, value in data.items():
+            if value.strip() == '':
+                return False
+            if not value.isdigit():
+                return False
+    if type == 2:
+        for key, value in data.items():
+            if value.strip() == '':
+                return False
+    return True
