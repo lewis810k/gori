@@ -12,6 +12,7 @@ from member.models import Tutor
 from member.serializers import TutorSerializer
 from member.serializers import UserSerializer
 from member.serializers.login import CustomRegisterSerializer
+from member.serializers.user import TutorInfoSerializer
 from talent.models import WishList, Talent, Registration
 from talent.serializers import MyRegistrationWrapperSerializer, TalentShortInfoSerializer
 from talent.serializers.wish_list import MyWishListSerializer
@@ -21,6 +22,7 @@ from utils.remove_all_but_numbers import remove_non_numeric
 __all__ = (
     'UserProfileView',
     'TutorProfileView',
+    'TutorUpdateView',
     'UserRetrieveUpdateDestroyView',
     'CreateDjangoUserView',
     'MyWishListView',
@@ -152,30 +154,33 @@ class TutorProfileView(APIView):
         return Response(serializer.data)
 
 
-class TutorInfoUpdateView(UpdateAPIView):
-    permission_classes = (permissions.IsAuthenticated)
+class TutorUpdateView(UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def patch(self, request, *args, **kwargs):
         user = request.user
         if hasattr(user, 'tutor'):
             try:
                 tutor = user.tutor
-                nickname = request.data.get('nickname', user.nickname)
-                profile_image = request.data.FILES('profile_image', user.profile_image)
-                cellphone = request.data.get('cellphone', user.cellphone)
-                verification_method = request.data.get('verification_method', tutor.verification_method)
-                verification_images = request.FILES.get('verification_images', tutor.verification_images)
-                school = request.data.get('school', tutor.school)
-                major = request.data.get('major', tutor.major)
-                current_status = request.data.get('current_status', tutor.current_status)
-                if verification_method == 'UN' or 'GR':
-                    if school == None or major == None:
-                        return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "학교를 입력해주세요"})
-
-
-
+                for request_item in request.data.keys():
+                    if request_item not in [item for item in TutorInfoSerializer(tutor).fields]:
+                        return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "잘못된 형식의 data 입니다."})
+                    verification_method = request.data.get('verification_method', tutor.verification_method)
+                    current_status = request.data.get('current_status', tutor.current_status)
+                    if verification_method == 'UN' or 'GR':
+                        if current_status == '':
+                            return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "재학/졸업/수료 여부를 입력해주세요"})
+                        serializer = TutorInfoSerializer(tutor, data=request.data, partial=True)
+                        if serializer.is_valid():
+                            serializer.save()
+                            return Response(status=status.HTTP_200_OK, data={"detail": "튜터 정보가 수정되었습니다"})
+                    else:
+                        serializer = TutorSerializer(tutor, data=request.data, partial=True)
+                        if serializer.is_valid():
+                            serializer.save()
+                            return Response(status=status.HTTP_200_OK, data={"detail": "튜터 정보가 수정되었습니다"})
             except:
-                pass
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "잘못된 형식의 data 입니다"})
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': "튜터로 등록되어 있지 않습니다"})
 

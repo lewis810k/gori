@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from member.models import Tutor
-from talent.models import Location, Talent
+from talent.models import Location
 
 __all__ = (
     'UserSerializer',
@@ -149,6 +149,11 @@ class TutorSerializer(DynamicFieldsModelSerializer):
             'is_verified',
             'profile_image',
             'cellphone',
+            'verification_method',
+            'verification_images',
+            'school',
+            'major',
+            'current_status',
         )
 
 
@@ -161,16 +166,11 @@ class ReviewUserSerializer(serializers.ModelSerializer):
             'profile_image',
         )
 
+
 class TutorInfoSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField(source='user.profile_image')
-    nickname = serializers.ImageField(source='user.nickname')
-    cellphone = serializers.ImageField(source='user.cellphone')
     class Meta:
         model = Tutor
         fields = (
-            'profile_image',
-            'nickname',
-            'cellphone',
             'verification_method',
             'verification_images',
             'school',
