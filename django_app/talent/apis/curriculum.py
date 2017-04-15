@@ -17,6 +17,7 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
     queryset = Curriculum.objects.all()
     serializer_class = CurriculumSerializer
     pagination_class = LargeResultsSetPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         return Curriculum.objects.filter(talent_id=self.kwargs['pk'])

@@ -16,6 +16,7 @@ class LocationListCreateView(generics.ListCreateAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     pagination_class = LargeResultsSetPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         return Location.objects.filter(talent_id=self.kwargs['pk'])

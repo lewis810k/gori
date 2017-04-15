@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
@@ -7,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from talent.models import Talent, Question, Reply
-from talent.serializers import QuestionSerializer
-from utils import verify_tutor, LargeResultsSetPagination
+from talent.serializers import QuestionSerializer, QuestionCreateSerializer, ReplyCreateSerializer
+from utils import *
 
 __all__ = (
     'QuestionListCreateView',
@@ -17,7 +18,7 @@ __all__ = (
 )
 
 
-class QuestionListCreateView(generics.ListAPIView):
+class QuestionListCreateView(generics.ListCreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     pagination_class = LargeResultsSetPagination
@@ -26,54 +27,34 @@ class QuestionListCreateView(generics.ListAPIView):
     def get_queryset(self):
         return Question.objects.filter(talent_id=self.kwargs['pk'])
 
-    def post(self, request):
+    def create(self, request, *args, **kwargs):
         """
-
         필수정보 :
             - talent_pk : 수업 아이디
             - content : 질문 내용
         추가정보 :
         """
-        try:
-            talent_pk = request.data['talent_pk']
-            user = request.user
-            content = request.data['content']
+        request.data['user'] = request.user.id
 
-            talent = Talent.objects.filter(pk=talent_pk).first()
+        # 생성 전용 시리얼라이저 사용
+        serializer = QuestionCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            if not talent:
-                ret = {
-                    'detail': '수업({pk})이 존재하지 않습니다.'.format(pk=talent_pk)
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 절차 #####
+        talent = Talent.objects.get(pk=request.data['talent_pk'])
 
-            # 자신의 수업이 아니어야 질문을 등록할 수 있음
-            if not verify_tutor(request, talent):
-                Question.objects.create(
-                    talent=talent,
-                    user=user,
-                    content=content,
-                )
-                ret_message = '[{talent}]에 질문이 추가되었습니다.'.format(
-                    talent=talent.title,
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
+        # ##### 자신의 수업이면 등록 불가능 #####
+        if verify_tutor(request, talent):
+            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
 
-            # 자신의 수업에 질문을 등록하려는 경우
-            else:
-                ret = {
-                    'detail': '자신의 수업에 질문을 등록할 수 없습니다.',
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 갯수 제한? #####
 
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 끝  #####
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class QuestionDeleteView(generics.DestroyAPIView):
@@ -106,58 +87,43 @@ class QuestionDeleteView(generics.DestroyAPIView):
         return Response(ret, status=return_status)
 
 
-class ReplyCreateView(APIView):
+class ReplyCreateView(generics.CreateAPIView):
     queryset = Reply.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request):
+    def create(self, request, *args, **kwargs):
         """
+        여기는 튜터 정보를 추출하기 위해서 verify_tutor를 먼저 실행한다.
+        후에 is_valid 적용
 
         필수정보 :
             - question_pk : 질문 아이디
             - content : 답변 내용
         추가정보 :
         """
+        request.data['user'] = request.user.id
         try:
-            question_pk = request.data['question_pk']
-            user = request.user
-            content = request.data['content']
-            question = Question.objects.filter(pk=question_pk).first()
+            request.data['tutor'] = request.user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
 
-            if not question:
-                ret = {
-                    'detail': '질문({pk})이 존재하지 않습니다.'.format(pk=question_pk)
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # 생성 전용 시리얼라이저 사용
+        serializer = ReplyCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            # 이미 question이 존재하지 않으면 talent에 접근하지 못함
-            # 여기서 에러가 발생하면 talent 지워질 때 question이 같이 지워지지 않은 것
-            talent = question.talent
+        question = Question.objects.get(pk=request.data['question_pk'])
+        talent = question.talent
 
-            # 자신의 수업이어야 답변을 등록할 수 있음
-            if verify_tutor(request, talent):
-                Reply.objects.create(
-                    question=question,
-                    tutor=user.tutor,
-                    content=content,
-                )
-                ret_message = '질문[{pk}]에 댓글이 추가되었습니다.'.format(
-                    pk=question_pk,
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
+        # ##### 추가 검증 절차 #####
+        # ##### 자신의 수업이 아니면 등록 불가능 #####
+        if not verify_tutor(request, talent):
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
 
-            # 자신의 수업이 아닌데 답변하려고 하거나 튜터가 아닌 경우
-            else:
-                ret = {
-                    'detail': '권한이 없습니다.',
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 갯수 제한? #####
 
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 끝  #####
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)

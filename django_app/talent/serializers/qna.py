@@ -1,14 +1,18 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from member.models import GoriUser, Tutor
+from member.models import Tutor
 from talent.models import Talent, Question, Reply
 
 __all__ = (
     # 'QnaSerializer',
     'ReplySerializer',
-    'QnAWrapperSerializer',
+    'ReplyCreateSerializer',
     'QuestionSerializer',
+    'QuestionCreateSerializer',
 )
+
+User = get_user_model()
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -26,8 +30,21 @@ class ReplySerializer(serializers.ModelSerializer):
         )
 
 
+class ReplyCreateSerializer(serializers.ModelSerializer):
+    question_pk = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all(), source='question')
+    tutor = serializers.PrimaryKeyRelatedField(queryset=Tutor.objects.all())
+
+    class Meta:
+        model = Reply
+        fields = (
+            'question_pk',
+            'tutor',
+            'content',
+        )
+
+
 class QuestionSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
     replies = ReplySerializer(source='reply_set', many=True)
 
@@ -42,36 +59,15 @@ class QuestionSerializer(serializers.ModelSerializer):
             'replies',
         )
 
-        # def get_user_image(self, obj):
-        #     print(obj.user)
-        #     # print(dir(obj.user.profile_image))
-        #     return obj.user
 
-
-class QnAWrapperSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField(read_only=True)
-    type = serializers.SerializerMethodField(read_only=True)
-    questions = QuestionSerializer(many=True, source='question_set')
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
 
     class Meta:
-        model = Talent
+        model = Question
         fields = (
-            'pk',
-            'title',
-            'category',
-            'type',
-            'questions',
+            'user',
+            'talent_pk',
+            'content',
         )
-
-    def create(self, validated_data):
-        qna = validated_data.pop('title')
-        # photos = validated_data.pop('photo_set')
-        print(qna)
-
-    @staticmethod
-    def get_category(obj):
-        return obj.get_category_display()
-
-    @staticmethod
-    def get_type(obj):
-        return obj.get_type_display()
