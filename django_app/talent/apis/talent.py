@@ -16,6 +16,7 @@ __all__ = (
     # detail - fragments
     'TalentShortDetailView',
     'TalentSalesStatusToggleView',
+    'TalentDeleteView',
 )
 
 User = get_user_model()
@@ -33,7 +34,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         """
-
         필수정보 :
             - title : 수업 제목
             - category : 카테고리
@@ -172,3 +172,11 @@ class TalentSalesStatusToggleView(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수업 내역을 찾을 수 없습니다."})
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+
+
+class TalentDeleteView(generics.DestroyAPIView):
+    queryset = Talent.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Talent.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)

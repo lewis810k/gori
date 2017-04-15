@@ -12,7 +12,7 @@ from .location import LocationSerializer
 __all__ = (
     'TalentListSerializer',
     'TalentShortInfoSerializer',
-    'TalentCrateSerializers',
+    'TalentCrateSerializer',
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
 )
@@ -265,7 +265,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TalentCrateSerializers(serializers.ModelSerializer):
+class TalentCrateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Talent
         fields = (
@@ -273,7 +273,6 @@ class TalentCrateSerializers(serializers.ModelSerializer):
             'title',
             'category',
             'type',
-            'tutor_message',
             'cover_image',
             'tutor_info',
             'class_info',
@@ -285,5 +284,5 @@ class TalentCrateSerializers(serializers.ModelSerializer):
             'min_number_student',
             'max_number_student',
             'is_soldout',
-            'is_verified',
+            'tutor_message',
         )
