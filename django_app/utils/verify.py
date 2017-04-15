@@ -22,9 +22,6 @@ def verify_duplicate(model, data):
     :param data:
     :return:
     """
-    ret = {
-        'detail': '이미 존재하는 항목입니다.'
-    }
     if model.objects.filter(**data).count() > 0:
         return True
     else:

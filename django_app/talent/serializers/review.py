@@ -53,7 +53,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             'timeliness',
             'delivery',
             'friendliness',
-            'created_date',
             'comment',
         )
 

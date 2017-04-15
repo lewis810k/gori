@@ -6,8 +6,8 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
-from talent.serializers.registration import TalentRegistrationSerializer
-from utils import verify_tutor, LargeResultsSetPagination, verify_blank_data
+from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
+from utils import *
 
 __all__ = (
     'RegistrationListCreateView',
@@ -23,6 +23,42 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
 
+    def create(self, request, *args, **kwargs):
+        # 생성 전용 시리얼라이저 사용
+        serializer = TalentRegistrationCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # ##### 추가 검증 절차 #####
+        location = Location.objects.get(pk=request.data['location_pk'])
+        talent = location.talent
+
+        # ##### 자신의 수업이면 등록 불가능 #####
+        if verify_tutor(request, talent):
+            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # ##### 이미 등록되었는지 #####
+        data = {
+            'student': request.user,
+            'talent_location': location,
+        }
+        if verify_duplicate(Registration, data=data):
+            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # ##### 추가 검증 끝 #####
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        # 성공 메시지 출력
+        ret_message = '[{talent}] 수업이 신청되었습니다.'.format(
+            talent=talent,
+        )
+        ret = {
+            'detail': ret_message,
+        }
+
+        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
+
     def post(self, request, *args, **kwargs):
         """
         요청하는 장소에 대한 talent를 구한다. talent의 튜터가 request.user와 동일하면 에러.
@@ -36,73 +72,11 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             - experience_length : 경력 (개월수)
         """
         try:
-            location_pk = request.data['location_pk']
-            message_to_tutor = request.data['message_to_tutor']
-            student_level = request.data['student_level']
-
-            if not verify_blank_data(request.data):
-                ret = {
-                    'detail': '입력 값이 올바르지 않습니다.'
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-            locations = Location.objects.filter(pk=location_pk)
-            location = locations.first()
-            user = request.user
-            if not location:
-                ret = {
-                    'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-            # 이미 등록했었는지 체크
-            if user.id in location.registered_student.values_list('id', flat=True):
-                ret = {
-                    'detail': '이미 등록된 수업입니다.'
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-            talent = location.talent
-
-            # 해당 수업에 자신이 튜터라면 등록되지 않도록.
-            if verify_tutor(request, talent):
-                ret = {
-                    'detail': '자신의 수업은 신청할 수 없습니다.',
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                # 기존에 존재하는 아이템이면 생성되지 않도록
-                item, created = Registration.objects.get_or_create(
-                    student=request.user,
-                    talent_location=location,
-                    message_to_tutor=message_to_tutor,
-                    student_level=student_level,
-
-                    # 필수가 아닌 정보
-                    experience_length=request.data.get('experience_length', 0),
-                )
-
-                if not created:
-                    ret = {
-                        'detail': '이미 등록된 수업입니다.'
-                    }
-                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-                ret_message = '[{user}]님이 [{location}] 수업을 추가되었습니다.'.format(
-                    user=request.user,
-                    location=location
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
-
+            request.data['talent_location'] = request.data['location_pk']
+            request.data['student'] = request.user.id
         except MultiValueDictKeyError as e:
             ret = {
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-        except ValueError as ve:
-            ret = {
-                'detail': (str(ve))
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request, *args, **kwargs)

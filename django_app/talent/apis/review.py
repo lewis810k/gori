@@ -39,7 +39,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             'talent': talent,
             'user': request.user,
         }
-
         if verify_duplicate(Review, data=data):
             return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
 
@@ -76,7 +75,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         try:
             # primary key로 연결되는 값 설정
             request.data['talent'] = request.data['talent_pk']
-            request.data['user'] = request.user.id
         except MultiValueDictKeyError as e:
             ret = {
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'

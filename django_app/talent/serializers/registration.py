@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
-from talent.models import Talent, Registration
+from talent.models import Talent, Registration, Location
 from talent.serializers import TalentShortInfoSerializer
 from .location import LocationListSerializer
 
@@ -133,3 +133,19 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
 
     def get_student_level(self, obj):
         return obj.get_student_level_display()
+
+
+class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    talent_location = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
+
+    class Meta:
+        model = Registration
+        fields = (
+            'id',
+            'student',
+            'talent_location',
+            'student_level',
+            'experience_length',
+            'message_to_tutor',
+        )
