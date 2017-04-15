@@ -113,17 +113,4 @@ class ReplyDeleteView(generics.DestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Reply.objects.filter(pk=self.kwargs['pk'], tutor=self.kwargs['tutor'])
-
-    def destroy(self, request, *args, **kwargs):
-        """
-        요청유저가 튜터인지 체크해야함
-        """
-        try:
-            self.kwargs['tutor'] = request.user.tutor
-        except ObjectDoesNotExist as e:
-            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
-
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
