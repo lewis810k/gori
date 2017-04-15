@@ -20,7 +20,9 @@ urlpatterns = [
     url(r'^add/reply/$', apis.ReplyCreateView.as_view(), name='reply-create'),
 
     # ##### 삭제 #####
-    url(r'^delete/question/$', apis.QuestionDeleteView.as_view()),
+    url(r'^delete/review/(?P<pk>[0-9]+)/$', apis.ReviewDeleteView.as_view()),
+    url(r'^delete/question/(?P<pk>[0-9]+)/$', apis.QuestionDeleteView.as_view()),
+    url(r'^delete/reply/(?P<pk>[0-9]+)/$', apis.ReplyDeleteView.as_view()),
 
     # ##### 리스트 #####
     url(r'^list/$', apis.TalentListCreateView.as_view(), name='list'),

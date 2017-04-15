@@ -10,6 +10,7 @@ from utils import *
 
 __all__ = (
     'ReviewListCreateView',
+    'ReviewDeleteView',
 )
 
 
@@ -65,3 +66,11 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ReviewDeleteView(generics.DestroyAPIView):
+    queryset = Review.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Review.objects.filter(pk=self.kwargs['pk'], user=self.request.user)

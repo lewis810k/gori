@@ -15,6 +15,7 @@ __all__ = (
     'QuestionListCreateView',
     'QuestionDeleteView',
     'ReplyCreateView',
+    'ReplyDeleteView',
 )
 
 
@@ -61,30 +62,8 @@ class QuestionDeleteView(generics.DestroyAPIView):
     queryset = Question.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
-    def delete(self, request):
-        pk = request.data['pk']
-        try:
-            question = Question.objects.get(pk=pk)
-        except Question.DoesNotExist as e:
-            ret = {
-                'detail': '질문[{}]이 존재하지 않습니다.'.format(pk)
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-        user = request.user
-        # 지우려고 하는 question과 현재 유저가 같은지 확인
-        if question.user == user:
-            question.delete()
-            ret_msg = '질문[{}]이 삭제되었습니다.'.format(pk)
-            return_status = status.HTTP_200_OK
-        else:
-            ret_msg = '권한이 없습니다.'
-            return_status = status.HTTP_400_BAD_REQUEST
-
-        ret = {
-            'detail': ret_msg,
-        }
-        return Response(ret, status=return_status)
+    def get_queryset(self):
+        return Question.objects.filter(pk=self.kwargs['pk'], user=self.request.user)
 
 
 class ReplyCreateView(generics.CreateAPIView):
@@ -127,3 +106,24 @@ class ReplyCreateView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ReplyDeleteView(generics.DestroyAPIView):
+    queryset = Reply.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Reply.objects.filter(pk=self.kwargs['pk'], tutor=self.kwargs['tutor'])
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        요청유저가 튜터인지 체크해야함
+        """
+        try:
+            self.kwargs['tutor'] = request.user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
