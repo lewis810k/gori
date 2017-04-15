@@ -5,3 +5,12 @@ talent_owner_error = {
 multiple_item_error ={
     'detail': '이미 등록되었습니다.'
 }
+
+authorization_error = {
+    'detail': '권한이 없습니다.'
+}
+
+success_msg = {
+    'detail': '성공적으로 등록되었습니다.'
+}
+

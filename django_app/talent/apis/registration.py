@@ -61,15 +61,7 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        # 성공 메시지 출력
-        ret_message = '[{talent}] 수업이 신청되었습니다.'.format(
-            talent=talent,
-        )
-        ret = {
-            'detail': ret_message,
-        }
-
-        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
     # def post(self, request, *args, **kwargs):
     #

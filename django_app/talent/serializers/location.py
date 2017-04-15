@@ -81,12 +81,12 @@ class LocationTalentSerializer(serializers.ModelSerializer):
 
 
 class LocationCreateSerializer(serializers.ModelSerializer):
-    talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all())
+    talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
 
     class Meta:
         model = Location
         fields = (
-            'talent',
+            'talent_pk',
             'region',
             'specific_location',
             'location_info',

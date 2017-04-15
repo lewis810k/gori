@@ -64,11 +64,4 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        # 성공 메시지 출력
-        ret_message = '[{talent}]에 리뷰가 추가되었습니다.'.format(
-            talent=talent.title,
-        )
-        ret = {
-            'detail': ret_message,
-        }
-        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
