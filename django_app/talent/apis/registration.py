@@ -40,13 +40,15 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             message_to_tutor = request.data['message_to_tutor']
             locations = Location.objects.filter(pk=location_pk)
             location = locations.first()
+            user = request.user
             if not location:
                 ret = {
                     'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-            if locations.count() > 0:
+            # 이미 등록했었는지 체크
+            if user.id in location.registered_student.values_list('id', flat=True):
                 ret = {
                     'detail': '이미 등록된 수업입니다.'
                 }

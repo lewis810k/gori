@@ -9,7 +9,7 @@ __all__ = (
 
 class Curriculum(models.Model):
     talent = models.ForeignKey(Talent, )
-    information = models.CharField(max_length=50)
+    information = models.TextField()
     image = models.ImageField(upload_to='talent/curriculum', blank=True)
 
     class Meta:
