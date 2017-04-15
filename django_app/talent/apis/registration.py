@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
 from talent.serializers.registration import TalentRegistrationSerializer
-from utils import verify_tutor, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination, verify_blank_data
 
 __all__ = (
     'RegistrationListCreateView',
@@ -38,6 +38,14 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         try:
             location_pk = request.data['location_pk']
             message_to_tutor = request.data['message_to_tutor']
+            student_level = request.data['student_level']
+
+            if not verify_blank_data(request.data):
+                ret = {
+                    'detail': '입력 값이 올바르지 않습니다.'
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
             locations = Location.objects.filter(pk=location_pk)
             location = locations.first()
             user = request.user
@@ -67,9 +75,9 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
                     student=request.user,
                     talent_location=location,
                     message_to_tutor=message_to_tutor,
+                    student_level=student_level,
 
-                    # 필수가 아닌 정보들
-                    student_level=request.data.get('student_level', 1),
+                    # 필수가 아닌 정보
                     experience_length=request.data.get('experience_length', 0),
                 )
 
@@ -91,5 +99,10 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         except MultiValueDictKeyError as e:
             ret = {
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
+            }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as ve:
+            ret = {
+                'detail': (str(ve))
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)

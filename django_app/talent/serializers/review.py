@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_auth.app_settings import serializers
 from rest_framework import serializers
 
@@ -9,8 +10,10 @@ from utils import review_average_rate, curriculum_average_rate, timeliness_avera
 
 __all__ = (
     'ReviewSerializer',
-    'ReviewWrapperSerializer'
+    'ReviewCreateSerializer',
 )
+
+User = get_user_model()
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -22,6 +25,27 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = (
             'pk',
+            'talent',
+            'user',
+            'curriculum',
+            'readiness',
+            'timeliness',
+            'delivery',
+            'friendliness',
+            'created_date',
+            'comment',
+        )
+
+
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    talent = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    # name = serializers.PrimaryKeyRelatedField(queryset=GoriUser.objects.all(), source='user.name')
+
+    class Meta:
+        model = Review
+        fields = (
             'talent',
             'user',
             'curriculum',
@@ -77,39 +101,3 @@ class AverageRatesSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_readiness(obj):
         return readiness_average_rate(obj.reviews)
-
-
-class ReviewWrapperSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField(read_only=True)
-    type = serializers.SerializerMethodField(read_only=True)
-    reviews = ReviewSerializer(many=True)
-    average_rates = serializers.SerializerMethodField(read_only=True)
-    review_count = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = Talent
-        fields = (
-            'pk',
-            'title',
-            'category',
-            'type',
-            'average_rates',
-            'review_count',
-            'reviews',
-        )
-
-    @staticmethod
-    def get_category(obj):
-        return obj.get_category_display()
-
-    @staticmethod
-    def get_type(obj):
-        return obj.get_type_display()
-
-    @staticmethod
-    def get_average_rates(obj):
-        return AverageRatesSerializer(obj).data
-
-    @staticmethod
-    def get_review_count(obj):
-        return obj.reviews.count()

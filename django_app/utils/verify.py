@@ -26,9 +26,9 @@ def verify_duplicate(model, data):
         'detail': '이미 존재하는 항목입니다.'
     }
     if model.objects.filter(**data).count() > 0:
-        return True, ret
+        return True
     else:
-        return False, {}
+        return False
 
 
 def verify_instance(model, pk):
@@ -43,29 +43,17 @@ def verify_instance(model, pk):
     return instance, detail
 
 
-def verify_data(data, type):
+def verify_blank_data(data):
     """
     post 요청으로 넘겨받은 데이터의 유효성을 점검한다.
     A. 빈 값 체크
-    B. 숫자형태 체크
-
-    type == 1 : A, B
-    type == 2 : A
 
     :param data: response.data
-    :param type: 검증 형태
     :return:
     """
-    if type == 1:
-        for key, value in data.items():
-            if value.strip() == '':
-                return False
-            if not value.isdigit():
-                return False
-    if type == 2:
-        for key, value in data.items():
-            if value.strip() == '':
-                return False
+    for key, value in data.items():
+        if value.strip() == '':
+            return False
     return True
 
 def switch_sales_status(pk):
