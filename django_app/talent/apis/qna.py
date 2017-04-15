@@ -8,35 +8,23 @@ from rest_framework.views import APIView
 
 from talent.models import Talent, Question, Reply
 from talent.serializers import QuestionSerializer
-from utils import tutor_verify, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination
 
 __all__ = (
-    'QnATalentListView',
-    'QuestionCreateView',
-    'ReplyCreateView',
+    'QuestionListCreateView',
     'QuestionDeleteView',
+    'ReplyCreateView',
 )
 
 
-class QnATalentListView(generics.ListAPIView):
+class QuestionListCreateView(generics.ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     pagination_class = LargeResultsSetPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
         return Question.objects.filter(talent_id=self.kwargs['pk'])
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-
-class QuestionCreateView(APIView):
-    queryset = Question.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
         """
@@ -60,7 +48,7 @@ class QuestionCreateView(APIView):
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
             # 자신의 수업이 아니어야 질문을 등록할 수 있음
-            if not tutor_verify(request, talent):
+            if not verify_tutor(request, talent):
                 Question.objects.create(
                     talent=talent,
                     user=user,
@@ -118,9 +106,6 @@ class QuestionDeleteView(generics.DestroyAPIView):
         return Response(ret, status=return_status)
 
 
-
-
-
 class ReplyCreateView(APIView):
     queryset = Reply.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
@@ -150,7 +135,7 @@ class ReplyCreateView(APIView):
             talent = question.talent
 
             # 자신의 수업이어야 답변을 등록할 수 있음
-            if tutor_verify(request, talent):
+            if verify_tutor(request, talent):
                 Reply.objects.create(
                     question=question,
                     tutor=user.tutor,

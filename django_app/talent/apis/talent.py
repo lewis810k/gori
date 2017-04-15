@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from talent.models import Talent
 from talent.serializers import TalentDetailSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
-from utils import duplicate_verify, tutor_verify, Tutor
+from utils import verify_duplicate, verify_tutor, Tutor
 from utils.pagination import LargeResultsSetPagination
 
 __all__ = (
@@ -78,7 +78,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
                 data = {
                     'title': title,
                 }
-                is_dup, msg = duplicate_verify(Talent, data)
+                is_dup, msg = verify_duplicate(Talent, data)
                 if is_dup:
                     return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 

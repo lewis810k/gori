@@ -6,41 +6,21 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Review
 from talent.serializers import ReviewWrapperSerializer, ReviewSerializer
-from utils import tutor_verify, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination, verify_data
 
 __all__ = (
-    'ReviewRetrieveView',
-    'ReviewCreateView',
-    'ReviewListView',
+    'ReviewListCreateView',
 )
 
 
-#
-class ReviewRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = ReviewWrapperSerializer
-
-
-class ReviewListView(generics.ListAPIView):
+class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = LargeResultsSetPagination
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
         return Review.objects.filter(talent_id=self.kwargs['pk'])
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-
-class ReviewCreateView(generics.CreateAPIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """
@@ -68,6 +48,12 @@ class ReviewCreateView(generics.CreateAPIView):
             delivery = request.data['delivery']
             friendliness = request.data['friendliness']
 
+            if not verify_data(request.data, 1):
+                ret = {
+                    'detail': '입력 값이 올바르지 않습니다.'
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+
             talent = Talent.objects.filter(pk=talent_pk).first()
             if not talent:
                 ret = {
@@ -76,7 +62,7 @@ class ReviewCreateView(generics.CreateAPIView):
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
             # 자신의 수업이 아니어야 등록 가능
-            if not tutor_verify(request, talent):
+            if not verify_tutor(request, talent):
                 item, created = Review.objects.get_or_create(
                     talent=talent,
                     user=user,

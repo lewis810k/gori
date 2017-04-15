@@ -7,35 +7,21 @@ from rest_framework.response import Response
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
 from talent.serializers.registration import TalentRegistrationSerializer
-from utils import tutor_verify, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination
 
 __all__ = (
-    'TalentRegistrationRetrieveView',
     'RegistrationListCreateView',
 )
-
-
-class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = TalentRegistrationWrapperSerializer
 
 
 class RegistrationListCreateView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
     pagination_class = LargeResultsSetPagination
-    # permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
         return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
 
     def post(self, request, *args, **kwargs):
         """
@@ -51,6 +37,7 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         """
         try:
             location_pk = request.data['location_pk']
+            message_to_tutor = request.data['message_to_tutor']
             locations = Location.objects.filter(pk=location_pk)
             location = locations.first()
             if not location:
@@ -67,7 +54,7 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             talent = location.talent
 
             # 해당 수업에 자신이 튜터라면 등록되지 않도록.
-            if tutor_verify(request, talent):
+            if verify_tutor(request, talent):
                 ret = {
                     'detail': '자신의 수업은 신청할 수 없습니다.',
                 }
@@ -77,7 +64,7 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
                 item, created = Registration.objects.get_or_create(
                     student=request.user,
                     talent_location=location,
-                    message_to_tutor=request.data['message_to_tutor'],
+                    message_to_tutor=message_to_tutor,
 
                     # 필수가 아닌 정보들
                     student_level=request.data.get('student_level', 1),
@@ -104,10 +91,3 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-# class RegistrationRetrieve(generics.RetrieveAPIView):
-#     queryset = Talent.objects.all()
-#     serializer_class = RegistrationWrapperSerializers
-#
-#     def get_queryset(self):
-#         return Talent.objects.filter(id=self.kwargs['pk'])

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from talent.models import Curriculum, Talent
 from talent.serializers import CurriculumSerializer, CurriculumWrapperSerializer
-from utils import tutor_verify, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination
 
 __all__ = (
     'CurriculumListCreateView',
@@ -18,14 +18,7 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
         return Curriculum.objects.filter(talent_id=self.kwargs['pk'])
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
@@ -45,7 +38,7 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-            if tutor_verify(request, talent):
+            if verify_tutor(request, talent):
                 item, _ = Curriculum.objects.get_or_create(
                     talent=talent,
                     information=request.data['information'],
@@ -70,8 +63,3 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CurriculumRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = CurriculumWrapperSerializer

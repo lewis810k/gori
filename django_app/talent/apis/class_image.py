@@ -6,11 +6,10 @@ from rest_framework.response import Response
 
 from talent.models import Talent, ClassImage
 from talent.serializers import ClassImageWrapperSerializer, ClassImageSerializer
-from utils import tutor_verify, LargeResultsSetPagination
+from utils import verify_tutor, LargeResultsSetPagination
 
 __all__ = (
     'ClassImageListCreateView',
-    'ClassImageRetrieveView',
 )
 
 
@@ -21,14 +20,7 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
         return ClassImage.objects.filter(talent_id=self.kwargs['pk'])
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
@@ -47,7 +39,7 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
-            if tutor_verify(request, talent):
+            if verify_tutor(request, talent):
                 ClassImage.objects.create(
                     talent=talent,
                     image=request.FILES['image'],
@@ -71,8 +63,3 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
                 'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
             }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ClassImageRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = ClassImageWrapperSerializer
