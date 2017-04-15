@@ -10,6 +10,7 @@ from utils import *
 
 __all__ = (
     'CurriculumListCreateView',
+    'CurriculumDeleteView',
 )
 
 
@@ -49,3 +50,12 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class CurriculumDeleteView(generics.DestroyAPIView):
+    queryset = Curriculum.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
+

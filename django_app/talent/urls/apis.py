@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^add/reply/$', apis.ReplyCreateView.as_view(), name='reply-create'),
 
     # ##### 삭제 #####
+    url(r'^delete/curriculum/(?P<pk>[0-9]+)/$', apis.CurriculumDeleteView.as_view()),
     url(r'^delete/class-image/(?P<pk>[0-9]+)/$', apis.ClassImageDeleteView.as_view()),
     url(r'^delete/registration/(?P<pk>[0-9]+)/$', apis.RegistrationDeleteView.as_view()),
     url(r'^delete/review/(?P<pk>[0-9]+)/$', apis.ReviewDeleteView.as_view()),
