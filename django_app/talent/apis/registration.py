@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
@@ -22,6 +23,38 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
+
+    def list(self, request, *args, **kwargs):
+        """
+        pk에 해당하는 talent의 작성자가 request.user인지 확인하고 정보 출력
+        """
+        user = request.user
+
+        # talent pk가 존재하는지, 없으면 다른 리스트 반환값 처럼 반환. 여기만 예외적으로!!
+        try:
+            talent = Talent.objects.get(pk=kwargs['pk'])
+        except Talent.DoesNotExist as de:
+            return Response(object_not_found, status=status.HTTP_200_OK)
+
+        # 요청하는 유저가 튜터인지
+        try:
+            tutor = user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # talent의 튜터와 요청하는 유저가 같은지
+        if talent.tutor != tutor:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         """
@@ -62,15 +95,3 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
-
-    # def post(self, request, *args, **kwargs):
-    #
-    #     try:
-    #         request.data['talent_location'] = request.data['location_pk']
-    #         request.data['student'] = request.user.id
-    #     except MultiValueDictKeyError as e:
-    #         ret = {
-    #             'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-    #         }
-    #         return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-    #     return self.create(request, *args, **kwargs)

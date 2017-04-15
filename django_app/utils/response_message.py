@@ -14,3 +14,9 @@ success_msg = {
     'detail': '성공적으로 등록되었습니다.'
 }
 
+object_not_found = {
+  "count": 0,
+  "next": "null",
+  "previous": "null",
+  "results": []
+}
