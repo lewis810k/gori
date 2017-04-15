@@ -12,6 +12,7 @@ from utils import *
 
 __all__ = (
     'RegistrationListCreateView',
+    'RegistrationDeleteView',
 )
 
 
@@ -95,3 +96,11 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class RegistrationDeleteView(generics.DestroyAPIView):
+    queryset = Registration.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Registration.objects.filter(pk=self.kwargs['pk'], student=self.request.user)
