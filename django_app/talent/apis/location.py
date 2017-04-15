@@ -9,6 +9,7 @@ from utils import *
 
 __all__ = (
     'LocationListCreateView',
+    'LocationDeleteView',
 )
 
 
@@ -61,3 +62,11 @@ class LocationListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class LocationDeleteView(generics.DestroyAPIView):
+    queryset = Location.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Location.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
