@@ -1,0 +1,4 @@
+WORKDIR     /srv/app/django_app
+
+EXPOSE      80
+CMD ["supervisord", "-n"]
