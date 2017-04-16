@@ -38,7 +38,7 @@ class RegistrationCreateRetrieveTest(APILiveServerTestCase, APITestUserLogin):
 
     def test_registration_retrieve(self):
         users, tokens = self.obtain_token(4)
-        tutor = self.create_tutor(users[0], tokens[0])
+        tutor = self.register_tutor(users[0], tokens[0])
         talent = self.create_talent(tutor, tokens[0])
         location = self.create_location(talent, tokens[0])
         for index, token in enumerate(tokens[1:]):

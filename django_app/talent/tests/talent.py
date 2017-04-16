@@ -118,6 +118,8 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         location = self.create_location(talent, user_token)
         url = reverse('api:talent:list')
         response = self.client.get(url)
+        results = response.data['results'][0]
+
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
                       'profile_image', 'cellphone', 'is_school', 'cover_image', 'price_per_hour', 'hours_per_class',
                       'number_of_class', 'min_number_student', 'max_number_student', 'is_soldout', 'created_date',
@@ -125,6 +127,11 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
 
         data = list(response.data['results'][0]) + list(response.data['results'][0]['tutor'])
         self.verify_util(data, field_list)
+        response_list = list(results.keys()) + list(results["tutor"])
+
+        for field in field_list:
+            self.assertIn(field, response_list)
+
         params_list = [
             ({'region': 'KN'}, 1),
             ({'region': 'SD'}, 0),
@@ -149,9 +156,6 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         curriculum = self.create_curriculum(talent, user_token[0])
         review = self.create_review(talent, user_token[1])
         url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
-        a = [['qna'][0]],['tutor']
-        for i in a:
-            print('54324325234532453423333333',print(i))
         response = self.client.get(url)
         data = list(response.data)
         tutor = list(response.data['tutor'])
@@ -174,7 +178,6 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
                       'information', 'qna', 'user', 'user_image', 'created_data', 'content', 'replies', 'tutor_image',
                       'talent', 'comment']
         # 'registration_count', 모델다시 해놓고 바꿔줄것
-        response_list = list(response.data) + list(response.data["tutor"])
 
         for field in field_list:
             self.assertIn(field, data)

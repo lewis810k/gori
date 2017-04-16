@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
+
     def test_location_create(self):
         user, token = self.obtain_token()
         tutor = self.register_tutor(user, token)

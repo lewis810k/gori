@@ -57,20 +57,20 @@ class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
         question = self.create_question(talent, user_token[1])
 
         test_list = [
-            [555, "content", user_token[0]],
-            [question.pk, "", user_token[0]],
-            [question.pk, 'content', user_token[1]],
-            [question.pk, 'content', ""],
+            [555, "content", user_token[1]],
+            [question.pk, "", user_token[1]],
             [question.pk, 'content', user_token[0]],
+            [question.pk, 'content', ""],
+            [question.pk, 'content', user_token[1]],
         ]
         for test_item in test_list:
             data = {
-                'question_pk': test_item[0],
+                'talent_pk': test_item[0],
                 test_item[1]: 'test_content'
             }
-            url = reverse('api:talent:reply-create')
+            url = reverse('api:talent:question-create')
             response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + test_item[2])
-            if test_item[0] == question.pk and test_item[1] == 'content' and test_item[2] == user_token[0]:
+            if test_item[0] == talent.pk and test_item[1] == 'content' and test_item[2] == user_token[1]:
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
                 self.assertEqual(Question.objects.count(), 1)
             elif test_item[2] == '':
@@ -94,4 +94,3 @@ class QnARetrieveTest(APILiveServerTestCase, APITestUserLogin):
 
         url = reverse('api:talent:qna-retrieve', kwargs={'pk': talent.pk})
         response = self.client.get(url)
-
