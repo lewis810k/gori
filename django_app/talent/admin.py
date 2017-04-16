@@ -1,7 +1,13 @@
 from django.contrib import admin
+from django.contrib.admin import AllValuesFieldListFilter
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter, DropdownFilter
 
 from talent.models import Reply
 from talent.models import Review, Location, Talent, ClassImage, Registration, WishList, Curriculum, Question
+
+
+class CustomDropdownFilter(AllValuesFieldListFilter):
+    template = 'admin/dropdown_filter.html'
 
 
 class LocationInline(admin.TabularInline):
@@ -29,7 +35,10 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'is_verified',
                     'student_level',
                     'experience_length',)
-    list_filter = ('student', 'talent_location')
+    list_filter = (('student', RelatedDropdownFilter),
+                   ('talent_location__region', CustomDropdownFilter),
+                   ('talent_location__talent', RelatedDropdownFilter))
+    list_display_links = list_display
 
     def student_name(self, registration):
         return registration.student.name
@@ -44,22 +53,18 @@ class RegistrationAdmin(admin.ModelAdmin):
 
 
 class CurriculumAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent_title', 'tutor')
-    list_filter = ('talent',)
-
-    def talent_title(self, curriculum):
-        return curriculum.talent.title
-
-    talent_title.short_description = 'title'
+    list_display = ('pk', 'information', 'image', 'talent', 'tutor')
+    list_filter = (('talent', RelatedDropdownFilter),)
+    list_display_links = list_display
 
     def tutor(self, curriculum):
         return curriculum.talent.tutor.user.name
 
 
 class ClassImageAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent', 'tutor', 'image',)
-    list_filter = ('talent',)
-    ordering = ('talent',)
+    list_display = ('pk', 'image', 'talent', 'tutor',)
+    list_filter = (('talent', RelatedDropdownFilter),)
+    list_display_links = list_display
 
     def talent(self, classimage):
         return classimage.talent.title
@@ -70,10 +75,12 @@ class ClassImageAdmin(admin.ModelAdmin):
 
 class TalentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'title', 'category', 'location', 'tutor', 'students_list',)
+    list_filter = (
+        ('category', DropdownFilter),
+        ('tutor', RelatedDropdownFilter),
+    )
     inlines = [LocationInline, ClassImageInline, CurriculumInline, ]
-
-    def tutor(self, talent):
-        return talent.tutor
+    list_display_links = list_display
 
     def students_list(self, talent):
         student_list = []
@@ -89,23 +96,35 @@ class TalentAdmin(admin.ModelAdmin):
 
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent', 'registered_students')
+    list_display = ('pk', 'region', 'day', 'talent', 'registered_count')
+    list_filter = (('talent', RelatedDropdownFilter),
+                   ('day', CustomDropdownFilter),
+                   ('region', CustomDropdownFilter)
+                   )
+    list_display_links = list_display
+
     inlines = [RegistrationInline, ]
 
     def talent(self, location):
         return location.talent.title
 
-    def registered_students(self, location):
-        return [registrations.student.name for registrations in Registration.objects.filter(talent_location=location)]
+    def registered_count(self, location):
+        return Registration.objects.filter(talent_location=location).count()
+
+
+        # def registered_students(self, location):
         # for registrations in Registration.objects.filter(talent_location=location):
         #     student.append(registrations.student)
         # return student
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent', 'user_name', 'created_date', 'comment_summary')
-    list_filter = ('talent',)
-    list_display_links = ('talent',)
+    list_display = ('pk', 'comment_summary', 'talent', 'user_name', 'created_date',)
+    list_filter = (
+        ('talent', RelatedDropdownFilter),
+        ('user', RelatedDropdownFilter),
+    )
+    list_display_links = list_display
 
     def user_name(self, review):
         return review.user.name
@@ -115,7 +134,8 @@ class ReviewAdmin(admin.ModelAdmin):
 
 class WishAdmin(admin.ModelAdmin):
     list_display = ('pk', 'talent', 'user_name', 'added_date')
-    list_filter = ('talent',)
+    list_filter = (('talent', RelatedDropdownFilter),)
+    list_display_links = list_display
 
     def user_name(self, wishlist):
         return wishlist.user.name
@@ -124,12 +144,28 @@ class WishAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'talent', 'content_summary', 'created_date')
-    list_filter = ('talent',)
+    list_display = ('pk', 'content_summary', 'author', 'talent', 'created_date')
+    list_filter = (('talent', RelatedDropdownFilter),
+                   ('user', RelatedDropdownFilter))
+    list_display_links = list_display
+
+    def author(self, obj):
+        return obj.user
 
 
 class ReplyAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'content_summary', 'question', 'created_date')
+    list_display = ('pk', 'content_summary', 'author', 'question_content', 'talent', 'created_date')
+    list_filter = (('question__talent', RelatedDropdownFilter),)
+    list_display_links = list_display
+
+    def author(self, obj):
+        return obj.tutor.user
+
+    def question_content(self, obj):
+        return obj.question.content_summary()
+
+    def talent(self, obj):
+        return obj.question.talent.title
 
 
 admin.site.register(Location, LocationAdmin)

@@ -47,7 +47,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    results = MyRegistrationSerializer(many=True,source="registrations")
+    results = MyRegistrationSerializer(many=True, source="registrations")
     user_id = serializers.CharField(source='username')
 
     class Meta:
