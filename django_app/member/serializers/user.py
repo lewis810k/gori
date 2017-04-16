@@ -149,11 +149,6 @@ class TutorSerializer(DynamicFieldsModelSerializer):
             'is_verified',
             'profile_image',
             'cellphone',
-            'verification_method',
-            'verification_images',
-            'school',
-            'major',
-            'current_status',
         )
 
 
