@@ -1,10 +1,11 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from talent.serializers import TalentDetailSerializer
+from talent.serializers import TalentDetailSerializer, TalentCreateSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import *
 
@@ -32,7 +33,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('title', 'class_info')
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         """
         필수정보 :
             - title : 수업 제목
@@ -52,72 +53,32 @@ class TalentListCreateView(generics.ListCreateAPIView):
             - tutor_message : 튜터 메시지
 
         """
+        user = request.user
+        request.data['user'] = user.id
+        # 요청하는 유저가 튜터인지 체크
         try:
-            title = request.data['title']
-            category = request.data['category']
-            type = request.data['type']
-            cover_image = request.FILES['cover_image']
-            tutor_info = request.data['tutor_info']
-            class_info = request.data['class_info']
-            number_of_class = request.data['number_of_class']
-            price_per_hour = request.data['price_per_hour']
-            hours_per_class = request.data['hours_per_class']
-            video1 = request.data.get('video1', '')
-            video2 = request.data.get('video2', '')
-            min_number_student = request.data.get('min_number_student', 3)
-            max_number_student = request.data.get('max_number_student', 3)
-            tutor_message = request.data.get('tutor_message', '')
+            request.data['tutor'] = request.user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
 
-            user = request.user
+        # 생성 전용 시리얼라이저 사용
+        serializer = TalentCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            tutor_list = Tutor.objects.values_list('user_id', flat=True)
+        # ##### 추가 검증 절차 #####
 
-            # 요청하는 유저가 튜터인지 체크
-            if user.id in tutor_list:
-                # 이미 같은 이름의 수업이 존재하면 400 리턴
-                data = {
-                    'title': title,
-                }
-                is_dup, msg = verify_duplicate(Talent, data)
-                if is_dup:
-                    return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        # 이미 같은 이름의 수업이 존재하면 400 리턴
+        data = {
+            'title': request.data['title'],
+        }
+        if verify_duplicate(Talent, data):
+            return Response(title_already_exist, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 끝  #####
 
-                Talent.objects.create(
-                    tutor=user.tutor,
-                    title=title,
-                    category=category,
-                    type=type,
-                    tutor_info=tutor_info,
-                    class_info=class_info,
-                    number_of_class=number_of_class,
-                    price_per_hour=price_per_hour,
-                    hours_per_class=hours_per_class,
-                    cover_image=cover_image,
-                    video1=video1,
-                    video2=video2,
-                    min_number_student=1,
-                    max_number_student=3,
-                    tutor_message=tutor_message,
-                )
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
 
-                ret_message = '[{talent}] 수업이 추가되었습니다.'.format(
-                    talent=title,
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
-
-            ret = {
-                'detail': '권한이 없습니다.',
-            }
-            return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
-
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = Talent.objects.all()
@@ -180,3 +141,5 @@ class TalentDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Talent.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
+
+

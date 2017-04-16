@@ -20,3 +20,7 @@ object_not_found = {
     "previous": "null",
     "results": []
 }
+
+title_already_exist = {
+    'detail': '같은 제목의 수업이 존재합니다.'
+}

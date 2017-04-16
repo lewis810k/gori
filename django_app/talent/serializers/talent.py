@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from member.serializers import TutorSerializer
 from talent.models import Talent, Curriculum, Location
-from utils import review_average_rate
+from utils import review_average_rate, Tutor
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
 from .review import ReviewSerializer, AverageRatesSerializer
@@ -12,7 +12,7 @@ from .location import LocationSerializer
 __all__ = (
     'TalentListSerializer',
     'TalentShortInfoSerializer',
-    'TalentCrateSerializer',
+    'TalentCreateSerializer',
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
 )
@@ -265,7 +265,9 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TalentCrateSerializer(serializers.ModelSerializer):
+class TalentCreateSerializer(serializers.ModelSerializer):
+    tutor = serializers.PrimaryKeyRelatedField(queryset=Tutor.objects.all())
+
     class Meta:
         model = Talent
         fields = (
