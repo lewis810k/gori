@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Question
-from utils import APITest_User_Login
+from utils import APITestUserLogin
 
 User = get_user_model()
 
@@ -15,7 +15,7 @@ __all__ = (
 )
 
 
-class QuestionCreateTest(APILiveServerTestCase, APITest_User_Login):
+class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_question(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
@@ -49,7 +49,7 @@ class QuestionCreateTest(APILiveServerTestCase, APITest_User_Login):
                 self.assertIn('detail', response.data)
 
 
-class ReplyCreateTest(APILiveServerTestCase, APITest_User_Login):
+class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_reply(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
@@ -84,7 +84,7 @@ class ReplyCreateTest(APILiveServerTestCase, APITest_User_Login):
                 self.assertIn('detail', response.data)
 
 
-class QnARetrieveTest(APILiveServerTestCase, APITest_User_Login):
+class QnARetrieveTest(APILiveServerTestCase, APITestUserLogin):
     def test_qna_retrieve_url_exist(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])

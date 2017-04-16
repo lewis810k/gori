@@ -1,15 +1,25 @@
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
+from rest_framework.test import APILiveServerTestCase
 
 from member.models import Tutor
 from talent.models import Talent, Location, Registration, Curriculum, Review, Question, Reply
 from utils.upload import image_upload
+from rest_framework.test import APILiveServerTestCase
 
 User = get_user_model()
 
 
-class APITest_User_Login(object):
+class APITestListVerify(APILiveServerTestCase):
+    def verify_util(self, data, keys):
+        response_list = data
+        field_list = keys
+        for field_item in field_list:
+            self.assertIn(field_item, response_list)
+
+
+class APITestUserLogin(object):
     test_user = 'test{}'
     test_password1 = 'testpw12'
     test_password2 = 'testpw12'
@@ -93,7 +103,7 @@ class APITest_User_Login(object):
             'price_per_hour': '10000',
             'hours_per_class': '1000',
             'number_of_class': '10',
-            'tutor_message':'test_message'
+            'tutor_message': 'test_message'
 
         }
         url = reverse('api:talent:create')
