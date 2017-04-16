@@ -1,7 +1,13 @@
 from django.contrib import admin
+from django.contrib.admin import AllValuesFieldListFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 from member.models import GoriUser, Tutor
 from talent.admin import RegistrationInline
+
+
+class CustomDropdownFilter(AllValuesFieldListFilter):
+    template = 'admin/dropdown_filter.html'
 
 
 class TutorInline(admin.TabularInline):
@@ -9,16 +15,26 @@ class TutorInline(admin.TabularInline):
 
 
 class GoriUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_active',
+    list_display = ('pk', 'username', 'email', 'is_staff', 'is_active',
                     'joined_date', 'is_tutor', 'get_tutor_info',)
     inlines = [TutorInline, RegistrationInline]
+    list_display_links = list_display
+
+    list_filter = (
+        ('is_tutor', DropdownFilter),
+        ('is_staff', DropdownFilter),
+    )
 
     def get_tutor_info(self, user):
         return user.tutor
 
 
 class TutorAdmin(admin.ModelAdmin):
-    list_display = ('user', 'talent_title',)
+    list_display = ('pk', 'user', 'talent_count',)
+    list_display_links = list_display
+
+    def talent_count(self, obj):
+        return obj.talent_set.count()
 
     def talent_title(self, tutor):
         title_list = []
