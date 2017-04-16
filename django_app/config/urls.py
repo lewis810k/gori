@@ -21,6 +21,7 @@ from django.contrib import admin
 from member.urls import apis as member_api_urls
 from member.urls import member as member_urls
 from talent.urls import apis as talent_api_urls
+from talent.urls import talent as talent_urls
 
 # ##### API URL #####
 api_urlpatterns = [
@@ -39,6 +40,7 @@ urlpatterns = [
 
     # ##### 일반 뷰에 대한 URL #####
     url(r'^member/', include(member_urls)),
+    url(r'^main/', include(talent_urls)),
 
 ]
 

@@ -11,6 +11,10 @@ Dockerfile_*
 .ebextensions
 .elasticbeanstalk
 
+# bower packages
+bower_components/
+**/app/static/css/
+
 ### Django ###
 *.log
 *.pot

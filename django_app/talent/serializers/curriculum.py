@@ -4,12 +4,12 @@ from talent.models import Curriculum, Talent
 
 __all__ = (
     'CurriculumSerializer',
-    'CurriculumWrapperSerializer',
 )
 
 
 class CurriculumSerializer(serializers.ModelSerializer):
     talent_pk = serializers.PrimaryKeyRelatedField(read_only=True, source='talent.id')
+
     class Meta:
         model = Curriculum
         fields = (
@@ -19,25 +19,13 @@ class CurriculumSerializer(serializers.ModelSerializer):
         )
 
 
-class CurriculumWrapperSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField(read_only=True)
-    type = serializers.SerializerMethodField(read_only=True)
-    curriculums = CurriculumSerializer(many=True, source='curriculum_set')
+class CurriculumCreateSerializer(serializers.ModelSerializer):
+    talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
 
     class Meta:
-        model = Talent
+        model = Curriculum
         fields = (
-            'pk',
-            'title',
-            'category',
-            'type',
-            'curriculums',
+            'talent_pk',
+            'information',
+            'image',
         )
-
-    @staticmethod
-    def get_category(obj):
-        return obj.get_category_display()
-
-    @staticmethod
-    def get_type(obj):
-        return obj.get_type_display()

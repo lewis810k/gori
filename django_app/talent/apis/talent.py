@@ -1,21 +1,23 @@
-from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from talent.models import Talent
-from talent.serializers import TalentDetailSerializer
+from talent.serializers import TalentDetailSerializer, TalentCreateSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
-from utils import duplicate_verify, tutor_verify, Tutor
+from utils import *
 
 __all__ = (
     'TalentListCreateView',
+    'UnverifiedTalentListView',
     # detail - all
     'TalentDetailView',
     # detail - fragments
     'TalentShortDetailView',
+    'TalentSalesStatusToggleView',
+    'TalentDeleteView',
 )
 
 User = get_user_model()
@@ -25,16 +27,14 @@ User = get_user_model()
 class TalentListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentListSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    # pagination_class = TalentPagination
+    pagination_class = LargeResultsSetPagination
 
     # rest_framework의 SearchFilter 사용시
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('title', 'class_info')
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         """
-
         필수정보 :
             - title : 수업 제목
             - category : 카테고리
@@ -48,69 +48,37 @@ class TalentListCreateView(generics.ListCreateAPIView):
         추가정보 :
             - video1 : 비디오링크 1
             - video2 : 비디오링크 2
+            - min_number_student : 최소 인원수
+            - max_number_student : 최대 인원수
+            - tutor_message : 튜터 메시지
+
         """
+        user = request.user
+        request.data['user'] = user.id
+        # 요청하는 유저가 튜터인지 체크
         try:
-            print('a')
-            title = request.data['title']
-            category = request.data['category']
-            type = request.data['type']
-            cover_image = request.FILES['cover_image']
-            tutor_info = request.data['tutor_info']
-            class_info = request.data['class_info']
-            number_of_class = request.data['number_of_class']
-            price_per_hour = request.data['price_per_hour']
-            hours_per_class = request.data['hours_per_class']
-            video1 = request.data.get('video1', '')
-            video2 = request.data.get('video2', '')
+            request.data['tutor'] = request.user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
 
-            user = request.user
+        # 생성 전용 시리얼라이저 사용
+        serializer = TalentCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            tutor_list = Tutor.objects.values_list('user_id', flat=True)
-            print(tutor_list)
+        # ##### 추가 검증 절차 #####
 
-            # 요청하는 유저가 튜터인지 체크
-            if user.id in tutor_list:
-                # 이미 같은 이름의 수업이 존재하면 400 리턴
-                data = {
-                    'title': title,
-                }
-                is_dup, msg = duplicate_verify(Talent, data)
-                if is_dup:
-                    return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        # 이미 같은 이름의 수업이 존재하면 400 리턴
+        data = {
+            'title': request.data['title'],
+        }
+        if verify_duplicate(Talent, data):
+            return Response(title_already_exist, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 끝  #####
 
-                Talent.objects.create(
-                    tutor=user.tutor,
-                    title=title,
-                    category=category,
-                    type=type,
-                    tutor_info=tutor_info,
-                    class_info=class_info,
-                    number_of_class=number_of_class,
-                    price_per_hour=price_per_hour,
-                    hours_per_class=hours_per_class,
-                    cover_image=cover_image,
-                    video1=video1,
-                    video2=video2,
-                )
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
 
-                ret_message = '[{talent}] 수업이 추가되었습니다.'.format(
-                    talent=title,
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
-
-            ret = {
-                'detail': '권한이 없습니다.',
-            }
-            return Response(ret, status=status.HTTP_401_UNAUTHORIZED)
-
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = Talent.objects.all()
@@ -123,8 +91,16 @@ class TalentListCreateView(generics.ListCreateAPIView):
             queryset = queryset.filter(locations__region__icontains=region).distinct('pk')
         if category is not None:
             queryset = queryset.filter(category__icontains=category)
-
+        queryset = queryset.filter(is_verified=True)
         return queryset
+
+
+# 인증 승인이 필요한 talent list api
+class UnverifiedTalentListView(generics.ListAPIView):
+    permission_classes = (custom_permission.CustomerIsAdminAccessPermission,)
+    queryset = Talent.objects.filter(is_verified=False)
+    serializer_class = TalentListSerializer
+    pagination_class = LargeResultsSetPagination
 
 
 class TalentShortDetailView(generics.RetrieveAPIView):
@@ -136,3 +112,35 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 class TalentDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentDetailSerializer
+
+
+# talent의 is_soldout 상태 toggle
+class TalentSalesStatusToggleView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, pk):
+        user = request.user
+        if hasattr(user, 'tutor'):
+            tutor = request.user.tutor
+            try:
+                talent = Talent.objects.get(pk=pk)
+                if talent in tutor.talent_set.all():
+                    talent, detail = switch_sales_status(pk)
+                    return Response(status=status.HTTP_200_OK,
+                                    data={"detail": detail})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+            except Talent.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수업 내역을 찾을 수 없습니다."})
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+
+
+class TalentDeleteView(generics.DestroyAPIView):
+    queryset = Talent.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Talent.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
+
+

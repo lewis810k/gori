@@ -71,8 +71,8 @@ class GoriUser(AbstractUser):
         user.cellphone = cellphone
         user.profile_image = profile_image
         user.save()
-        tutor = Tutor.objects.create(user=user, verification_method=verification_method,
-                                     verification_images=verification_images, **extra_fields)
+        tutor, _ = Tutor.objects.get_or_create(user=user, verification_method=verification_method,
+                                               verification_images=verification_images, **extra_fields)
 
         return tutor
 
@@ -96,8 +96,8 @@ class Tutor(models.Model):
     is_verified = models.BooleanField(default=False)
     verification_method = models.CharField(choices=VERIFICATION_CHOICES, max_length=2, default='ID')
     verification_images = models.ImageField(upload_to='member/verification_image')
-    school = models.CharField(max_length=20, blank=True)
-    major = models.CharField(max_length=20, blank=True)
+    school = models.CharField(max_length=30, blank=True)
+    major = models.CharField(max_length=30, blank=True)
     current_status = models.CharField(max_length=1, blank=True)
 
     def __str__(self):

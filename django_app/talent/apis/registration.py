@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
@@ -6,26 +7,57 @@ from rest_framework.response import Response
 
 from talent.models import Talent, Registration, Location
 from talent.serializers import TalentRegistrationWrapperSerializer
-from talent.serializers.registration import TalentRegistrationSerializer
-from utils import tutor_verify
+from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
+from utils import *
 
 __all__ = (
-    'TalentRegistrationRetrieveView',
     'RegistrationListCreateView',
+    'RegistrationDeleteView',
 )
-
-
-class TalentRegistrationRetrieveView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = TalentRegistrationWrapperSerializer
 
 
 class RegistrationListCreateView(generics.ListCreateAPIView):
     queryset = Registration.objects.all()
     serializer_class = TalentRegistrationSerializer
+    pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
+    def get_queryset(self):
+        return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
+
+    def list(self, request, *args, **kwargs):
+        """
+        pk에 해당하는 talent의 작성자가 request.user인지 확인하고 정보 출력
+        """
+        user = request.user
+
+        # talent pk가 존재하는지, 없으면 다른 리스트 반환값 처럼 반환. 여기만 예외적으로!!
+        try:
+            talent = Talent.objects.get(pk=kwargs['pk'])
+        except Talent.DoesNotExist as de:
+            return Response(object_not_found, status=status.HTTP_200_OK)
+
+        # 요청하는 유저가 튜터인지
+        try:
+            tutor = user.tutor
+        except ObjectDoesNotExist as e:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+        # talent의 튜터와 요청하는 유저가 같은지
+        if talent.tutor != tutor:
+            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
         """
         요청하는 장소에 대한 talent를 구한다. talent의 튜터가 request.user와 동일하면 에러.
         동일하지 않으면 등록 요청을 한다.
@@ -37,58 +69,38 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
             - student_level : 학생 레벨
             - experience_length : 경력 (개월수)
         """
-        try:
-            location_pk = request.data['location_pk']
-            location = Location.objects.filter(pk=location_pk).first()
-            if not location:
-                ret = {
-                    'detail': 'location({pk})을 찾을 수 없습니다.'.format(pk=location_pk)
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-            talent = location.talent
+        request.data['user'] = request.user.id
 
-            # 해당 수업에 자신이 튜터라면 등록되지 않도록.
-            if tutor_verify(request, talent):
-                ret = {
-                    'detail': '자신의 수업은 신청할 수 없습니다.',
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                # 기존에 존재하는 아이템이면 생성되지 않도록
-                item, created = Registration.objects.get_or_create(
-                    student=request.user,
-                    talent_location=location,
-                    message_to_tutor=request.data['message_to_tutor'],
+        # 생성 전용 시리얼라이저 사용
+        serializer = TalentRegistrationCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-                    # 필수가 아닌 정보들
-                    student_level=request.data.get('student_level', 1),
-                    experience_length=request.data.get('experience_length', 0),
-                )
+        # ##### 추가 검증 절차 #####
+        location = Location.objects.get(pk=request.data['location_pk'])
+        talent = location.talent
 
-                if not created:
-                    ret = {
-                        'detail': '이미 등록된 수업입니다.'
-                    }
-                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 자신의 수업이면 등록 불가능 #####
+        if verify_tutor(request, talent):
+            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
 
-                ret_message = '[{user}]님이 [{location}] 수업을 추가되었습니다.'.format(
-                    user=request.user,
-                    location=location
-                )
-                ret = {
-                    'detail': ret_message,
-                }
-                return Response(ret, status=status.HTTP_201_CREATED)
+        # ##### 이미 등록되었는지 #####
+        data = {
+            'student': request.user,
+            'talent_location': location,
+        }
+        if verify_duplicate(Registration, data=data):
+            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 추가 검증 끝 #####
 
-        except MultiValueDictKeyError as e:
-            ret = {
-                'non_field_error': (str(e)).strip('"') + ' field가 제공되지 않았습니다.'
-            }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
 
-# class RegistrationRetrieve(generics.RetrieveAPIView):
-#     queryset = Talent.objects.all()
-#     serializer_class = RegistrationWrapperSerializers
-#
-#     def get_queryset(self):
-#         return Talent.objects.filter(id=self.kwargs['pk'])
+        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class RegistrationDeleteView(generics.DestroyAPIView):
+    queryset = Registration.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Registration.objects.filter(pk=self.kwargs['pk'], student=self.request.user)

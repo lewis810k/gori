@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
-from talent.models import Talent, Registration
+from talent.models import Talent, Registration, Location
 from talent.serializers import TalentShortInfoSerializer
 from .location import LocationListSerializer
 
@@ -47,7 +47,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    registrations = MyRegistrationSerializer(many=True)
+    results = MyRegistrationSerializer(many=True,source="registrations")
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -60,7 +60,7 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'cellphone',
             'profile_image',
             'joined_date',
-            'registrations',
+            'results',
         )
 
 
@@ -116,6 +116,7 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
 class TalentRegistrationSerializer(serializers.ModelSerializer):
     student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='student.name')
     talent_location = LocationListSerializer(read_only=True)
+    day = serializers.SerializerMethodField()
     student_level = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -124,12 +125,33 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
             'id',
             'student',
             'talent_location',
-            'joined_date',
+            'day',
             'is_verified',
             'student_level',
             'experience_length',
+            'joined_date',
             'message_to_tutor',
         )
 
     def get_student_level(self, obj):
+        print(dir(obj))
         return obj.get_student_level_display()
+
+    def get_day(self, obj):
+        return obj.talent_location.get_day_display()
+
+
+class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='student')
+    location_pk = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), source='talent_location')
+
+    class Meta:
+        model = Registration
+        fields = (
+            'id',
+            'user',
+            'location_pk',
+            'student_level',
+            'experience_length',
+            'message_to_tutor',
+        )

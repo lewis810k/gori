@@ -72,11 +72,11 @@ class Location(models.Model):
     )
     region = models.CharField(choices=REGION, max_length=4)
     specific_location = models.CharField(choices=SPECIFIC_LOCATION, max_length=4, help_text='상세 위치 정보')
-    location_info = models.CharField(max_length=10, help_text='직접 입력 10글자 내외', blank=True)
+    location_info = models.TextField(blank=True)
     extra_fee = models.CharField(choices=EXTRA_FEE, max_length=1, default='N', help_text='장소 및 기타 비용이 있나요?')
-    extra_fee_amount = models.CharField(max_length=10, help_text='추가 비용: 예시) 재료 비용 1만원', blank=True)
+    extra_fee_amount = models.CharField(max_length=50, help_text='추가 비용: 예시) 재료 비용 1만원', blank=True)
     day = models.CharField(choices=DAYS_OF_WEEK, max_length=2)
-    time = models.CharField(max_length=20, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
+    time = models.CharField(max_length=50, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
 
     def __str__(self):
         return '{} - 지역: {}'.format(self.talent, self.get_region_display())
