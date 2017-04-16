@@ -149,15 +149,22 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         curriculum = self.create_curriculum(talent, user_token[0])
         review = self.create_review(talent, user_token[1])
         url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
+        a = [['qna'][0]],['tutor']
+        for i in a:
+            print('54324325234532453423333333',print(i))
         response = self.client.get(url)
-        print('base',list(response.data))
-        print('tutor',list(response.data['tutor']))
-        print('average_reates',list(response.data['average_rates']))
-        print('location',list(response.data['locations'][0]))
-        print('curriculums',list(response.data['curriculums'][0]))
-        print('qna',list(response.data['qna'][0]))
-        print('reply',list(response.data['qna'][0]['replies'][0]))
-        print('reviews',list(response.data['reviews'][0]))
+        data = list(response.data)
+        tutor = list(response.data['tutor'])
+        average_reates = list(response.data['average_rates'])
+        location = list(response.data['locations'][0])
+        curriculums = list(response.data['curriculums'][0])
+        qna = list(response.data['qna'][0])
+        reply = list(response.data['qna'][0]['replies'][0])
+        reviews = list(response.data['reviews'][0])
+        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews]
+        for data_item in data_list:
+            data.extend(data_item)
+        print('432523154324354325432', data)
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
                       'profile_image', 'cellphone', 'tutor_message', 'registration_count', 'cover_image', 'tutor_info',
                       'class_info', 'video1', 'video2', 'total', 'curriculum', 'readiness', 'timeliness', 'delivery',
@@ -170,7 +177,7 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         response_list = list(response.data) + list(response.data["tutor"])
 
         for field in field_list:
-            self.assertIn(field, response_list)
+            self.assertIn(field, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         url = reverse('api:talent:detail-all', kwargs={'pk': 999})
         response = self.client.get(url)
