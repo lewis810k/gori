@@ -1,14 +1,5 @@
-import json
-
-import requests
 from allauth.account.views import login
-from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.urls import resolve
-from django.urls import reverse
-from rest_framework.response import Response
+from django.shortcuts import render
 
 
 # @login_required
@@ -27,3 +18,10 @@ def login_view(request):
 
         return render(request, 'member/success.html')
     return render(request, 'member/login.html')
+
+
+def my_page_view(request):
+    context = {
+
+    }
+    return render(request, 'member/my_page.html', context)
