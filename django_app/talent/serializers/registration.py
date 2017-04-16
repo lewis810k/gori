@@ -116,6 +116,7 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
 class TalentRegistrationSerializer(serializers.ModelSerializer):
     student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='student.name')
     talent_location = LocationListSerializer(read_only=True)
+    day = serializers.SerializerMethodField()
     student_level = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -124,15 +125,20 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
             'id',
             'student',
             'talent_location',
-            'joined_date',
+            'day',
             'is_verified',
             'student_level',
             'experience_length',
+            'joined_date',
             'message_to_tutor',
         )
 
     def get_student_level(self, obj):
+        print(dir(obj))
         return obj.get_student_level_display()
+
+    def get_day(self, obj):
+        return obj.talent_location.get_day_display()
 
 
 class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
