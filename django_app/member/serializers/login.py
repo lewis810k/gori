@@ -73,58 +73,6 @@ class CustomRegisterSerializer(serializers.Serializer):
         return user
 
 
-#
-# class CustomLoginSerializer(RegisterSerializer):
-#     name = serializers.CharField(write_only=True)
-#     email = serializers.EmailField(required=False)
-#
-#     #
-#     # def validate_name(self, name):
-#     #     name = get_adapter().clean_username(name)
-#     #     return name
-#
-#     def get_cleaned_data(self):
-#         return {
-#             'username': self.validated_data.get('username', ''),
-#             'password1': self.validated_data.get('password1', ''),
-#             'password2': self.validated_data.get('password2', ''),
-#             'name': self.validated_data.get('name', ''),
-#             'email': self.validated_data.get('email', '')
-#         }
-#
-#     def save(self, request):
-#         print('1')
-#         adapter = get_adapter()
-#         print('2')
-#         user = adapter.new_user(request)
-#         print(user)
-#         if 'name' in request.POST:
-#             user.name = request.POST['name']
-#         print(user.name)
-#         # else:
-#         #     raise Exception('test')
-#         #     # return HttpResponse('test')
-#         # raise MultiValueDictKeyError('test')
-#         #
-#         # try:
-#         #     user.name = request.POST['name']
-#         # except MultiValueDictKeyError as ME:
-#         #     print(ME)
-#         # finally:
-#         #     raise ValueError('could not find {} in {}'.format(char, char_string))
-#         print('3')
-#         self.cleaned_data = self.get_cleaned_data()
-#         print(self.cleaned_data)
-#         print('4')
-#         print(request, user)
-#         adapter.save_user(request, user, self)
-#         print('5')
-#         self.custom_signup(request, user)
-#         setup_user_email(request, user, [])
-#         print('6')
-#         return user
-
-
 class CustomSocialLoginSerializer(SocialLoginSerializer):
     def get_social_login(self, adapter, app, token, response):
         request = self._get_request()

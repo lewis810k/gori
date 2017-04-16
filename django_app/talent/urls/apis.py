@@ -15,12 +15,19 @@ urlpatterns = [
     url(r'^add/location/$', apis.LocationListCreateView.as_view(), name='location-create'),
     url(r'^add/curriculum/$', apis.CurriculumListCreateView.as_view(), name='curriculum-create'),
     url(r'^add/registration/$', apis.RegistrationListCreateView.as_view(), name='registration-create'),
-    url(r'^add/review/$', apis.ReviewCreateView.as_view(), name='review-create'),
-    url(r'^add/question/$', apis.QuestionCreateView.as_view(), name='question-create'),
+    url(r'^add/review/$', apis.ReviewListCreateView.as_view(), name='review-create'),
+    url(r'^add/question/$', apis.QuestionListCreateView.as_view(), name='question-create'),
     url(r'^add/reply/$', apis.ReplyCreateView.as_view(), name='reply-create'),
 
     # ##### 삭제 #####
-    url(r'^delete/question/$', apis.QuestionDeleteView.as_view()),
+    url(r'^delete/(?P<pk>[0-9]+)/$', apis.TalentDeleteView.as_view()),
+    url(r'^delete/location/(?P<pk>[0-9]+)/$', apis.LocationDeleteView.as_view()),
+    url(r'^delete/curriculum/(?P<pk>[0-9]+)/$', apis.CurriculumDeleteView.as_view()),
+    url(r'^delete/class-image/(?P<pk>[0-9]+)/$', apis.ClassImageDeleteView.as_view()),
+    url(r'^delete/registration/(?P<pk>[0-9]+)/$', apis.RegistrationDeleteView.as_view()),
+    url(r'^delete/review/(?P<pk>[0-9]+)/$', apis.ReviewDeleteView.as_view()),
+    url(r'^delete/question/(?P<pk>[0-9]+)/$', apis.QuestionDeleteView.as_view()),
+    url(r'^delete/reply/(?P<pk>[0-9]+)/$', apis.ReplyDeleteView.as_view()),
 
     # ##### 리스트 #####
     url(r'^list/$', apis.TalentListCreateView.as_view(), name='list'),
@@ -36,8 +43,8 @@ urlpatterns = [
     url(r'^detail/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumListCreateView.as_view(), name='curriculum-retrieve'),
     url(r'^detail/(?P<pk>[0-9]+)/registration/$', apis.RegistrationListCreateView.as_view(),
         name='registration-retrieve'),
-    url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewListView.as_view(), name='review-retrieve'),
-    url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QnATalentListView.as_view(), name='qna-retrieve'),
+    url(r'^detail/(?P<pk>[0-9]+)/review/$', apis.ReviewListCreateView.as_view(), name='review-retrieve'),
+    url(r'^detail/(?P<pk>[0-9]+)/qna/$', apis.QuestionListCreateView.as_view(), name='qna-retrieve'),
 
     # ##### 위시리스트 추가/삭제 #####
     url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view(), name='wishlist-toggle'),

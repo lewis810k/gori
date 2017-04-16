@@ -70,7 +70,7 @@ class APITest_User_Login(object):
 
         return users, tokens
 
-    def create_tutor(self, user, token=None):
+    def register_tutor(self, user, token=None):
         test_image = image_upload()
         data = {
             "user": user,

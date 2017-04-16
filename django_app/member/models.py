@@ -71,8 +71,8 @@ class GoriUser(AbstractUser):
         user.cellphone = cellphone
         user.profile_image = profile_image
         user.save()
-        tutor = Tutor.objects.create(user=user, verification_method=verification_method,
-                                     verification_images=verification_images, **extra_fields)
+        tutor, _ = Tutor.objects.get_or_create(user=user, verification_method=verification_method,
+                                               verification_images=verification_images, **extra_fields)
 
         return tutor
 

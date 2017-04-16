@@ -10,6 +10,8 @@ _Dockerfile*
 Dockerfile_*
 .ebextensions
 .elasticbeanstalk
+front/
+Dockerfile.*
 
 # bower packages
 bower_components/
