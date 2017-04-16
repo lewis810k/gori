@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from member.models import Tutor
-from talent.models import Location, Talent
+from talent.models import Location
 
 __all__ = (
     'UserSerializer',
@@ -159,4 +159,16 @@ class ReviewUserSerializer(serializers.ModelSerializer):
             'pk',
             'name',
             'profile_image',
+        )
+
+
+class TutorInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tutor
+        fields = (
+            'verification_method',
+            'verification_images',
+            'school',
+            'major',
+            'current_status',
         )

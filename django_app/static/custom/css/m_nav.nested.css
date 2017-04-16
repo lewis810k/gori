@@ -1,0 +1,32 @@
+.nav-wrap {
+  width: 100vmax;
+  height: 15.5vmin;
+  float: left;
+  background-color: #fff; }
+  .nav-wrap .nav-left {
+    width: 36.5vmax;
+    height: inherit; }
+    .nav-wrap .nav-left .nav-list {
+      float: left;
+      list-style: none;
+      width: 80%;
+      margin: 5vmin auto; }
+      .nav-wrap .nav-left .nav-list .left-list-item .left-item {
+        font-size: 1.2em;
+        font-style: italic;
+        color: #999;
+        font-weight: 600;
+        float: left; }
+  .nav-wrap .center-logo {
+    width: 26vmax;
+    background-image: url(../../images/bg_header_logo.jpg);
+    background-size: 26vmax 16vmin;
+    overflow: hidden;
+    height: inherit; }
+    .nav-wrap .center-logo .logo {
+      width: 7.6vmax;
+      margin: 5vmin 9.2vmax;
+      size: auto; }
+  .nav-wrap .nav-right {
+    width: 36.6vmax;
+    height: inherit; }

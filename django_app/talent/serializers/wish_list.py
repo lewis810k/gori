@@ -38,7 +38,7 @@ class WishListSerializer(serializers.ModelSerializer):
 
 
 class MyWishListSerializer(serializers.ModelSerializer):
-    talent = TalentShortInfoSerializer(many=True, source='talent_set')
+    results = TalentShortInfoSerializer(many=True, source='talent_set')
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -51,5 +51,5 @@ class MyWishListSerializer(serializers.ModelSerializer):
             'cellphone',
             'profile_image',
             'joined_date',
-            'talent',
+            'results',
         )

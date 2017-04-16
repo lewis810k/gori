@@ -1,0 +1,54 @@
+@import "variables";
+
+.nav-wrap {
+  width: 100vmax;
+  // height:100px;
+  height: 15.5vmin;
+  float: left;
+  background-color: $color-bg-nav;
+  .nav-left{
+    width: 36.5vmax;
+    height: inherit;
+    .nav-list{
+      float: left;
+      list-style: none;
+      width: 80%;
+      margin: 5vmin auto;
+      .left-list-item{
+
+
+        .left-item{
+          font-size: 1.2em;
+          font-style: italic;
+          color: $color-lt-light-grey;
+          font-weight: 600;
+          float: left;
+        }
+      }
+    }
+  }
+  .center-logo{
+    width: 26vmax;
+    // width: 340px;
+    background-image: url(../../images/bg_header_logo.jpg);
+    // background-size: 334px 99px;
+    // background-size: 25.5vmax 105px;
+    background-size: 26vmax 16vmin;
+
+    overflow: hidden;
+
+    height: inherit;
+    .logo{
+      width: 7.6vmax;
+      // margin: 30px 120px;
+      margin: 5vmin 9.2vmax;
+      size: auto;
+
+    }
+  }
+  .nav-right{
+    // background-color: blue;
+    width: 36.6vmax;
+    height: inherit;
+  }
+}
