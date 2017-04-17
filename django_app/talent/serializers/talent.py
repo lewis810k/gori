@@ -1,13 +1,16 @@
+import collections
+
 from rest_framework import serializers
 
 from member.serializers import TutorSerializer
 from talent.models import Talent, Curriculum, Location
 from utils import review_average_rate, Tutor
+from utils.region_display import region_display
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
-from .review import ReviewSerializer, AverageRatesSerializer
-from .qna import QuestionSerializer
 from .location import LocationSerializer
+from .qna import QuestionSerializer
+from .review import ReviewSerializer, AverageRatesSerializer
 
 __all__ = (
     'TalentListSerializer',
@@ -183,7 +186,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
     average_rates = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     # category = serializers.ChoiceField(choices=Talent.CATEGORY)
-    locations = LocationSerializer(many=True)
+    locations = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -218,6 +221,28 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'qna',
             'reviews',
         )
+
+    def get_locations(self, obj):
+        regions = {}
+        for location_item in obj.locations.all():
+            if location_item.region in regions.keys():
+                regions[location_item.region] += 1
+
+
+            else:
+                regions[location_item.region] = 1
+        locationss = []
+        for region_key, value in regions.items():
+            a = collections.OrderedDict()
+            a["region"] = region_display(region_key)
+            a["count"] = value
+            results = []
+            l = Location.objects.filter(talent=obj, region=region_key)
+            for item_l in l:
+                results.append(LocationSerializer(item_l).data)
+            a["results"] = results
+            locationss.append(a)
+        return locationss
 
     def get_category(self, obj):
         return obj.get_category_display()
