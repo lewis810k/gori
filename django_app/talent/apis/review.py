@@ -39,27 +39,28 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - friendliness : 친근감?에 대한 점수
             - comment : 코멘트
         """
-        return Response('test', status=status.HTTP_200_OK)
         request.data['user'] = request.user.id
 
         # 생성 전용 시리얼라이저 사용
         serializer = ReviewCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # ##### 추가 검증 절차 #####
-        talent = Talent.objects.get(pk=request.data['talent_pk'])
+        return Response('test', status=status.HTTP_200_OK)
 
-        # ##### 자신의 수업이면 등록 불가능 #####
-        if verify_tutor(request, talent):
-            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
-
-        # ##### 이미 리뷰가 존재하면 등록 불가능#####
-        data = {
-            'talent': talent,
-            'user': request.user,
-        }
-        if verify_duplicate(Review, data=data):
-            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+        # # ##### 추가 검증 절차 #####
+        # talent = Talent.objects.get(pk=request.data['talent_pk'])
+        #
+        # # ##### 자신의 수업이면 등록 불가능 #####
+        # if verify_tutor(request, talent):
+        #     return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
+        #
+        # # ##### 이미 리뷰가 존재하면 등록 불가능#####
+        # data = {
+        #     'talent': talent,
+        #     'user': request.user,
+        # }
+        # if verify_duplicate(Review, data=data):
+        #     return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
 
         # ##### 추가 검증 끝  #####
 
