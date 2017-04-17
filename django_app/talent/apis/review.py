@@ -41,14 +41,10 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - friendliness : 친근감?에 대한 점수
             - comment : 코멘트
         """
-
-        print(request)
-        print(request.data)
-
+        request.data['user'] = request.user.id
         print("=====================")
         print("data: ", request.data)
 
-        request.data['user'] = request.user.id
         # 생성 전용 시리얼라이저 사용
         print('---------before serializer-------')
         serializer = ReviewCreateSerializer(data=request.data)
