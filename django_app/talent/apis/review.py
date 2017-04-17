@@ -45,7 +45,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         """
         request.data['user'] = request.user.id
         print("=====================")
-        print("data: ", request.data)
 
         # 생성 전용 시리얼라이저 사용
         print('---------before serializer-------')
