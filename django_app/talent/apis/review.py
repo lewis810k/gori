@@ -28,6 +28,8 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         특정 수업에 대해 리뷰를 작성한다.
         자신의 수업에 대해서는 리뷰를 작성할 수 없도록 한다.
 
+        수강생만 리뷰 등록 가능!
+
         필수정보 :
             - talent_pk : 수업 아이디
         추가정보 :
@@ -39,6 +41,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - friendliness : 친근감?에 대한 점수
             - comment : 코멘트
         """
+
         request.data['user'] = request.user.id
 
         # 생성 전용 시리얼라이저 사용
