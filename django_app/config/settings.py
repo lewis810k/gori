@@ -137,6 +137,7 @@ INSTALLED_APPS = [
 
     # extension
     'django_extensions',
+    'django_admin_listfilter_dropdown',
 
     'django.contrib.sites',
     'allauth',

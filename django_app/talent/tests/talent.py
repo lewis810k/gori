@@ -4,17 +4,19 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Talent
-from utils import APITest_User_Login, image_upload, Tutor
+from utils import APITestUserLogin, image_upload, Tutor, APITestListVerify
 
 User = get_user_model()
 
 __all__ = (
     'TutorTest',
+    'TutorRegisterTest',
     'TalentCreateTest',
     'TalentListTest',
 )
 
-class TutorTest(APILiveServerTestCase, APITest_User_Login):
+
+class TutorRegisterTest(APILiveServerTestCase, APITestUserLogin):
     def test_tutor_register(self):
         """
         유저를 tutor로 등록시키는 코드
@@ -49,7 +51,7 @@ class TutorTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TalentCreateTest(APILiveServerTestCase, APITest_User_Login):
+class TalentCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_talent(self):
         test_image = image_upload()
         user, user_token = self.obtain_token(2)
@@ -104,7 +106,7 @@ class TalentCreateTest(APILiveServerTestCase, APITest_User_Login):
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + user_token[1])
 
 
-class TalentListTest(APILiveServerTestCase, APITest_User_Login):
+class TalentListTest(APITestUserLogin, APITestListVerify):
     def test_talent_list(self):
         """
         params : resgion:SD 은 사당으로 검색하기에
@@ -123,10 +125,9 @@ class TalentListTest(APILiveServerTestCase, APITest_User_Login):
                       'profile_image', 'cellphone', 'is_school', 'cover_image', 'price_per_hour', 'hours_per_class',
                       'number_of_class', 'min_number_student', 'max_number_student', 'is_soldout', 'created_date',
                       'average_rate', 'review_count', 'registration_count', 'regions']
-        response_list = list(results.keys()) + list(results["tutor"])
 
-        for field in field_list:
-            self.assertIn(field, response_list)
+        data = list(response.data['results'][0]) + list(response.data['results'][0]['tutor'])
+        self.verify_util(data, field_list)
 
         params_list = [
             ({'region': 'KN'}, 1),
@@ -142,25 +143,42 @@ class TalentListTest(APILiveServerTestCase, APITest_User_Login):
             self.assertEqual(response.data['count'], param_item[1])
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_talent_detail_retrieve_all_url_exist(self):
-        user, user_token = self.obtain_token()
-        tutor = self.register_tutor(user, user_token)
-        talent = self.create_talent(tutor, user_token)
+    def test_talent_detail_all_url_exist(self):
+        user, user_token = self.obtain_token(2)
+        tutor = self.register_tutor(user[0], user_token[0])
+        talent = self.create_talent(tutor, user_token[0])
+        location = self.create_location(talent, user_token[0])
+        question = self.create_question(talent, user_token[1])
+        reply = self.create_reply(question, user_token[0])
+        curriculum = self.create_curriculum(talent, user_token[0])
+        review = self.create_review(talent, user_token[1])
         url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
         response = self.client.get(url)
-        field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
-                      'profile_image', 'cellphone', 'cover_image', 'price_per_hour', 'hours_per_class',
-                      'number_of_class', 'min_number_student', 'max_number_student',
-                      'average_rate', 'review_count']
+        data = list(response.data)
+        tutor = list(response.data['tutor'])
+        average_reates = list(response.data['average_rates'])
+        location = list(response.data['locations'][0])
+        curriculums = list(response.data['curriculums'][0])
+        qna = list(response.data['qna'][0])
+        reply = list(response.data['qna'][0]['replies'][0])
+        reviews = list(response.data['reviews'][0])
+        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews]
+        for data_item in data_list:
+            data.extend(data_item)
+        print('432523154324354325432', data)
+        field_list = ['pk', 'title', 'category', 'type', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
+                      'profile_image', 'cellphone', 'tutor_message', 'registration_count', 'cover_image', 'tutor_info',
+                      'class_info', 'video1', 'video2', 'total', 'curriculum', 'readiness', 'timeliness', 'delivery',
+                      'friendliness', 'price_per_hour', 'hours_per_class', 'number_of_class', 'min_number_student',
+                      'max_number_student', 'average_rate', 'review_count', 'is_soldout', 'is_verified', 'locations',
+                      'talent_pk', 'region', 'specific_location', 'extra_fee', 'extra_fee_amount', 'time', 'image',
+                      'information', 'qna', 'user', 'user_image', 'created_data', 'content', 'replies', 'tutor_image',
+                      'talent', 'comment']
         # 'registration_count', 모델다시 해놓고 바꿔줄것
-        response_list = list(response.data) + list(response.data["tutor"])
 
         for field in field_list:
-            self.assertIn(field, response_list)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        url = reverse('api:talent:detail-all', kwargs={'pk': 999})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+            self.assertIn(field, data)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_talent_detail_short_retrieve_url_exist(self):
         user, user_token = self.obtain_token()

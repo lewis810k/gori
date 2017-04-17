@@ -28,6 +28,8 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         특정 수업에 대해 리뷰를 작성한다.
         자신의 수업에 대해서는 리뷰를 작성할 수 없도록 한다.
 
+        수강생만 리뷰 등록 가능!
+
         필수정보 :
             - talent_pk : 수업 아이디
         추가정보 :
@@ -44,27 +46,32 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         print(request)
         print(request.data)
 
+        print("=====================")
+        print("data: ", request.data)
+        print("user: ", request.user)
+
+        request.data['user'] = request.user.id
+
         # 생성 전용 시리얼라이저 사용
+        print('---------before serializer-------')
         serializer = ReviewCreateSerializer(data=request.data)
-        return Response('test1', status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        print('---------before is_valid---------')
         serializer.is_valid(raise_exception=True)
+        print('---------after is_valid--------')
+        # ##### 추가 검증 절차 #####
+        talent = Talent.objects.get(pk=request.data['talent_pk'])
 
-        return Response('test', status=status.HTTP_200_OK)
+        # ##### 자신의 수업이면 등록 불가능 #####
+        if verify_tutor(request, talent):
+            return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
 
-        # # ##### 추가 검증 절차 #####
-        # talent = Talent.objects.get(pk=request.data['talent_pk'])
-        #
-        # # ##### 자신의 수업이면 등록 불가능 #####
-        # if verify_tutor(request, talent):
-        #     return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
-        #
-        # # ##### 이미 리뷰가 존재하면 등록 불가능#####
-        # data = {
-        #     'talent': talent,
-        #     'user': request.user,
-        # }
-        # if verify_duplicate(Review, data=data):
-        #     return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+        # ##### 이미 리뷰가 존재하면 등록 불가능#####
+        data = {
+            'talent': talent,
+            'user': request.user,
+        }
+        if verify_duplicate(Review, data=data):
+            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
 
         # ##### 추가 검증 끝  #####
 

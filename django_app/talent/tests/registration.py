@@ -5,15 +5,14 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Registration
-from utils import APITest_User_Login
+from utils import APITestUserLogin
 
 User = get_user_model()
 
-
-class RegistrationCreateRetrieveTest(APILiveServerTestCase, APITest_User_Login):
+class RegistrationCreateRetrieveTest(APILiveServerTestCase, APITestUserLogin):
     def test_registration_create(self):
         users, tokens = self.obtain_token(3)
-        tutor = self.register_tutor(users[0], tokens[0])
+        tutor = self.create_tutor(users[0], tokens[0])
         talent = self.create_talent(tutor, tokens[0])
         location = self.create_location(talent, tokens[0])
         message_to_tutor = "잘부탁드립니다"

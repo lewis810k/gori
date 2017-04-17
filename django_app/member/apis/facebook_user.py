@@ -71,6 +71,7 @@ def fb_complete_login(request, app, token):
 
 class FacebookOAuth2TempAdapter(FacebookOAuth2Adapter):
     def complete_login(self, request, app, access_token, **kwargs):
+        # access_token = access_token.format(0x0F)
         return fb_complete_login(request, app, access_token)
 
 

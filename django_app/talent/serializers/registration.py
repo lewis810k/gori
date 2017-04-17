@@ -47,8 +47,11 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    results = MyRegistrationSerializer(many=True,source="registrations")
+
+
+    results = MyRegistrationSerializer(many=True, source="registrations")
     user_id = serializers.CharField(source='username')
+
 
     class Meta:
         model = User
@@ -63,8 +66,11 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'results',
         )
 
+    # def get_results(self, obj):
+    #     print(obj.registrations)
+    #     return MyRegistrationSerializer(obj.registrations.filter(is_verified=True)).data  # ======== talent =========
 
-# ======== talent =========
+
 class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
@@ -148,10 +154,10 @@ class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registration
         fields = (
-            'id',
-            'user',
-            'location_pk',
-            'student_level',
-            'experience_length',
-            'message_to_tutor',
+                     'id',
+                     'user',
+                     'location_pk',
+                     'student_level',
+                     'experience_length',
+                     'message_to_tutor',
         )
