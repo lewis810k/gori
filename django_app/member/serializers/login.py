@@ -60,14 +60,10 @@ class CustomRegisterSerializer(serializers.Serializer):
         user = adapter.new_user(request)
         if 'name' in request.POST:
             user.name = request.POST['name']
-        print(user.name)
         # user.name = user.name.encode('utf-8')
         self.cleaned_data = self.get_cleaned_data()
-        print('cleaned: ', self.cleaned_data)
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
-        print('data: ', request.data)
-        print(user)
         user.email = request.data['username']
         user.save()
         # setup_user_email(request, user, )
