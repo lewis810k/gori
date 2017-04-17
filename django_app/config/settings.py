@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
-# DEBUG = True
-DEBUG = os.environ.get('MODE') == 'DEBUG'
+DEBUG = True
+# DEBUG = os.environ.get('MODE') == 'DEBUG'
 # 실험이 되는지 확인하기위해  True생성
 # STORAGE_S3 = False
 STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
@@ -37,9 +37,9 @@ CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
 
 # 디버그 모드일 경우 local, 아닐 경우 deploy 파일을 불러온다.
 if DEBUG:
-    CONFIG_FILE = os.path.join(CONF_DIR, 'settings_local.json')
-else:
     CONFIG_FILE = os.path.join(CONF_DIR, 'settings_deploy.json')
+else:
+    CONFIG_FILE = os.path.join(CONF_DIR, 'settings_local.json')
 config_common = json.loads(open(CONFIG_FILE_COMMON).read())
 config = json.loads(open(CONFIG_FILE).read())
 
