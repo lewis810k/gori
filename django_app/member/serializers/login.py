@@ -1,5 +1,8 @@
+from __future__ import unicode_literals
+
 from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
+from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import SocialLoginSerializer
@@ -58,8 +61,10 @@ class CustomRegisterSerializer(serializers.Serializer):
     def save(self, request):
         adapter = get_adapter()
         user = adapter.new_user(request)
+        print('before request.post')
         if 'name' in request.POST:
-            user.name = request.POST['name']
+            print('in reqeust.post')
+            user.name = smart_str(request.POST['name'])
         # user.name = user.name.encode('utf-8')
         self.cleaned_data = self.get_cleaned_data()
         adapter.save_user(request, user, self)
