@@ -90,7 +90,7 @@ TEMPLATES_DIR = 'templates'
 
 AUTH_USER_MODEL = 'member.GoriUser'
 
-SITE_ID = 1
+SITE_ID = 2
 
 LOGIN_URL = '/admin/'
 LOGIN_REDIRECT_URL = '/admin/'

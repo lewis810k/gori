@@ -63,6 +63,10 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'results',
         )
 
+        # def get_results(self, obj):
+        #     print(obj.registrations)
+        #     return MyRegistrationSerializer(obj.registrations.filter(is_verified=True)).data
+
 
 # ======== talent =========
 class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
