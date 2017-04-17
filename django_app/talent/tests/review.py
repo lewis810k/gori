@@ -16,40 +16,42 @@ class ReviewCreateTest(APILiveServerTestCase, APITestUserLogin):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
-        fail_list = [
-            [1234, 'readiness', user_token[1]],
-            [talent.pk, '', user_token[1]],
-            [talent.pk, 'readiness', user_token[0]],
-            [talent.pk, 'readiness', user_token[1]],
-            [talent.pk, 'readiness', ""],
+        data_list = [
+            ["", user_token[1]],
+            [1234, user_token[1]],
+            [talent.pk, user_token[1]],
+            [talent.pk, user_token[0]],
+            [talent.pk, ""],
         ]
-        for fail_item in fail_list:
+        for data_item in data_list:
             data = {
-                'talent_pk': fail_item[0],
+                'talent_pk': data_item[0],
                 'curriculum': 5,
-                fail_item[1]: 5,
+                'readiness': 5,
                 'timeliness': 5,
                 'delivery': 5,
                 'friendliness': 5,
                 'comment': 'test_comment'
             }
             url = reverse('api:talent:review-create')
-            response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + fail_item[2])
-            if fail_item[1] == "":
-                self.assertIn('non_field_error', response.data)
-                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-            elif fail_item[0] == talent.pk and fail_item[1] == 'readiness' and fail_item[2] == user_token[1]:
+            response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + data_item[1])
+            if data_item[0] == talent.pk and data_item[1] == user_token[1]:
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
                 self.assertEqual(Review.objects.count(), 1)
-            elif fail_item[2] == "":
-                self.assertIn('detail', response.data)
-                self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-            else:
-                self.assertIn('detail', response.data)
+            elif data_item[0] == '' or data_item[0] == 1234:
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[1])
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Review.objects.count(), 1)
+                self.assertIn('talent_pk', response.data)
+            elif data_item[1] == user_token[0]:
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn('detail', response.data)
+            else:
+                self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+                self.assertIn('detail', response.data)
+
+                # 지금은 리뷰가 여러개 달림
+                # response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[1])
+                # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                # self.assertEqual(Review.objects.count(), 1)
 
 
 class ReviewRetrieveTest(APITestUserLogin, APITestListVerify):

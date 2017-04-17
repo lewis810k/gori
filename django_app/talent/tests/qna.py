@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Question
-from utils import APITestUserLogin
+from utils import APITestUserLogin, APITestListVerify
 
 User = get_user_model()
 
@@ -16,7 +16,6 @@ __all__ = (
 
 
 class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
-
     def test_create_question(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
@@ -40,15 +39,13 @@ class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
                 self.assertEqual(Question.objects.count(), 1)
             elif test_item[2] == '':
-                self.assertIn('detail',response.data)
+                self.assertIn('detail', response.data)
                 self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
             elif test_item[1] == '':
                 self.assertIn('content', response.data)
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             else:
-                print("question", response.data)
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
 
 
 class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
@@ -72,7 +69,7 @@ class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
             }
             url = reverse('api:talent:reply-create')
             response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + test_item[2])
-            if test_item[0] == talent.pk and test_item[1] == 'content' and test_item[2] == user_token[1]:
+            if test_item[0] == question.pk and test_item[1] == 'content' and test_item[2] == user_token[0]:
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
                 self.assertEqual(Question.objects.count(), 1)
             elif test_item[2] == '':
@@ -86,9 +83,10 @@ class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
                 self.assertIn('detail', response.data)
 
 
-class QnARetrieveTest(APILiveServerTestCase, APITestUserLogin):
+class QnARetrieveTest(APITestListVerify, APITestUserLogin):
     def test_qna_retrieve_url_exist(self):
         user, user_token = self.obtain_token(2)
+
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
         question = self.create_question(talent, user_token[1])
@@ -96,3 +94,9 @@ class QnARetrieveTest(APILiveServerTestCase, APITestUserLogin):
 
         url = reverse('api:talent:qna-retrieve', kwargs={'pk': talent.pk})
         response = self.client.get(url)
+        results = list(response.data['results'][0])
+        replies = list(response.data['results'][0]['replies'][0])
+        data = replies + results
+        field_list = ['pk', 'user', 'user_image', 'created_date', 'content', 'replies', 'tutor', 'tutor_image']
+        self.verify_util(data,field_list)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -37,19 +37,23 @@ class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
                 'information': 'test_information',
                 'image': test_image,
             }
-            print(data)
             url = reverse('api:talent:curriculum-create')
             response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + data_item[2])
             if data_item[0] == 'talent_pk' and data_item[1] == talent.pk and data_item[2] == user_token[0]:
-                self.assertIn('detail',response.data)
+                self.assertIn('detail', response.data)
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            elif
-
-
+            elif data_item[0] == "" or data_item[1] == 555:
+                self.assertIn('talent_pk', response.data)
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            elif data_item[2] == "":
+                self.assertIn('detail', response.data)
+                self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            else:
+                self.assertIn('detail', response.data)
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
-
     def test_curriculum_retrieve_url_exist(self):
         user, user_token = self.obtain_token()
         tutor = self.register_tutor(user, user_token)
@@ -62,7 +66,3 @@ class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
 
         field_list = ['talent_pk', 'information', 'image']
         self.verify_util(list(response.data['results'][0]), field_list)
-
-        # url = reverse('api:talent:curriculum-retrieve', kwargs={'pk': 123})
-        # response = self.client.get(url)
-        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

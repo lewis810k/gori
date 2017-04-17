@@ -52,57 +52,52 @@ class TutorRegisterTest(APILiveServerTestCase, APITestUserLogin):
 
 class TalentCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_talent(self):
-        test_image = image_upload()
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
-        data = {
-            'title': 'test',
-            'category': 'COM',
-            'type': 1,
-            'tutor_info': 'test_info',
-            'class_info': 'test_class_info',
-            'number_of_class': 5,
-            'price_per_hour': 20000,
-            'hours_per_class': 2,
-            'cover_image': test_image,
-            'video1': 'test.com',
-            'video2': 'test2.com'
-        }
-        fail_data = {
-            'title': 'test1',
-            'category': 'COM',
-            'type': 1,
-            'tutor_info': 'test_info',
-            'class_info': 'test_class_info',
-            'number_of_class': 5,
-            'hours_per_class': 2,
-            'cover_image': test_image,
-            'video1': 'test.com',
-            'video2': 'test2.com'
-        }
-        title_overlap_fail_data = {
-            'title': 'test',
-            'category': 'COM',
-            'type': 1,
-            'tutor_info': 'test_info',
-            'class_info': 'test_class_info',
-            'number_of_class': 5,
-            'price_per_hour': 20000,
-            'hours_per_class': 2,
-            'cover_image': test_image,
-            'video1': 'test.com',
-            'video2': 'test2.com'
-        }
-        url = reverse('api:talent:create')
-        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[0])
-        self.assertIn('detail', response.data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Talent.objects.count(), 1)
-        response = self.client.post(url, fail_data, HTTP_AUTHORIZATION='Token ' + user_token[0])
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        response = self.client.post(url, title_overlap_fail_data, HTTP_AUTHORIZATION='Token ' + user_token[0])
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + user_token[1])
+        video_url = 'https://www.youtube.com/watch?v=irV2tDQLajA/'
+        count = 0
+        data_list = [
+            ['test', 'tutor_info', user_token[0], video_url],
+            ["", 'tutor_info', user_token[0], video_url],
+            ['test1', 'tutor_info', user_token[1], video_url],
+            ['test1', 'tutor_info', user_token[0], 'test'],
+            ['test', 'tutor_info', user_token[0], video_url],
+        ]
+        for data_item in data_list:
+            test_image = image_upload()
+            data = {
+                'title': data_item[0],
+                'category': 'COM',
+                'type': 1,
+                data_item[1]: 'test_info',
+                'class_info': 'test_class_info',
+                'cover_image': test_image,
+                'number_of_class': 5,
+                'price_per_hour': 20000,
+                'hours_per_class': 2,
+                'cover_image': test_image,
+                'video1': data_item[3],
+
+            }
+            url = reverse('api:talent:create')
+            response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + data_item[2])
+            if data_item[0] == 'test' and data_item[1] == 'tutor_info' and \
+                            data_item[2] == user_token[0] and data_item[3] == video_url and count == 0:
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                self.assertEqual(Talent.objects.count(), 1)
+                count += 1
+            elif data_item[0] == "":
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn('title', response.data)
+            elif data_item[2] == user_token[1]:
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn('detail', response.data)
+            elif data_item[3] == 'test':
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn('video1', response.data)
+            else:
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn('detail', response.data)
 
 
 class TalentListTest(APITestUserLogin, APITestListVerify):
@@ -118,7 +113,6 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         location = self.create_location(talent, user_token)
         url = reverse('api:talent:list')
         response = self.client.get(url)
-        results = response.data['results'][0]
 
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
                       'profile_image', 'cellphone', 'is_school', 'cover_image', 'price_per_hour', 'hours_per_class',
@@ -164,36 +158,17 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews]
         for data_item in data_list:
             data.extend(data_item)
-        print('432523154324354325432', data)
+        print('432523154324354325432', qna)
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
                       'profile_image', 'cellphone', 'tutor_message', 'registration_count', 'cover_image', 'tutor_info',
                       'class_info', 'video1', 'video2', 'total', 'curriculum', 'readiness', 'timeliness', 'delivery',
                       'friendliness', 'price_per_hour', 'hours_per_class', 'number_of_class', 'min_number_student',
-                      'max_number_student', 'average_rate', 'review_count', 'is_soldout', 'is_verified', 'locations',
+                      'max_number_student', 'average_rates', 'review_count', 'is_soldout', 'is_verified', 'locations',
                       'talent_pk', 'region', 'specific_location', 'extra_fee', 'extra_fee_amount', 'time', 'image',
-                      'information', 'qna', 'user', 'user_image', 'created_data', 'content', 'replies', 'tutor_image',
+                      'information', 'qna', 'user', 'user_image', 'created_date', 'content', 'replies', 'tutor_image',
                       'talent', 'comment']
-        # 'registration_count', 모델다시 해놓고 바꿔줄것
 
-        for field in field_list:
-            self.assertIn(field, data)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_talent_detail_retrieve_all_url_exist(self):
-        user, user_token = self.obtain_token()
-        tutor = self.register_tutor(user, user_token)
-        talent = self.create_talent(tutor, user_token)
-        url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
-        response = self.client.get(url)
-        field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
-                      'profile_image', 'cellphone', 'cover_image', 'price_per_hour', 'hours_per_class',
-                      'number_of_class', 'min_number_student', 'max_number_student',
-                      'average_rate', 'review_count']
-        # 'registration_count', 모델다시 해놓고 바꿔줄것
-        response_list = list(response.data) + list(response.data["tutor"])
-
-        for field in field_list:
-            self.assertIn(field, response_list)
+        self.verify_util(data, field_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         url = reverse('api:talent:detail-all', kwargs={'pk': 999})
         response = self.client.get(url)
@@ -208,11 +183,10 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         field_list = ['max_number_student', 'price_per_hour', 'is_verified', 'category', 'number_of_class',
                       'hours_per_class', 'is_soldout', 'class_info', 'video1', 'video2', 'pk', 'title', 'tutor',
                       'user_id', 'name', 'nickname', 'profile_image', 'cellphone', 'type', 'cover_image',
-                      'tutor_info', 'average_rate', 'review_count', 'min_number_student']
-        response_list = list(response.data) + list(response.data["tutor"])
+                      'tutor_info', 'average_rates', 'review_count', 'min_number_student']
+        data = list(response.data) + list(response.data["tutor"])
 
-        for field in field_list:
-            self.assertIn(field, response_list)
+        self.verify_util(data, field_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         url = reverse('api:talent:detail-all', kwargs={'pk': 999})
         response = self.client.get(url)
