@@ -42,6 +42,7 @@ class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
 
 
 class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
+
     def test_curriculum_retrieve_url_exist(self):
         user, user_token = self.obtain_token()
         tutor = self.register_tutor(user, user_token)

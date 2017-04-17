@@ -127,10 +127,6 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
 
         data = list(response.data['results'][0]) + list(response.data['results'][0]['tutor'])
         self.verify_util(data, field_list)
-        response_list = list(results.keys()) + list(results["tutor"])
-
-        for field in field_list:
-            self.assertIn(field, response_list)
 
         params_list = [
             ({'region': 'KN'}, 1),
@@ -181,6 +177,23 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
 
         for field in field_list:
             self.assertIn(field, data)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_talent_detail_retrieve_all_url_exist(self):
+        user, user_token = self.obtain_token()
+        tutor = self.register_tutor(user, user_token)
+        talent = self.create_talent(tutor, user_token)
+        url = reverse('api:talent:detail-all', kwargs={'pk': talent.pk})
+        response = self.client.get(url)
+        field_list = ['pk', 'title', 'category', 'type', 'tutor', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
+                      'profile_image', 'cellphone', 'cover_image', 'price_per_hour', 'hours_per_class',
+                      'number_of_class', 'min_number_student', 'max_number_student',
+                      'average_rate', 'review_count']
+        # 'registration_count', 모델다시 해놓고 바꿔줄것
+        response_list = list(response.data) + list(response.data["tutor"])
+
+        for field in field_list:
+            self.assertIn(field, response_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         url = reverse('api:talent:detail-all', kwargs={'pk': 999})
         response = self.client.get(url)
