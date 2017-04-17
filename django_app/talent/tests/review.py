@@ -3,14 +3,15 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Review
-from utils import APITest_User_Login
+from utils import APITestUserLogin, APITestListVerify
 
 __all__ = (
     'ReviewCreateTest',
     'ReviewRetrieveTest'
 )
 
-class ReviewCreateTest(APILiveServerTestCase, APITest_User_Login):
+
+class ReviewCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_review(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
@@ -51,8 +52,8 @@ class ReviewCreateTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(Review.objects.count(), 1)
 
 
-class ReviewRetrieveTest(APILiveServerTestCase, APITest_User_Login):
-    def test_review_retrieve_url_exist(self):
+class ReviewRetrieveTest(APITestUserLogin, APITestListVerify):
+    def test_review_list_url_exist(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
@@ -60,15 +61,13 @@ class ReviewRetrieveTest(APILiveServerTestCase, APITest_User_Login):
 
         url = reverse('api:talent:review-retrieve', kwargs={'pk': talent.pk})
         response = self.client.get(url)
-        response_list = list(response.data) + list(response.data['reviews'][0]) \
-                        + list(response.data['reviews'][0]['user'])
-        field_list = ['pk', 'title', 'category', 'type', 'average_rates', 'review_count', 'reviews', 'talent', 'user',
-                      'curriculum', 'readiness', 'timeliness', 'delivery', 'friendliness', 'created_date', 'comment',
-                      'name', 'profile_image']
-
-        for field_item in field_list:
-            self.assertIn(field_item, response_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        url = reverse('api:talent:review-retrieve', kwargs={'pk': 555})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        field_list = ['pk', 'user', 'curriculum', 'readiness', 'timeliness', 'delivery', 'friendliness', 'created_date',
+                      'comment', 'name', 'profile_image']
+
+        data = list(response.data['results'][0]) + list(response.data['results'][0]['user'])
+        self.verify_util(data, field_list)
+
+        # url = reverse('api:talent:review-retrieve', kwargs={'pk': 555})
+        # response = self.client.get(url)
+        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

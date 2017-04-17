@@ -1,18 +1,25 @@
-import os
-
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
+from rest_framework.test import APILiveServerTestCase
 
 from member.models import Tutor
+from talent.models import Talent, Location, Registration, Curriculum, Review, Question, Reply
 from utils.upload import image_upload
-from talent.models import Talent, Location, Registration, Curriculum, Review, Question
+from rest_framework.test import APILiveServerTestCase
 
 User = get_user_model()
 
 
-class APITest_User_Login(object):
+class APITestListVerify(APILiveServerTestCase):
+    def verify_util(self, data, keys):
+        response_list = data
+        field_list = keys
+        for field_item in field_list:
+            self.assertIn(field_item, response_list)
+
+
+class APITestUserLogin(object):
     test_user = 'test{}'
     test_password1 = 'testpw12'
     test_password2 = 'testpw12'
@@ -96,11 +103,14 @@ class APITest_User_Login(object):
             'price_per_hour': '10000',
             'hours_per_class': '1000',
             'number_of_class': '10',
+            'tutor_message': 'test_message'
 
         }
         url = reverse('api:talent:create')
-        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + token)
+        response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
         talent = Talent.objects.last()
+        talent.is_verified = True
+        talent.save()
         return talent
 
     def create_location(self, talent, token=None):
@@ -147,10 +157,10 @@ class APITest_User_Login(object):
         review = Review.objects.get(talent_id=talent.pk)
         return review
 
-    def create_qestion(self, talent, token=None):
+    def create_question(self, talent, token=None):
         data = {
             'talent_pk': talent.pk,
-            'coment': 'test_coment'
+            'content': 'test_content',
         }
         url = reverse('api:talent:question-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
@@ -164,7 +174,7 @@ class APITest_User_Login(object):
         }
         url = reverse('api:talent:reply-create')
         response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + token)
-        reply = Question.objects.get(question_id=question.pk)
+        reply = Reply.objects.get(question_id=question.pk)
         return reply
 
     def create_registration(self, location, token=None):

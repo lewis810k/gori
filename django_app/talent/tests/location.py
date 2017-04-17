@@ -3,12 +3,13 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Location
-from utils import APITest_User_Login, get_user_model
-from utils import testcase
+from utils import APITestUserLogin, get_user_model
+
 User = get_user_model()
 
 
-class LocationCreateRetriveTest(APILiveServerTestCase, APITest_User_Login):
+class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
+
     def test_location_create(self):
         user, token = self.obtain_token()
         tutor = self.register_tutor(user, token)
@@ -47,6 +48,7 @@ class LocationCreateRetriveTest(APILiveServerTestCase, APITest_User_Login):
     def test_location_retrieve(self):
         user, token = self.obtain_token()
         tutor = self.register_tutor(user, token)
+        tutor = self.create_tutor(user, token)
         talent = self.create_talent(tutor, token)
         location = self.create_location(talent, token)
         valid_pk = talent.pk

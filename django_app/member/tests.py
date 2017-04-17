@@ -4,12 +4,12 @@ from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
-from utils import APITest_User_Login
+from utils import APITestUserLogin
 
 User = get_user_model()
 
 
-class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
+class UserSignUpLoginTest(APILiveServerTestCase, APITestUserLogin):
     test_user = 'test'
     test_password1 = 'testpw12'
     test_password2 = 'testpw12'
@@ -61,7 +61,7 @@ class UserSignUpLoginTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
+class MemberProfileTest(APILiveServerTestCase, APITestUserLogin):
     def test_user_detail_retrieve(self):
         user, token = self.obtain_token()
         url = reverse('api:member:user-detail')
@@ -98,7 +98,7 @@ class MemberProfileTest(APILiveServerTestCase, APITest_User_Login):
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class VerfiyFunctionTest(APILiveServerTestCase, APITest_User_Login):
+class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
     def test_staff_verify_tutor(self):
         users, tokens = self.obtain_token(2)
         tutor = self.create_tutor(users[1], tokens[1])
@@ -175,7 +175,7 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITest_User_Login):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class UserWishlistTest(APILiveServerTestCase, APITest_User_Login):
+class UserWishlistTest(APILiveServerTestCase, APITestUserLogin):
     def test_user_wishlist_toggle(self):
         users, tokens = self.obtain_token(2)
         tutor = self.create_tutor(users[1], tokens[1])

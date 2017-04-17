@@ -8,8 +8,10 @@ django_app/static/css/
 .ebignore
 _Dockerfile*
 Dockerfile_*
+Dockerfile.*
 .ebextensions
 .elasticbeanstalk
+front/
 
 # bower packages
 bower_components/
