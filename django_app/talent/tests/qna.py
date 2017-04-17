@@ -39,14 +39,15 @@ class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
                 self.assertEqual(Question.objects.count(), 1)
             elif test_item[2] == '':
+                self.assertIn('detail',response.data)
                 self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-                self.assertIn('detail', response.data)
             elif test_item[1] == '':
+                self.assertIn('content', response.data)
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-                self.assertIn('non_field_error', response.data)
             else:
+                print("question", response.data)
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-                self.assertIn('detail', response.data)
+
 
 
 class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
@@ -65,10 +66,10 @@ class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
         ]
         for test_item in test_list:
             data = {
-                'talent_pk': test_item[0],
+                'question_pk': test_item[0],
                 test_item[1]: 'test_content'
             }
-            url = reverse('api:talent:question-create')
+            url = reverse('api:talent:reply-create')
             response = self.client.post(url, data, HTTP_AUTHORIZATION='Token ' + test_item[2])
             if test_item[0] == talent.pk and test_item[1] == 'content' and test_item[2] == user_token[1]:
                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -78,7 +79,7 @@ class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
                 self.assertIn('detail', response.data)
             elif test_item[1] == '':
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-                self.assertIn('non_field_error', response.data)
+                self.assertIn('detail', response.data)
             else:
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                 self.assertIn('detail', response.data)
