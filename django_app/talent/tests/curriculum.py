@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
-from utils import APITestUserLogin, image_upload, APITestListVerify
+from utils import APITestUserLogin, APITestListVerify
+from utils.upload import image_upload
 
 User = get_user_model()
 
@@ -19,40 +20,45 @@ class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
         test_image = image_upload()
+
         data = {
             'talent_pk': talent.pk,
             'information': 'test_information',
             'image': test_image,
         }
+        print(data)
         url = reverse('api:talent:curriculum-create')
-        response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[0])
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn('detail', response.data)
-        fail_list = [
-            ['talent_pk', 555],
-            ["", ""]
+        response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + user_token[0])
+        print('4321415124532511413', response.data)
+
+        data = {
+            'talent_pk': talent.pk,
+            'information': 'test_information',
+            'image': test_image,
+        }
+        print(data)
+        url = reverse('api:talent:curriculum-create')
+        response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + user_token[0])
+        print('4321415124532511413', response.data)
+
+        data_list = [
+            ['talent_pk', talent.pk, user_token[0]],
+            ['talent_pk', 555, user_token[0]],
+            ["", talent.pk, user_token[0]],
+            ['talent_pk', talent.pk, user_token[1]],
+            ['talent_pk', talent.pk, ""],
+
         ]
-        for fail_item in fail_list:
-            fail_data = {
-                fail_item[0]: fail_item[1],
+        for data_item in data_list:
+            data = {
+                data_item[0]: data_item[1],
                 'information': 'test_information',
                 'image': test_image,
             }
+            print(data)
             url = reverse('api:talent:curriculum-create')
-            response = self.client.post(url, fail_data, format="multipart", HTTP_AUTHORIZATION='Token ' + user_token[0])
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-            if fail_item[0] == "":
-                self.assertIn('non_field_error', response.data)
-            else:
-                self.assertIn('detail', response.data)
-        fail_token = [
-            user_token[1],
-            ""
-        ]
-        for fail_item in fail_token:
-            url = reverse('api:talent:curriculum-create')
-            response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION='Token ' + fail_item)
-            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + data_item[2])
+            print('31231243254325432523452345', response.data)
 
 
 class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
@@ -67,7 +73,7 @@ class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         field_list = ['talent_pk', 'information', 'image']
-        self.verify_util(list(response.data['results'][0]),field_list)
+        self.verify_util(list(response.data['results'][0]), field_list)
 
         # url = reverse('api:talent:curriculum-retrieve', kwargs={'pk': 123})
         # response = self.client.get(url)

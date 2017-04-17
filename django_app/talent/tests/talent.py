@@ -9,13 +9,13 @@ from utils import APITestUserLogin, image_upload, Tutor, APITestListVerify
 User = get_user_model()
 
 __all__ = (
-    'TutorTest',
+    'TutorRegisterTest',
     'TalentCreateTest',
     'TalentListTest',
 )
 
 
-class TutorTest(APILiveServerTestCase, APITestUserLogin):
+class TutorRegisterTest(APILiveServerTestCase, APITestUserLogin):
     def test_tutor_register(self):
         """
         유저를 tutor로 등록시키는 코드
