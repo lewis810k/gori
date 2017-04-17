@@ -61,12 +61,12 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             return Response(talent_owner_error, status=status.HTTP_400_BAD_REQUEST)
 
         # ##### 이미 리뷰가 존재하면 등록 불가능#####
-        data = {
-            'talent': talent,
-            'user': request.user,
-        }
-        if verify_duplicate(Review, data=data):
-            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+        # data = {
+        #     'talent': talent,
+        #     'user': request.user,
+        # }
+        # if verify_duplicate(Review, data=data):
+        #     return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
 
         # ##### 추가 검증 끝  #####
 

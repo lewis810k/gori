@@ -14,6 +14,10 @@ __all__ = (
 )
 
 class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
+    """
+    curriculum을 생성하는 API 테스트
+    data_list =
+    """
     def test_create_curriculum(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
