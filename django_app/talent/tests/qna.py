@@ -16,6 +16,7 @@ __all__ = (
 
 
 class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
+
     def test_create_question(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])

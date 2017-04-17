@@ -71,6 +71,3 @@ class ReviewRetrieveTest(APITestUserLogin, APITestListVerify):
         # url = reverse('api:talent:review-retrieve', kwargs={'pk': 555})
         # response = self.client.get(url)
         # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        url = reverse('api:talent:review-retrieve', kwargs={'pk': 555})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
