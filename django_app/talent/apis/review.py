@@ -18,7 +18,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     pagination_class = LargeResultsSetPagination
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         return Review.objects.filter(talent_id=self.kwargs['pk'])
@@ -39,6 +39,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - friendliness : 친근감?에 대한 점수
             - comment : 코멘트
         """
+        return Response('test', status=status.HTTP_200_OK)
         request.data['user'] = request.user.id
 
         # 생성 전용 시리얼라이저 사용
