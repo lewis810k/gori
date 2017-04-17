@@ -34,6 +34,7 @@ urlpatterns = [
     # ##### 마이페이지 관련 #####
     url(r'^wish-list/$', apis.MyWishListView.as_view()),
     url(r'^registrations/$', apis.MyRegistrationView.as_view()),
+    url(r'^enrollment/$', apis.MyEnrolledTalentView.as_view()),
 
     # ##### 튜터 등록 #####
     url(r'^register/tutor/$', apis.RegisterTutorView.as_view(), name='tutor-register'),

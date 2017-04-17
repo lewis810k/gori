@@ -14,7 +14,8 @@ from member.serializers import UserSerializer
 from member.serializers.login import CustomRegisterSerializer
 from member.serializers.user import TutorInfoSerializer
 from talent.models import WishList, Talent, Registration
-from talent.serializers import MyRegistrationWrapperSerializer, TalentShortInfoSerializer
+from talent.serializers import MyRegistrationWrapperSerializer, TalentShortInfoSerializer, \
+    MyEnrolledTalentWrapperSerializer
 from talent.serializers.wish_list import MyWishListSerializer
 from utils import verify_instance
 from utils.remove_all_but_numbers import remove_non_numeric
@@ -27,6 +28,7 @@ __all__ = (
     'CreateDjangoUserView',
     'MyWishListView',
     'MyRegistrationView',
+    'MyEnrolledTalentView',
     'WishListToggleView',
     'RegisterTutorView',
     'StaffUserVerifyTutorView',
@@ -282,6 +284,14 @@ class MyRegistrationView(APIView):
     def get(self, request):
         user = User.objects.get(id=request.user.id)
         serializer = MyRegistrationWrapperSerializer(user)
+        return Response(serializer.data)
+
+class MyEnrolledTalentView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = MyEnrolledTalentWrapperSerializer(user)
         return Response(serializer.data)
 
 # class MyWishListRetrieve(generics.RetrieveAPIView):

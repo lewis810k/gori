@@ -12,6 +12,7 @@ __all__ = (
     # user
     'MyRegistrationSerializer',
     'MyRegistrationWrapperSerializer',
+    'MyEnrolledTalentWrapperSerializer',
     # talent
     # 'TalentRegistrationSerializer',
     'TalentRegistrationWrapperSerializer',
@@ -47,7 +48,8 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    results = MyRegistrationSerializer(many=True, source="registrations")
+    # results = MyRegistrationSerializer(many=True, source="registrations")
+    results = serializers.SerializerMethodField()
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -63,9 +65,36 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'results',
         )
 
-        # def get_results(self, obj):
-        #     print(obj.registrations)
-        #     return MyRegistrationSerializer(obj.registrations.filter(is_verified=True)).data
+    def get_results(self, obj):
+        if obj.registrations.all().filter(is_verified=False):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=False), many=True).data
+        else:
+            return []
+
+
+class MyEnrolledTalentWrapperSerializer(serializers.ModelSerializer):
+    results = serializers.SerializerMethodField()
+    user_id = serializers.CharField(source='username')
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'user_id',
+            'name',
+            'nickname',
+            'cellphone',
+            'profile_image',
+            'joined_date',
+            'results',
+        )
+
+    def get_results(self, obj):
+        if obj.registrations.all().filter(is_verified=True):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=True), many=True).data
+        else:
+            print(obj.registrations.all().filter(is_verified=True))
+            return []
 
 
 # ======== talent =========
