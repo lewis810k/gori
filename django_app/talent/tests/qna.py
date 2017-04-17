@@ -16,12 +16,15 @@ __all__ = (
 
 
 class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
-
+    """
+    post요청으로 question을 생성했을때 생성하고 필드값이 정확하게 있는지 검사
+    """
     def test_create_question(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
 
+        #
         test_list = [
             [555, "content", user_token[1]],
             [talent.pk, "", user_token[1]],
