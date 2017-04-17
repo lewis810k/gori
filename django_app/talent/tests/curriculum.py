@@ -19,27 +19,6 @@ class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
-        test_image = image_upload()
-
-        data = {
-            'talent_pk': talent.pk,
-            'information': 'test_information',
-            'image': test_image,
-        }
-        print(data)
-        url = reverse('api:talent:curriculum-create')
-        response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + user_token[0])
-        print('4321415124532511413', response.data)
-
-        data = {
-            'talent_pk': talent.pk,
-            'information': 'test_information',
-            'image': test_image,
-        }
-        print(data)
-        url = reverse('api:talent:curriculum-create')
-        response = self.client.post(url, data=data, HTTP_AUTHORIZATION='Token ' + user_token[0])
-        print('4321415124532511413', response.data)
 
         data_list = [
             ['talent_pk', talent.pk, user_token[0]],
@@ -50,6 +29,7 @@ class CurriculumCreateTest(APILiveServerTestCase, APITestUserLogin):
 
         ]
         for data_item in data_list:
+            test_image = image_upload()
             data = {
                 data_item[0]: data_item[1],
                 'information': 'test_information',
