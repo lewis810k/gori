@@ -152,6 +152,7 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
             'category',
             'type',
             'tutor_message',
+            'location_message',
             'cover_image',
             'tutor_info',
             'class_info',
@@ -216,6 +217,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'video1',
             'video2',
             'average_rates',
+            'location_message',
             'locations',
             'price_per_hour',
             'hours_per_class',
@@ -318,6 +320,7 @@ class TalentCreateSerializer(serializers.ModelSerializer):
             'max_number_student',
             'is_soldout',
             'tutor_message',
+            'location_message',
         )
 
 
