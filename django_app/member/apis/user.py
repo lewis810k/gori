@@ -3,7 +3,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from rest_auth.registration.views import RegisterView
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework import serializers
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
@@ -16,7 +15,7 @@ from member.serializers.login import CustomRegisterSerializer
 from member.serializers.user import TutorInfoSerializer
 from talent.models import WishList, Talent, Registration
 from talent.serializers import TalentShortInfoSerializer, \
-    MyRegistrationSerializer, MyRegistrationWrapperSerializer, MyPageAllSerializer, MyPageWrapperSerializer, \
+    MyRegistrationSerializer, MyPageWrapperSerializer, \
     MyApplicantsSerializer
 from utils import verify_instance, LargeResultsSetPagination
 from utils.remove_all_but_numbers import remove_non_numeric
@@ -314,20 +313,6 @@ class MyEnrolledTalentView(generics.ListAPIView):
         return registrations.all()
 
 
-# class MyTalentsView(APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get(self, request):
-#         if hasattr(request.user, "tutor"):
-#             if hasattr(request.user.tutor, "talent_set"):
-#                 serializer = MyTalentsWrapperSerializer(request.user)
-#                 return Response(serializer.data)
-#             else:
-#                 return Response(status=status.HTTP_200_OK, data=object_not_found)
-#
-#         else:
-#             return Response(status=status.HTTP_200_OK, data=object_not_found)
-
 class MyTalentsView(generics.ListAPIView):
     serializer_class = TalentShortInfoSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -359,24 +344,3 @@ class MyPageView(APIView):
         user = User.objects.get(id=request.user.id)
         serializer = MyPageWrapperSerializer(user)
         return Response(serializer.data)
-
-
-# class MyWishListRetrieve(generics.RetrieveAPIView):
-#     serializer_class = MyWishListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-# class MyRegistrationRetrieve(generics.RetrieveAPIView):
-#     serializer_class = MyRegistrationWrapperSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-#     def empty_view(self):
-#         content = {'error': '요청하신 유저의 정보와 pk가 불일치 합니다'}
-#         return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-
