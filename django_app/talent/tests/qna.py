@@ -54,13 +54,13 @@ class QuestionCreateTest(APILiveServerTestCase, APITestUserLogin):
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class ReplyCreateTest(APILiveServerTestCase, APITestUserLogin):
+class ReplyCreateTest(APITestListVerify, APITestUserLogin):
     def test_create_reply(self):
         user, user_token = self.obtain_token(2)
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
-        question = self.create_qestion(talent, user_token[1])
         question = self.create_question(talent, user_token[1])
+        reply = self.create_reply(question,user_token[0])
 
         test_list = [
             [555, "content", user_token[1]],

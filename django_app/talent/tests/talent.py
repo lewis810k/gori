@@ -9,7 +9,6 @@ from utils import APITestUserLogin, image_upload, Tutor, APITestListVerify
 User = get_user_model()
 
 __all__ = (
-    'TutorTest',
     'TutorRegisterTest',
     'TalentCreateTest',
     'TalentListTest',
@@ -152,14 +151,14 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         tutor = list(response.data['tutor'])
         average_reates = list(response.data['average_rates'])
         location = list(response.data['locations'][0])
+        location_detail = list(response.data['locations'][0]['results'][0])
         curriculums = list(response.data['curriculums'][0])
         qna = list(response.data['qna'][0])
         reply = list(response.data['qna'][0]['replies'][0])
         reviews = list(response.data['reviews'][0])
-        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews]
+        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews,location_detail]
         for data_item in data_list:
             data.extend(data_item)
-        print('432523154324354325432', qna)
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
                       'profile_image', 'cellphone', 'tutor_message', 'registration_count', 'cover_image', 'tutor_info',
                       'class_info', 'video1', 'video2', 'total', 'curriculum', 'readiness', 'timeliness', 'delivery',
@@ -167,7 +166,7 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
                       'max_number_student', 'average_rates', 'review_count', 'is_soldout', 'is_verified', 'locations',
                       'talent_pk', 'region', 'specific_location', 'extra_fee', 'extra_fee_amount', 'time', 'image',
                       'information', 'qna', 'user', 'user_image', 'created_date', 'content', 'replies', 'tutor_image',
-                      'talent', 'comment']
+                      'talent', 'comment','day','location_message']
 
         self.verify_util(data, field_list)
 
