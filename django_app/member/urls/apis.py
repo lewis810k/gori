@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
 
 from .. import apis
+from talent.apis import registration as regis_apis
 
 app_name = 'member'
 
@@ -35,6 +36,9 @@ urlpatterns = [
     url(r'^wish-list/$', apis.MyWishListView.as_view()),
     url(r'^registrations/$', apis.MyRegistrationView.as_view()),
     url(r'^enrollment/$', apis.MyEnrolledTalentView.as_view()),
+    url(r'^talents/$', apis.MyTalentsView.as_view()),
+    url(r'^applicants/$', apis.MyApplicantsView.as_view()),
+    url(r'^my-page/$', apis.MyPageView.as_view()),
 
     # ##### 튜터 등록 #####
     url(r'^register/tutor/$', apis.RegisterTutorView.as_view(), name='tutor-register'),

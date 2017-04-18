@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from member.serializers import TutorSerializer
 from talent.models import Talent, Curriculum, Location
-from utils import review_average_rate, Tutor
+from utils import review_average_rate, Tutor, get_user_model
 from utils.region_display import region_display
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
@@ -18,7 +18,10 @@ __all__ = (
     'TalentCreateSerializer',
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
+    'MyTalentsWrapperSerializer',
 )
+
+User = get_user_model()
 
 
 class TalentShortInfoSerializer(serializers.ModelSerializer):
@@ -27,6 +30,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
     review_count = serializers.SerializerMethodField(read_only=True)
     regions = serializers.SerializerMethodField(read_only=True)
     average_rate = serializers.SerializerMethodField(read_only=True)
+    wishlist_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Talent
@@ -43,6 +47,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
             'average_rate',
             'review_count',
             'registration_count',
+            'wishlist_count',
             'regions',
         )
 
@@ -54,6 +59,9 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
 
     def get_review_count(self, obj):
         return obj.reviews.count()
+
+    def get_wishlist_count(self, obj):
+        return obj.wishlist_user.count()
 
     def get_regions(self, obj):
         return obj.region_list
@@ -312,4 +320,22 @@ class TalentCreateSerializer(serializers.ModelSerializer):
             'max_number_student',
             'is_soldout',
             'tutor_message',
+        )
+
+
+class MyTalentsWrapperSerializer(serializers.ModelSerializer):
+    results = TalentShortInfoSerializer(many=True, source="tutor.talent_set")
+    user_id = serializers.CharField(source='username')
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'user_id',
+            'name',
+            'nickname',
+            'cellphone',
+            'profile_image',
+            'joined_date',
+            'results',
         )
