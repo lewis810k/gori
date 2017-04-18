@@ -4,11 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APILiveServerTestCase
 
 from talent.models import Question
-<<<<<<< HEAD
 from utils import APITestUserLogin, APITestListVerify
-=======
-from utils import APITestUserLogin
->>>>>>> 440835b3a4ea821b6d20c7f2257ce0b746d14da3
 
 User = get_user_model()
 
