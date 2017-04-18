@@ -333,7 +333,6 @@ class MyApplicantsView(generics.ListAPIView):
         registrations = []
         for talent in user.tutor.talent_set.all():
             registrations.extend([item for item in Registration.objects.filter(talent_location__talent=talent)])
-        print(registrations)
         return registrations
 
 

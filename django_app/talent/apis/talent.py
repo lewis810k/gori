@@ -110,9 +110,6 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 
 # 하나의 talent에 대한 세부 정보 api (request user 정보 포함)
 class TalentDetailView(generics.RetrieveAPIView):
-    # queryset = Talent.objects.all()
-    # serializer_class = TalentDetailSerializer
-
     def get(self, request, *args, **kwargs):
         talent_dict = TalentDetailSerializer(Talent.objects.get(pk=kwargs['pk'])).data
         user = request.user

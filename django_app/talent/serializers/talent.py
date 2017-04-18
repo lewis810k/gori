@@ -278,7 +278,6 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         instance.hours_per_class = validated_data.get('hours_per_class', instance.hours_per_class)
         instance.number_of_class = validated_data.get('number_of_class', instance.number_of_class)
         instance.save()
-        print(self.initial_data)
         for index, image in enumerate(self.initial_data.get(
                 'c1', validated_data['curriculum_set'])):
             item = Curriculum.objects.filter(talent=instance)[index]
@@ -287,7 +286,6 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             item.save()
 
         for index, new_curriculum_item in enumerate(validated_data.pop('curriculum_set')):
-            print(new_curriculum_item)
             new_info = new_curriculum_item["information"]
             # new_image = new_curriculum_item["image"]
             item = Curriculum.objects.filter(talent=instance)[index]

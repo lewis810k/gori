@@ -1,12 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.models import Talent, Registration, Location
-from talent.serializers import TalentRegistrationWrapperSerializer
 from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
 from utils import *
 

@@ -96,7 +96,6 @@ class MyEnrolledTalentWrapperSerializer(serializers.ModelSerializer):
         if obj.registrations.all().filter(is_verified=True):
             return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=True), many=True).data
         else:
-            print(obj.registrations.all().filter(is_verified=True))
             return []
 
 
@@ -216,7 +215,6 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
         for location in obj.locations.values_list('registered_student', 'id'):
             if None not in location and location not in registrations:
                 registrations.append(location)
-        # print(registrations)
 
         ret = []
         for student_id, location_id in registrations:
@@ -263,7 +261,6 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
         )
 
     def get_student_level(self, obj):
-        print(dir(obj))
         return obj.get_student_level_display()
 
     def get_day(self, obj):
