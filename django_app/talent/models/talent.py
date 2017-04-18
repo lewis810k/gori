@@ -62,6 +62,6 @@ class Talent(models.Model):
     @property
     def region_list(self):
         region_list = []
-        for location in self.locations.all():
+        for location in self.locations.all().distinct("region"):
             region_list.append(location.get_region_display())
         return region_list

@@ -14,9 +14,10 @@ from member.serializers import UserSerializer
 from member.serializers.login import CustomRegisterSerializer
 from member.serializers.user import TutorInfoSerializer
 from talent.models import WishList, Talent, Registration
-from talent.serializers import MyRegistrationWrapperSerializer, TalentShortInfoSerializer
-from talent.serializers.wish_list import MyWishListSerializer
-from utils import verify_instance
+from talent.serializers import TalentShortInfoSerializer, \
+    MyRegistrationSerializer, MyPageWrapperSerializer, \
+    MyApplicantsSerializer
+from utils import verify_instance, LargeResultsSetPagination
 from utils.remove_all_but_numbers import remove_non_numeric
 
 __all__ = (
@@ -27,11 +28,15 @@ __all__ = (
     'CreateDjangoUserView',
     'MyWishListView',
     'MyRegistrationView',
+    'MyEnrolledTalentView',
+    'MyTalentsView',
+    'MyApplicantsView',
     'WishListToggleView',
     'RegisterTutorView',
     'StaffUserVerifyTutorView',
     'StaffUserVerifyTalentView',
     'TutorVerifyRegistrationView',
+    'MyPageView',
 )
 
 User = get_user_model()
@@ -243,13 +248,15 @@ class RegisterTutorView(APIView):
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MyWishListView(APIView):
+class MyWishListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TalentShortInfoSerializer
+    pagination_class = LargeResultsSetPagination
 
-    def get(self, request):
-        user = User.objects.get(id=request.user.id)
-        serializer = MyWishListSerializer(user)
-        return Response(serializer.data)
+    def get_queryset(self):
+        user = self.request.user
+        talents = Talent.objects.filter(wishlist_user=user)
+        return talents.all()
 
 
 # ##### 유저가 wishlist에 담기/빼기 #####
@@ -276,28 +283,63 @@ class WishListToggleView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND, data={'detail': '해당 수업을 찾을 수 없습니다.'})
 
 
-class MyRegistrationView(APIView):
+# class MyRegistrationView(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#
+#     def get(self, request):
+#         user = User.objects.get(id=request.user.id)
+#         serializer = MyRegistrationWrapperSerializer(user)
+#         return Response(serializer.data)
+
+class MyRegistrationView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = MyRegistrationSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        registrations = Registration.objects.filter(student=user).filter(is_verified=False)
+        return registrations.all()
+
+
+class MyEnrolledTalentView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = MyRegistrationSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        registrations = Registration.objects.filter(student=user).filter(is_verified=True)
+        return registrations.all()
+
+
+class MyTalentsView(generics.ListAPIView):
+    serializer_class = TalentShortInfoSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        talents = Talent.objects.filter(tutor__user=self.request.user)
+        return talents.all()
+
+
+class MyApplicantsView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = MyApplicantsSerializer
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        registrations = []
+        for talent in user.tutor.talent_set.all():
+            registrations.extend([item for item in Registration.objects.filter(talent_location__talent=talent)])
+        return registrations
+
+
+class MyPageView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         user = User.objects.get(id=request.user.id)
-        serializer = MyRegistrationWrapperSerializer(user)
+        serializer = MyPageWrapperSerializer(user)
         return Response(serializer.data)
-
-# class MyWishListRetrieve(generics.RetrieveAPIView):
-#     serializer_class = MyWishListSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-# class MyRegistrationRetrieve(generics.RetrieveAPIView):
-#     serializer_class = MyRegistrationWrapperSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return User.objects.filter(id=self.request.user.id)
-#
-#     def empty_view(self):
-#         content = {'error': '요청하신 유저의 정보와 pk가 불일치 합니다'}
-#         return Response(content, status=status.HTTP_404_NOT_FOUND)

@@ -1,9 +1,7 @@
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.models import Curriculum, Talent
 from talent.serializers import CurriculumSerializer
 from talent.serializers.curriculum import CurriculumCreateSerializer
 from utils import *
@@ -74,4 +72,3 @@ class CurriculumDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
-

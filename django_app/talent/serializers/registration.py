@@ -11,7 +11,11 @@ from .location import LocationListSerializer
 __all__ = (
     # user
     'MyRegistrationSerializer',
+    'MyApplicantsSerializer',
     'MyRegistrationWrapperSerializer',
+    'MyEnrolledTalentWrapperSerializer',
+    'MyPageAllSerializer',
+    'MyPageWrapperSerializer',
     # talent
     # 'TalentRegistrationSerializer',
     'TalentRegistrationWrapperSerializer',
@@ -47,7 +51,8 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    results = MyRegistrationSerializer(many=True, source="registrations")
+    # results = MyRegistrationSerializer(many=True, source="registrations")
+    results = serializers.SerializerMethodField()
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -63,9 +68,128 @@ class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
             'results',
         )
 
-        # def get_results(self, obj):
-        #     print(obj.registrations)
-        #     return MyRegistrationSerializer(obj.registrations.filter(is_verified=True)).data
+    def get_results(self, obj):
+        if obj.registrations.all().filter(is_verified=False):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=False), many=True).data
+        else:
+            return []
+
+
+class MyEnrolledTalentWrapperSerializer(serializers.ModelSerializer):
+    results = serializers.SerializerMethodField()
+    user_id = serializers.CharField(source='username')
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'user_id',
+            'name',
+            'nickname',
+            'cellphone',
+            'profile_image',
+            'joined_date',
+            'results',
+        )
+
+    def get_results(self, obj):
+        if obj.registrations.all().filter(is_verified=True):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=True), many=True).data
+        else:
+            return []
+
+
+# tutor의 수업에 대한 수강신청서
+class MyApplicantsSerializer(serializers.ModelSerializer):
+    registered_location = LocationListSerializer(read_only=True, source='talent_location')
+    student_level = serializers.SerializerMethodField(read_only=True)
+    talent = TalentShortInfoSerializer(source='talent_location.talent')
+
+    class Meta:
+        model = Registration
+        fields = (
+            'pk',
+            'registered_location',
+            'is_verified',
+            'student_level',
+            'joined_date',
+            'experience_length',
+            'message_to_tutor',
+            'talent',
+        )
+
+    def get_student_level(self, obj):
+        return obj.get_student_level_display()
+
+
+# MyPage에 들어가는 모든 Serializer를 불러오는 serializer
+class MyPageWrapperSerializer(serializers.ModelSerializer):
+    results = serializers.SerializerMethodField()
+    user_id = serializers.CharField(source='username')
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'user_id',
+            'name',
+            'nickname',
+            'cellphone',
+            'profile_image',
+            'joined_date',
+            'results',
+        )
+
+    def get_results(self, obj):
+        return MyPageAllSerializer(obj).data
+
+
+class MyPageAllSerializer(serializers.ModelSerializer):
+    wishlist = serializers.SerializerMethodField()
+    registrations = serializers.SerializerMethodField()
+    enrollment = serializers.SerializerMethodField()
+    talents = serializers.SerializerMethodField()
+    applicants = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'wishlist',
+            'registrations',
+            'enrollment',
+            'talents',
+            'applicants',
+
+        )
+
+    def get_wishlist(self, obj):
+        return TalentShortInfoSerializer(obj.talent_set.all(), many=True).data
+
+    def get_registrations(self, obj):
+        if obj.registrations.all().filter(is_verified=False):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=False), many=True).data
+        else:
+            return []
+
+    def get_enrollment(self, obj):
+        if obj.registrations.all().filter(is_verified=False):
+            return MyRegistrationSerializer(obj.registrations.all().filter(is_verified=True), many=True).data
+        else:
+            return []
+
+    def get_talents(self, obj):
+        talents = Talent.objects.filter(tutor__user=obj)
+        return TalentShortInfoSerializer(talents.all(), many=True).data
+
+    def get_applicants(self, obj):
+        user = obj
+        if hasattr(user, "tutor"):
+            registrations = []
+            for talent in user.tutor.talent_set.all():
+                registrations.extend([item for item in Registration.objects.filter(talent_location__talent=talent)])
+                return MyApplicantsSerializer(registrations, many=True).data
+        else:
+            return []
 
 
 # ======== talent =========
@@ -91,7 +215,6 @@ class TalentRegistrationWrapperSerializer(serializers.ModelSerializer):
         for location in obj.locations.values_list('registered_student', 'id'):
             if None not in location and location not in registrations:
                 registrations.append(location)
-        # print(registrations)
 
         ret = []
         for student_id, location_id in registrations:
@@ -138,7 +261,6 @@ class TalentRegistrationSerializer(serializers.ModelSerializer):
         )
 
     def get_student_level(self, obj):
-        print(dir(obj))
         return obj.get_student_level_display()
 
     def get_day(self, obj):
