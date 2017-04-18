@@ -50,4 +50,9 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/wish-list/toggle/$', m_apis.WishListToggleView.as_view(), name='wishlist-toggle'),
     url(r'^(?P<pk>[0-9]+)/sales-status/toggle/$', apis.TalentSalesStatusToggleView.as_view(), name='sales-toggle'),
     # url(r'^registration/$', apis.RegistrationList.as_view()),
-]
+
+    ###### 수정 #######
+    url(r'^update/(?P<pk>[0-9]+)/curriculum/$',apis.CurriculumUpdateView.as_view(), name='curriculum-update'),
+    url(r'^update/(?P<pk>[0-9]+)/class-image/$',apis.ClassImageUpdateView.as_view(), name='classimage-update'),
+    url(r'^update/(?P<pk>[0-9]+)/review/$',apis.ReviewUpdateView.as_view(), name='review-update'),
+    ]

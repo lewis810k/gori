@@ -5,6 +5,7 @@ from talent.models import ClassImage, Talent
 __all__ = (
     'ClassImageSerializer',
     'ClassImageCreateSerializer',
+    'ClassImageUpdateSerializer'
 )
 
 
@@ -27,5 +28,16 @@ class ClassImageCreateSerializer(serializers.ModelSerializer):
         model = ClassImage
         fields = (
             'talent_pk',
+            'image',
+        )
+
+
+class ClassImageUpdateSerializer(serializers.ModelSerializer):
+    classimage_pk = serializers.IntegerField(source='pk')
+
+    class Meta:
+        model = ClassImage
+        fields = (
+            'classimage_pk',
             'image',
         )

@@ -1,16 +1,15 @@
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.models import Curriculum, Talent
-from talent.serializers import CurriculumSerializer
+from talent.serializers import CurriculumSerializer, CurriculumUpdateSerializer
 from talent.serializers.curriculum import CurriculumCreateSerializer
 from utils import *
 
 __all__ = (
     'CurriculumListCreateView',
     'CurriculumDeleteView',
+    'CurriculumUpdateView',
 )
 
 
@@ -52,10 +51,18 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
 
+class CurriculumUpdateView(generics.UpdateAPIView):
+    queryset = Curriculum.objects.all()
+    serializer_class = CurriculumUpdateSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
+
+
 class CurriculumDeleteView(generics.DestroyAPIView):
     queryset = Curriculum.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
-

@@ -1,17 +1,15 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.models import Talent, ClassImage
-from talent.serializers import ClassImageSerializer, ClassImageCreateSerializer
+from talent.models import ClassImage
+from talent.serializers import ClassImageSerializer, ClassImageCreateSerializer, ClassImageUpdateSerializer
 from utils import *
 
 __all__ = (
     'ClassImageListCreateView',
     'ClassImageDeleteView',
+    'ClassImageUpdateView',
 )
 
 
@@ -49,6 +47,15 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ClassImageUpdateView(generics.UpdateAPIView):
+    queryset = ClassImage.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ClassImageUpdateSerializer
+
+    def get_queryset(self):
+        return ClassImage.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
 
 
 class ClassImageDeleteView(generics.DestroyAPIView):

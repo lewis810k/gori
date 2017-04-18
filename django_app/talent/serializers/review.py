@@ -11,6 +11,7 @@ from utils import review_average_rate, curriculum_average_rate, timeliness_avera
 __all__ = (
     'ReviewSerializer',
     'ReviewCreateSerializer',
+    'ReviewUpdateSerializer',
 )
 
 User = get_user_model()
@@ -36,6 +37,20 @@ class ReviewSerializer(serializers.ModelSerializer):
             'comment',
         )
 
+class ReviewUpdateSerializer(serializers.ModelSerializer):
+    review_pk = serializers.IntegerField(source='pk')
+    class Meta:
+        model = Review
+        fields = (
+            'review_pk',
+            'curriculum',
+            'readiness',
+            'timeliness',
+            'delivery',
+            'friendliness',
+            'created_date',
+            'comment',
+        )
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
