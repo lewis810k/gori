@@ -12,10 +12,7 @@ Dockerfile.*
 .ebextensions
 .elasticbeanstalk
 front/
-<<<<<<< HEAD
 Dockerfile.*
-=======
->>>>>>> 42cb495d89f8862c07d51d6c51201749f08b91e9
 
 # bower packages
 bower_components/

@@ -1,5 +1,5 @@
 FROM        ubuntu:16.04
-MAINTAINER  dev@azelf.com
+MAINTAINER  gsh2448@gmail.com
 
 COPY        . /srv/app
 RUN         apt-get -y update

@@ -18,7 +18,7 @@ IMAGE_PRODUCTION = 'gori-front-production'
 IMAGE_DOCKERHUB = 'gori-front'
 IMAGE_ORIGINAL = 'gori-origianl'
 
-MAINTAINER = 'dev@azelf.com'
+MAINTAINER = 'gsh2448@gmail.com'
 DOCKERFILE_BASE = 'Dockerfile.base'
 DOCKERFILE_BASE2 = 'Dockerfile.base2'
 DOCKERFILE_DEBUG = 'Dockerfile.debug'
