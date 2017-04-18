@@ -66,3 +66,7 @@ class CurriculumRetrieveTest(APITestUserLogin, APITestListVerify):
 
         field_list = ['talent_pk', 'information', 'image']
         self.verify_util(list(response.data['results'][0]), field_list)
+
+        # url = reverse('api:talent:curriculum-retrieve', kwargs={'pk': 123})
+        # response = self.client.get(url)
+        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

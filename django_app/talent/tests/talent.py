@@ -169,10 +169,6 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
                       'talent', 'comment']
 
         self.verify_util(data, field_list)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        url = reverse('api:talent:detail-all', kwargs={'pk': 999})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_talent_detail_short_retrieve_url_exist(self):
         user, user_token = self.obtain_token()
