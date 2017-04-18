@@ -33,7 +33,7 @@ class LocationSerializer(serializers.ModelSerializer):
             'talent_pk',
             'region',
             'specific_location',
-            # 'registered_student',
+            'location_info',
             'day',
             'extra_fee',
             'extra_fee_amount',
