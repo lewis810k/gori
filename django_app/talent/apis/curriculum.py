@@ -2,13 +2,14 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.serializers import CurriculumSerializer
+from talent.serializers import CurriculumSerializer, CurriculumUpdateSerializer
 from talent.serializers.curriculum import CurriculumCreateSerializer
 from utils import *
 
 __all__ = (
     'CurriculumListCreateView',
     'CurriculumDeleteView',
+    'CurriculumUpdateView',
 )
 
 
@@ -64,6 +65,15 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
             headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED)
+
+
+class CurriculumUpdateView(generics.UpdateAPIView):
+    queryset = Curriculum.objects.all()
+    serializer_class = CurriculumUpdateSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
 
 
 class CurriculumDeleteView(generics.DestroyAPIView):
