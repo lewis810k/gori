@@ -77,8 +77,12 @@ class TalentListCreateView(generics.ListCreateAPIView):
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-
-        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+        ret_pk = {
+            "talent_pk": Talent.objects.filter(title=serializer.data['title']).first().pk,
+        }
+        ret = success_msg.copy()
+        ret.update(ret_pk)
+        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = Talent.objects.all()

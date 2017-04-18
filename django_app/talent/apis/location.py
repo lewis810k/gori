@@ -22,6 +22,23 @@ class LocationListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Location.objects.filter(talent_id=self.kwargs['pk'])
 
+    # 여러개를 한번에 추가하려고 하는 경우. 초기 생성시에는 중복이 없다는 것을 가정!
+    def create_list(self, request):
+        for data in request.data['input_list']:
+            # 생성 전용 시리얼라이저 사용
+            serializer = LocationCreateSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+
+            # ##### 추가 검증 절차 #####
+            talent = Talent.objects.get(pk=data['talent_pk'])
+
+            # ##### 자신의 수업이 아니면 등록 불가능 #####
+            if not verify_tutor(request, talent):
+                return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+
+            # ##### 추가 검증 끝  #####
+            self.perform_create(serializer)
+
     def create(self, request, *args, **kwargs):
         """
         필수정보 :
@@ -37,31 +54,34 @@ class LocationListCreateView(generics.ListCreateAPIView):
         """
         request.data['user'] = request.user.id
 
-        # 생성 전용 시리얼라이저 사용
-        serializer = LocationCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if 'input_list' in request.data:
+            self.create_list(request)
+        else:
 
-        # ##### 추가 검증 절차 #####
-        talent = Talent.objects.get(pk=request.data['talent_pk'])
+            # 생성 전용 시리얼라이저 사용
+            serializer = LocationCreateSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
 
-        # ##### 자신의 수업이 아니면 등록 불가능 #####
-        if not verify_tutor(request, talent):
-            return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
+            # ##### 추가 검증 절차 #####
+            talent = Talent.objects.get(pk=request.data['talent_pk'])
 
-        # ##### 같은 장소-요일이 존재하면 등록 불가능#####
-        data = {
-            'talent': talent,
-            'region': request.data['region'],
-            'day': request.data['day'],
-        }
-        if verify_duplicate(Location, data=data):
-            return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
+            # ##### 자신의 수업이 아니면 등록 불가능 #####
+            if not verify_tutor(request, talent):
+                return Response(authorization_error, status=status.HTTP_400_BAD_REQUEST)
 
-        # ##### 추가 검증 끝  #####
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
+            # ##### 같은 장소-요일이 존재하면 등록 불가능#####
+            data = {
+                'talent': talent,
+                'region': request.data['region'],
+                'day': request.data['day'],
+            }
+            if verify_duplicate(Location, data=data):
+                return Response(multiple_item_error, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+            # ##### 추가 검증 끝  #####
+            self.perform_create(serializer)
+
+        return Response(success_msg, status=status.HTTP_201_CREATED)
 
 
 class LocationDeleteView(generics.DestroyAPIView):
