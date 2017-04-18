@@ -20,6 +20,7 @@ STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 print(DEBUG)
 print(STORAGE_S3)
 
+
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/

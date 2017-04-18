@@ -2,17 +2,16 @@ from __future__ import unicode_literals
 
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 
-from talent.models import Talent, Review
-from talent.serializers import ReviewSerializer, ReviewCreateSerializer
+from talent.serializers import ReviewSerializer, ReviewCreateSerializer, ReviewUpdateSerializer
 from utils import *
 
 __all__ = (
     'ReviewListCreateView',
     'ReviewDeleteView',
+    'ReviewUpdateView',
 )
 
 
@@ -73,6 +72,15 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ReviewUpdateView(generics.UpdateAPIView):
+    queryset = Review.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ReviewUpdateSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(pk=self.kwargs['pk'], user=self.request.user)
 
 
 class ReviewDeleteView(generics.DestroyAPIView):

@@ -23,7 +23,7 @@ class APITestUserLogin(object):
     test_user = 'test{}'
     test_password1 = 'testpw12'
     test_password2 = 'testpw12'
-    test_name = 'testname'
+    test_name = 'testname{}'
 
     def create_user_and_login(self):
         user = self.create_user()
@@ -39,11 +39,13 @@ class APITestUserLogin(object):
         users = []
         for i in range(number):
             username = self.test_user.format(i)
+            name = self.test_name.format(i)
+
             data = {
                 'username': username,
                 'password1': self.test_password1,
                 'password2': self.test_password2,
-                'name': self.test_name,
+                'name': name,
             }
             url = reverse('api:member:user-signup')
             response = self.client.post(url, data, format='json')

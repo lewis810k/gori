@@ -69,9 +69,112 @@
               display: inline-block;
             }
             &:hover {
-              color: #eee;
+              color: #666;
+            }
+            &.nav-search {
+              > img {
+                content: url(../../images/icon_search_on.png);
+              }
+              &:hover {
+                > img {
+                  content: url(../../images/icon_search.png);
+                }
+              }
+            }
+            &.nav-tutor {
+              > img {
+                content: url(../../images/icon_tutor_on.png);
+              }
+              &:hover {
+                > img {
+                  content: url(../../images/icon_tutor.png);
+                }
+              }
+            }
+            &.nav-info {
+              > img {
+                content: url(../../images/icon_info_on.png);
+              }
+              &:hover {
+                > img {
+                  content: url(../../images/icon_info.png);
+                }
+              }
+            }
+            &.nav-join {
+              > img {
+                content: url(../../images/icon_join_on.png);
+              }
+              &:hover {
+                > img {
+                  content: url(../../images/icon_join.png);
+                }
+              }
+            }
+            &.nav-login {
+              > img {
+                content: url(../../images/icon_login_on.png);
+              }
+              &:hover {
+                > img {
+                  content: url(../../images/icon_login.png);
+                }
+              }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+#main-video {
+  height: 720px;
+  width: 100%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  z-index: -999;
+  .video-container {
+    height: 720px;
+    width: 100%;
+    position: relative;
+    .temp-image {
+      height: 100%;
+      width: 100%;
+      background: url('../../images/moon.jpg') no-repeat center;
+      background-size: cover;
+    }
+    .slogan {
+      position: absolute;
+      display: inline-block;
+      top: 70%;
+      height: auto;
+      transform: translateY(-50%);
+      text-align: center;
+      color: white;
+      .slogan-top {
+        display: inline-block;
+        font-size: 52px;
+        line-height: 52px;
+      }
+      .slogan-bottom {
+        margin-top: 20px;
+        display: inline-block;
+        font-size: 20px;
+        font-weight: 100;
+      }
+    }
+    .search-container {
+      width: 100%;
+      height: 106px;
+      position: absolute;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.7);
+      .col-input {
+        height: 50px;
+        .input-group {
+          height: 100%;
         }
       }
     }

@@ -26,15 +26,17 @@
 }
 
 .nav-wrap .center-logo {
+  height: 120px;
   width: 26vmax;
   background-image: url(../../images/bg_header_logo.jpg);
-  background-size: 26vmax 16vmin;
+  background-size: 334px 80px;
   overflow: hidden;
   height: inherit;
 }
 
 .nav-wrap .center-logo .logo {
-  width: 7.6vmax;
+  width: 7.6vw;
+  height: 40px;
   margin: 5vmin 9.2vmax;
   size: auto;
 }

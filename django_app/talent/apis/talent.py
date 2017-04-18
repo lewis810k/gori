@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from member.serializers import UserSerializer
 from talent.serializers import TalentDetailSerializer, TalentCreateSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import *
@@ -77,8 +77,12 @@ class TalentListCreateView(generics.ListCreateAPIView):
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-
-        return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+        ret_pk = {
+            "talent_pk": Talent.objects.filter(title=serializer.data['title']).first().pk,
+        }
+        ret = success_msg.copy()
+        ret.update(ret_pk)
+        return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = Talent.objects.all()
@@ -108,10 +112,18 @@ class TalentShortDetailView(generics.RetrieveAPIView):
     serializer_class = TalentShortDetailSerializer
 
 
-# 하나의 talent에 대한 세부 정보 api
+# 하나의 talent에 대한 세부 정보 api (request user 정보 포함)
 class TalentDetailView(generics.RetrieveAPIView):
-    queryset = Talent.objects.all()
-    serializer_class = TalentDetailSerializer
+    def get(self, request, *args, **kwargs):
+        talent_dict = TalentDetailSerializer(Talent.objects.get(pk=kwargs['pk'])).data
+        user = request.user
+
+        try:
+            user_dict = UserSerializer(user).data
+            talent_dict["user"] = user_dict
+        except:
+            talent_dict["user"] = "Login Required"
+        return Response(talent_dict)
 
 
 # talent의 is_soldout 상태 toggle
@@ -142,5 +154,3 @@ class TalentDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Talent.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
-
-
