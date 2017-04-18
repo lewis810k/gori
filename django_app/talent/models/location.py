@@ -77,6 +77,7 @@ class Location(models.Model):
     extra_fee_amount = models.CharField(max_length=50, help_text='추가 비용: 예시) 재료 비용 1만원', blank=True)
     day = models.CharField(choices=DAYS_OF_WEEK, max_length=2)
     time = models.CharField(max_length=50, help_text=',로 나누어 입력해 주세요. 예시) 13-14시, 18-19시')
+    location_message = models.TextField(blank=True)
 
     def __str__(self):
         return '{} - 지역: {}'.format(self.talent, self.get_region_display())
