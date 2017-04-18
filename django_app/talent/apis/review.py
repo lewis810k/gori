@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
@@ -41,9 +43,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - friendliness : 친근감?에 대한 점수
             - comment : 코멘트
         """
-        print("=====================")
-        print("data: ", request.data)
-        print("user: ", request.user)
 
         request.data['user'] = request.user.id
 

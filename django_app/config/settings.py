@@ -21,6 +21,7 @@ STORAGE_S3 = False
 print(DEBUG)
 print(STORAGE_S3)
 
+
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
