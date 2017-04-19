@@ -2,55 +2,94 @@
 
 .nav-wrap {
   width: 100vmax;
-  // height:100px;
-  height: 15.5vmin;
+  height: 100px;
   float: left;
   background-color: $color-bg-nav;
-  .nav-left{
-    width: 36.5vmax;
+  .box-wrap{
+    margin: 0 auto;
+    width: 100%;
     height: inherit;
-    .nav-list{
-      float: left;
-      list-style: none;
-      width: 80%;
-      margin: 5vmin auto;
-      .left-list-item{
+    .nav-left{
+      height: inherit;
+      .nav-list{
+        float: left;
+        list-style: none;
+        width: 80%;
+        margin: 5vmin auto;
+        .left-list-item{
 
 
-        .left-item{
-          font-size: 1.2em;
-          font-style: italic;
-          color: $color-lt-light-grey;
-          font-weight: 600;
-          float: left;
+          .left-item{
+            font-size: 1.2em;
+            font-style: italic;
+            color: $color-lt-light-grey;
+            font-weight: 600;
+            float: left;
+          }
+          .left-item:hover{
+            color:$color-pink;
+            cursor: pointer;
+
+          }
         }
       }
     }
-  }
-  .center-logo{
-    height: 120px;
-    width: 26vmax;
-    // width: 340px;
-    background-image: url(../../images/bg_header_logo.jpg);
-    background-size: 334px 80px;
-    // background-size: 25.5vmax 105px;
-    // background-size: 26vmax 16vmin;
+    .center-logo{
+      height: 120px;
+      overflow: hidden;
+      height: inherit;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url(../../images/bg_header_logo.jpg);
+      background-size: 340px 100px;
+      .logo{
 
-    overflow: hidden;
+        // width: 7.6vw;
+        // height: 40px;
+        // // margin: 30px 120px;
+        // margin: 5vmin 9.2vmax;
+        size: 99px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin:20px auto;
+        display: block;
+      }
+      .logo-message{
+        display:table;
+        top: -20px;
+        margin-left: auto;
+        margin-right: auto;
+        color: $color-lt-light-grey;
 
-    height: inherit;
-    .logo{
-      width: 7.6vw;
-      height: 40px;
-      // margin: 30px 120px;
-      margin: 5vmin 9.2vmax;
-      size: auto;
-
+      }
     }
-  }
-  .nav-right{
-    // background-color: blue;
-    width: 36.6vmax;
-    height: inherit;
+    .nav-right{
+      height: inherit;
+      .nav-list{
+        padding: 0;
+        float: left;
+        list-style: none;
+        .nav-list  ::after {
+          float: left;
+          content: “ “;
+          display: block;
+          height: 0;
+          clear: both;
+        }
+        .right-list-item{
+          float: left;
+          .right-image{
+            display: block;
+          }
+          .right-item{
+            color: $color-lt-light-grey;
+            display: block;
+
+          }
+
+        }
+      }
+    }
   }
 }
