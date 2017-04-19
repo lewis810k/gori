@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from talent.serializers import ReviewSerializer, ReviewCreateSerializer, ReviewUpdateSerializer
@@ -20,6 +21,8 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Review.objects.filter(talent_id=self.kwargs['pk'])

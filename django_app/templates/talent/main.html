@@ -69,17 +69,38 @@
       <div class="slogan-bottom">배움으로 삶을 풍요롭게 해보세요!</div>
     </div>
     <div class="search-container">
-      <div class="col-xs-2"></div>
-      <div class="col-xs-8 col-input">
+      <div class="col-xs-3"></div>
+      <div class="col-xs-6 col-input">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="배우고 싶은 과목을 검색해보세요!">
+          <input type="text" class="form-control input-box" placeholder="배우고 싶은 과목을 검색해보세요!">
           <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Go!</button>
+            <button class="btn btn-default" type="button">
+              <img src="" alt="">강의찾기
+            </button>
           </span>
         </div><!-- /input-group -->
       </div><!-- /.col-lg-6 -->
-      <div class="col-xs-2"></div>
+      <div class="col-xs-3"></div>
 
+    </div>
+  </div>
+</div>
+
+<div id="class-section">
+  <div class="class-section-intro">
+    <h1>
+      CLASS<br>
+      ㅡ
+    </h1>
+    <h2>
+      04월의 추천강의를 살펴보세요.
+    </h2>
+  </div>
+
+  <div class="class-section-content">
+    <div class="container">
+      <div class="row">
+      </div>
     </div>
   </div>
 </div>
@@ -87,58 +108,88 @@
 <div class='test-container'>
 </div>
 <script>
-  var place = 0;
-  function placeDiv() {
-    var d = document.getElementById('nav-ul');
-    if (place == 0) {
-      d.style.right = 20+'px';
-      d.style.top = 90+'px';
-      place = 1;
-    }
-    else {
-      d.style.right = 20+'px';
-      d.style.top = 10+'px';
-      place = 0;
-    }
-  }
+  // var place = 0;
+  //
+  //
+  //
+  // function placeDiv() {
+  //   var d = document.getElementById('nav-ul');
+  //   if (place == 0) {
+  //     d.style.right = 20+'px';
+  //     d.style.top = 90+'px';
+  //     place = 1;
+  //   }
+  //   else {
+  //     d.style.right = 20+'px';
+  //     d.style.top = 10+'px';
+  //     place = 0;
+  //   }
+  // }
 
+  test();
   function test(){
-    console.log('abc');
-    var url = 'http://localhost:8000/api/talent/list/';
+    console.log('test in');
+    var url = 'https://mozzi.co.kr/api/talent/list/';
+
+    // var url = 'http://localhost:8000/api/talent/list/';
     $.ajax({
       url: url,
       method: "GET",
       dataType: "json",
     })
     .done(function(data){
+      console.log('done');
+      console.log(data)
       length = data.results.length;
       results = data.results;
       // length만큼 반복
-
       for(i = 0; i < length; i++){
         // wrapper div를 새로 만든다.
-        var newDom = $('<div class="test-wrapper"></div>');
-        newDom.attr('id', 'post-' + results[i].pk);
+        var newDom = $('<a href="" class="col-md-4 col-sm-6 class-item"></a>');
+        //image, 좌측하단에 시간당 가격
+        newDom.append('<div class="item-top"></div>');
+        newDom.find('.item-top').append('<img class="item-image" src="" alt="" />');
+        newDom.find('.item-image').attr("src", results[i].cover_image);
 
-        newDom.append('<div class="test-inside"></div>');
-        newDom.find('.test-inside').text(results[i].title);
-        $('.test-container').append(newDom);
+        //제목, 튜터
+        newDom.append('<div class="item-mid"></div>');
+        var item_mid = newDom.find('.item-mid');
+          //제목 추가
+        item_mid.append('<div class="item-title-container"></div>');
+        item_mid.find('.item-title-container').append('<div class="item-title"></div>');
+        item_mid.find('.item-title').text(results[i].title);
+          //튜터 정보 추가
+        item_mid.append('<div class="item-tutor-container"></div>');
+        item_mid.find('.item-tutor-container').append('<div class="item-tutor"></div>');
+        item_mid.find('.item-tutor').text(results[i].tutor.name);
+        item_mid.find('.item-tutor-container').append('<img class="item-tutor-pic" src="" alt="" />');
+        item_mid.find('.item-tutor-pic').attr("src", results[i].tutor.profile_image);
 
+        //수업형태, 평점, 지역
+        newDom.append('<div class="item-bot"></div>');
+        var item_bot = newDom.find('.item-bot');
+        item_bot.append('<div class="item-group-type"></div>');
+        item_bot.append('<div class="item-rate"></div>');
+        item_bot.append('<div class="item-location"></div>');
+        //수업형태
+        item_bot.find('.item-group-type').text(results[i].type);
+        //평점
+        item_bot.find('.item-rate').text(results[i].average_rate);
+        //장소
+        var regions = '';
+        for (j = 0; j < results[i].regions.length; j++) {
+          if(j == results[i].regions.length) {
+            reginos += results[i].regions[j];
+          }
+          regions += results[i].regions[j] + ', ';
+        }
+        item_bot.find('.item-location').text(regions);
+
+        $('.row').append(newDom);
       }
-
-        // 세부 div를 만든다.
-        // 각 아이템마다 제목을 따와서 div에 추가한다.
-      // wrapper에 세부 div를 추가한다.
-
-      // container에 wrapper를 추가한다.
-
-      console.log('aaa');
-      console.log(data);
-      console.log(data.results[0].title);
-      console.log(length);
     })
     .fail(function(data){
-      console.log('서버연동실패');
+      console.log('fail');
     });
   }
   // test();

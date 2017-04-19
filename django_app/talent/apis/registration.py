@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
@@ -17,6 +18,8 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentRegistrationSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
