@@ -1,14 +1,17 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
+from talent.serializers import RegistrationUpdateSerializer
 from talent.serializers.registration import TalentRegistrationSerializer, TalentRegistrationCreateSerializer
 from utils import *
 
 __all__ = (
     'RegistrationListCreateView',
     'RegistrationDeleteView',
+    'RegistrationUpdateView',
 )
 
 
@@ -17,6 +20,8 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentRegistrationSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Registration.objects.filter(talent_location__talent_id=self.kwargs['pk'])
@@ -92,6 +97,29 @@ class RegistrationListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class RegistrationUpdateView(generics.UpdateAPIView):
+    queryset = Registration.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = RegistrationUpdateSerializer
+
+    def get_queryset(self):
+        return Registration.objects.filter(pk=self.kwargs['pk'], student=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 
 class RegistrationDeleteView(generics.DestroyAPIView):

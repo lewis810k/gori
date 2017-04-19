@@ -1,6 +1,7 @@
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from talent.models import Talent, Location
@@ -10,6 +11,7 @@ from utils import *
 __all__ = (
     'LocationListCreateView',
     'LocationDeleteView',
+    'LocationUpdateView'
 )
 
 
@@ -18,6 +20,8 @@ class LocationListCreateView(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Location.objects.filter(talent_id=self.kwargs['pk'])
@@ -83,6 +87,43 @@ class LocationListCreateView(generics.ListCreateAPIView):
 
         return Response(success_msg, status=status.HTTP_201_CREATED)
 
+class LocationUpdateView(generics.UpdateAPIView):
+    queryset = Location.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = LocationCreateSerializer
+
+    def get_queryset(self):
+        return Location.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        location = Location.objects.get(pk=kwargs['pk'])
+        talent = location.talent
+        if location.region == request.data['region'] and location.day == request.data['day']:
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+
+        else:
+            data = {
+                'talent': talent,
+                'region': request.data['region'],
+                'day': request.data['day'],
+            }
+            if verify_duplicate(Location, data=data):
+                return Response(data={"detail":"지역 중복 or 요일 중복"}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 class LocationDeleteView(generics.DestroyAPIView):
     queryset = Location.objects.all()

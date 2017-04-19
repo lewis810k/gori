@@ -1,34 +1,66 @@
+@charset "UTF-8";
 .nav-wrap {
   width: 100vmax;
-  height: 15.5vmin;
+  height: 100px;
   float: left;
   background-color: #fff; }
-  .nav-wrap .nav-left {
-    width: 36.5vmax;
+  .nav-wrap .box-wrap {
+    margin: 0 auto;
+    width: 100%;
     height: inherit; }
-    .nav-wrap .nav-left .nav-list {
-      float: left;
-      list-style: none;
-      width: 80%;
-      margin: 5vmin auto; }
-      .nav-wrap .nav-left .nav-list .left-list-item .left-item {
-        font-size: 1.2em;
-        font-style: italic;
-        color: #999;
-        font-weight: 600;
-        float: left; }
-  .nav-wrap .center-logo {
-    height: 120px;
-    width: 26vmax;
-    background-image: url(../../images/bg_header_logo.jpg);
-    background-size: 334px 80px;
-    overflow: hidden;
-    height: inherit; }
-    .nav-wrap .center-logo .logo {
-      width: 7.6vw;
-      height: 40px;
-      margin: 5vmin 9.2vmax;
-      size: auto; }
-  .nav-wrap .nav-right {
-    width: 36.6vmax;
-    height: inherit; }
+    .nav-wrap .box-wrap .nav-left {
+      height: inherit; }
+      .nav-wrap .box-wrap .nav-left .nav-list {
+        float: left;
+        list-style: none;
+        width: 80%;
+        margin: 5vmin auto; }
+        .nav-wrap .box-wrap .nav-left .nav-list .left-list-item .left-item {
+          font-size: 1.2em;
+          font-style: italic;
+          color: #999;
+          font-weight: 600;
+          float: left; }
+        .nav-wrap .box-wrap .nav-left .nav-list .left-list-item .left-item:hover {
+          color: #ff005a;
+          cursor: pointer; }
+    .nav-wrap .box-wrap .center-logo {
+      height: 120px;
+      overflow: hidden;
+      height: inherit;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url(../../images/bg_header_logo.jpg);
+      background-size: 340px 100px; }
+      .nav-wrap .box-wrap .center-logo .logo {
+        size: 99px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px auto;
+        display: block; }
+      .nav-wrap .box-wrap .center-logo .logo-message {
+        display: table;
+        top: -20px;
+        margin-left: auto;
+        margin-right: auto;
+        color: #999; }
+    .nav-wrap .box-wrap .nav-right {
+      height: inherit; }
+      .nav-wrap .box-wrap .nav-right .nav-list {
+        padding: 0;
+        float: left;
+        list-style: none; }
+        .nav-wrap .box-wrap .nav-right .nav-list .nav-list ::after {
+          float: left;
+          content: “ “;
+          display: block;
+          height: 0;
+          clear: both; }
+        .nav-wrap .box-wrap .nav-right .nav-list .right-list-item {
+          float: left; }
+          .nav-wrap .box-wrap .nav-right .nav-list .right-list-item .right-image {
+            display: block; }
+          .nav-wrap .box-wrap .nav-right .nav-list .right-list-item .right-item {
+            color: #999;
+            display: block; }

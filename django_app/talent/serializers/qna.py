@@ -8,8 +8,10 @@ __all__ = (
     # 'QnaSerializer',
     'ReplySerializer',
     'ReplyCreateSerializer',
+    'ReplyUpdateSerializer',
     'QuestionSerializer',
     'QuestionCreateSerializer',
+    'QuestionUpdateSerializer'
 )
 
 User = get_user_model()
@@ -43,10 +45,18 @@ class ReplyCreateSerializer(serializers.ModelSerializer):
         )
 
 
+class ReplyUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reply
+        fields = (
+            'content'
+        )
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
-    replies = ReplySerializer(source='reply_set', many=True)
+    replies = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
@@ -59,6 +69,10 @@ class QuestionSerializer(serializers.ModelSerializer):
             'replies',
         )
 
+    def get_replies(self, obj):
+        ordered_queryset = obj.reply_set.order_by('-pk')
+        return ReplySerializer(ordered_queryset, many=True).data
+
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -70,4 +84,12 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
             'user',
             'talent_pk',
             'content',
+        )
+
+
+class QuestionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'content'
         )

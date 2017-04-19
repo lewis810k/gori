@@ -106,8 +106,8 @@ class TalentListSerializer(serializers.ModelSerializer):
             'review_count',
             'registration_count',
             'regions',
-
         )
+
 
     def get_category(self, obj):
         return obj.get_category_display()
