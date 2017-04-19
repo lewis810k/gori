@@ -8,6 +8,7 @@ __all__ = (
     # 'QnaSerializer',
     'ReplySerializer',
     'ReplyCreateSerializer',
+    'ReplyUpdateSerializer',
     'QuestionSerializer',
     'QuestionCreateSerializer',
     'QuestionUpdateSerializer'
@@ -43,15 +44,15 @@ class ReplyCreateSerializer(serializers.ModelSerializer):
             'content',
         )
 
-class ReplyUpdateSerializer(serializers.ModelSerializer):
-    reply_pk = serializers.IntegerField(source='pk')
 
+class ReplyUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
         fields = (
-            'reply_pk',
             'content'
         )
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='user.name')
     user_image = serializers.ImageField(source='user.profile_image')
@@ -69,7 +70,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
 
-
 class QuestionCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
@@ -82,12 +82,10 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
             'content',
         )
 
-class QuestionUpdateSerializer(serializers.ModelSerializer):
-    question_pk = serializers.IntegerField(source='pk')
 
+class QuestionUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = (
-            'question_pk',
             'content'
         )

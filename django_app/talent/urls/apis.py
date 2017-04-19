@@ -55,5 +55,8 @@ urlpatterns = [
     url(r'^update/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumUpdateView.as_view(), name='curriculum-update'),
     url(r'^update/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageUpdateView.as_view(), name='classimage-update'),
     url(r'^update/(?P<pk>[0-9]+)/review/$', apis.ReviewUpdateView.as_view(), name='review-update'),
-    url(r'^update/(?P<pk>[0-9]+)/question/$', apis.QuestionUpdateView.as_view(), name='question-update')
+    url(r'^update/(?P<pk>[0-9]+)/question/$', apis.QuestionUpdateView.as_view(), name='question-update'),
+    url(r'^update/(?P<pk>[0-9]+)/reply/$', apis.ReplyUpdateView.as_view(), name='reply-update'),
+    url(r'^update/(?P<pk>[0-9]+)/registration/$', apis.RegistrationUpdateView.as_view(), name='reply-update'),
+    url(r'^update/(?P<pk>[0-9]+)/location/$', apis.LocationUpdateView.as_view(), name='location-update'),
 ]

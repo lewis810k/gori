@@ -20,6 +20,8 @@ class Question(models.Model):
         return 'Talent : {} User : {}'.format(self.talent.title, self.user.name)
 
     def content_summary(self):
+        if len(self.content) < 11:
+            return self.content
         return '{}...'.format(self.content[:10])
 
 
@@ -33,4 +35,6 @@ class Reply(models.Model):
         return "question : {}  user : {}".format(self.question.content[:10], self.tutor.user.name)
 
     def content_summary(self):
+        if len(self.content) < 11:
+            return self.content
         return '{}...'.format(self.content[:10])

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from talent.serializers import QuestionSerializer, QuestionCreateSerializer, ReplyCreateSerializer, \
     QuestionUpdateSerializer
+from talent.serializers.qna import ReplyUpdateSerializer
 from utils import *
 
 __all__ = (
@@ -13,6 +14,7 @@ __all__ = (
     'QuestionUpdateView',
     'ReplyCreateView',
     'ReplyDeleteView',
+    'ReplyUpdateView',
 )
 
 
@@ -63,39 +65,19 @@ class QuestionUpdateView(generics.UpdateAPIView):
     def get_queryset(self):
         return Question.objects.filter(pk=self.kwargs['pk'], user=self.request.user)
 
-    def patch(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        instance = self.get_queryset()
-        if not instance.exists():
-            return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "question_pk가 올바르지 않습니다"})
-
+        instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        print(serializer)
-        a = serializer.is_valid(raise_exception=True)
-        serializer.save()
-        # self.perform_update(serializer)
-        return Response(status.HTTP_200_OK, data={"detail": "수정이 완료되었습니다!!"})
-    # def update(self, request, *args, **kwargs):
-    #     partial = kwargs.pop('partial', False)
-    #     instance = self.get_object()
-    #     print('54324325342',instance)
-    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #
-    #     if getattr(instance, '_prefetched_objects_cache', None):
-    #         # If 'prefetch_related' has been applied to a queryset, we need to
-    #         # forcibly invalidate the prefetch cache on the instance.
-    #         instance._prefetched_objects_cache = {}
-    #
-    #     return Response(serializer.data)
-    #
-    # def perform_update(self, serializer):
-    #     serializer.save()
-    #
-    # def partial_update(self, request, *args, **kwargs):
-    #     kwargs['partial'] = True
-    #     return self.update(request, *args, **kwargs)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 
 class QuestionDeleteView(generics.DestroyAPIView):
@@ -147,6 +129,28 @@ class ReplyCreateView(generics.CreateAPIView):
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
+class ReplyUpdateView(generics.UpdateAPIView):
+    queryset = Reply.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ReplyUpdateSerializer
+
+    # def get_queryset(self):
+    #     return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user__name=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        print(request.data)
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 class ReplyDeleteView(generics.DestroyAPIView):
     queryset = Reply.objects.all()
@@ -154,3 +158,4 @@ class ReplyDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
+

@@ -15,6 +15,7 @@ __all__ = (
     # talent
     # 'TalentRegistrationSerializer',
     'TalentRegistrationWrapperSerializer',
+    'RegistrationUpdateSerializer',
 )
 
 User = get_user_model()
@@ -47,7 +48,7 @@ class MyRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyRegistrationWrapperSerializer(serializers.ModelSerializer):
-    results = MyRegistrationSerializer(many=True,source="registrations")
+    results = MyRegistrationSerializer(many=True, source="registrations")
     user_id = serializers.CharField(source='username')
 
     class Meta:
@@ -150,6 +151,19 @@ class TalentRegistrationCreateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'user',
+            'location_pk',
+            'student_level',
+            'experience_length',
+            'message_to_tutor',
+        )
+
+
+class RegistrationUpdateSerializer(serializers.ModelSerializer):
+    location_pk = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), source='talent_location')
+
+    class Meta:
+        model = Registration
+        fields = (
             'location_pk',
             'student_level',
             'experience_length',

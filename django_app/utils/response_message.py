@@ -24,3 +24,7 @@ object_not_found = {
 title_already_exist = {
     'detail': '같은 제목의 수업이 존재합니다.'
 }
+
+success_update = {
+    'detail': '성공적으로 수정되었습니다.'
+}

@@ -59,6 +59,20 @@ class CurriculumUpdateView(generics.UpdateAPIView):
     def get_queryset(self):
         return Curriculum.objects.filter(pk=self.kwargs['pk'], talent__tutor__user=self.request.user)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
+
 
 class CurriculumDeleteView(generics.DestroyAPIView):
     queryset = Curriculum.objects.all()

@@ -37,12 +37,11 @@ class ReviewSerializer(serializers.ModelSerializer):
             'comment',
         )
 
+
 class ReviewUpdateSerializer(serializers.ModelSerializer):
-    review_pk = serializers.IntegerField(source='pk')
     class Meta:
         model = Review
         fields = (
-            'review_pk',
             'curriculum',
             'readiness',
             'timeliness',
@@ -51,6 +50,7 @@ class ReviewUpdateSerializer(serializers.ModelSerializer):
             'created_date',
             'comment',
         )
+
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     talent_pk = serializers.PrimaryKeyRelatedField(queryset=Talent.objects.all(), source='talent')
