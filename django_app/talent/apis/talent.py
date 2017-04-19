@@ -113,17 +113,21 @@ class TalentShortDetailView(generics.RetrieveAPIView):
 
 
 # 하나의 talent에 대한 세부 정보 api (request user 정보 포함)
-class TalentDetailView(generics.RetrieveAPIView):
+class TalentDetailView(APIView):
     def get(self, request, *args, **kwargs):
-        talent_dict = TalentDetailSerializer(Talent.objects.get(pk=kwargs['pk'])).data
-        user = request.user
-
         try:
-            user_dict = UserSerializer(user).data
-            talent_dict["user"] = user_dict
-        except:
-            talent_dict["user"] = "Login Required"
-        return Response(talent_dict)
+            talent = Talent.objects.get(pk=kwargs['pk'])
+            talent_dict = TalentDetailSerializer(talent).data
+            user = request.user
+            try:
+                user_dict = UserSerializer(user).data
+                talent_dict["user"] = user_dict
+            except:
+                talent_dict["user"] = "Login Required"
+
+            return Response(talent_dict)
+        except Talent.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "찾을 수 없습니다."})
 
 
 # talent의 is_soldout 상태 toggle
