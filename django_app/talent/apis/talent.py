@@ -88,7 +88,6 @@ class TalentListCreateView(generics.ListCreateAPIView):
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
-        print('a')
         queryset = Talent.objects.all()
         title = self.request.query_params.get('title', None)
         region = self.request.query_params.get('region', None)

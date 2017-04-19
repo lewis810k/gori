@@ -60,7 +60,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
     def get_replies(self, obj):
-        ordered_queryset = Reply.objects.order_by('-pk')
+        ordered_queryset = obj.reply_set.order_by('-pk')
         return ReplySerializer(ordered_queryset, many=True).data
 
 
