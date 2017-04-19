@@ -190,14 +190,16 @@ class TalentDetailSerializer(serializers.ModelSerializer):
     tutor = TutorSerializer(read_only=True)
     class_images = ClassImageSerializer(many=True, source='classimage_set', read_only=True)
     curriculums = CurriculumSerializer(many=True, source='curriculum_set', read_only=True)
-    reviews = ReviewSerializer(many=True, read_only=True)
-    qna = QuestionSerializer(many=True, source='question_set', read_only=True)
+    # reviews = ReviewSerializer(many=True, read_only=True)
+    # qna = QuestionSerializer(many=True, source='question_set', read_only=True)
     category = serializers.SerializerMethodField(read_only=True)
     average_rates = serializers.SerializerMethodField(read_only=True)
     review_count = serializers.SerializerMethodField(read_only=True)
     # category = serializers.ChoiceField(choices=Talent.CATEGORY)
     locations = serializers.SerializerMethodField(read_only=True)
     type = serializers.SerializerMethodField(read_only=True)
+    reviews = serializers.SerializerMethodField()
+    qna = serializers.SerializerMethodField()
 
     class Meta:
         depth = 1
@@ -232,6 +234,14 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'qna',
             'reviews',
         )
+
+    def get_reviews(self, obj):
+        ordered_queryset = obj.reviews.order_by('-pk')
+        return ReviewSerializer(ordered_queryset, many=True).data
+
+    def get_qna(self, obj):
+        ordered_queryset = obj.question_set.order_by('-pk')
+        return QuestionSerializer(ordered_queryset, many=True).data
 
     def get_locations(self, obj):
         regions = {}
