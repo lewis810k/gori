@@ -14,3 +14,8 @@
 .nav-item {
   float: left;
 }
+
+.nav-list {
+  float: left;
+  list-style: none;
+}

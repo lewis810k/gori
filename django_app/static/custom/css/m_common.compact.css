@@ -4,3 +4,5 @@
 .clear-fix ::after { float: left; content: “ “; display: block; height: 0; clear: both; }
 
 .nav-item { float: left; }
+
+.nav-list { float: left; list-style: none; }

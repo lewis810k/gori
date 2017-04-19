@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
-
     def test_location_create(self):
         user, token = self.obtain_token()
         tutor = self.register_tutor(user, token)
@@ -52,7 +51,7 @@ class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
         location = self.create_location(talent, token)
         valid_pk = talent.pk
         invalid_talent_pk = 999
-        pk_s = [(valid_pk, status.HTTP_200_OK), (invalid_talent_pk, status.HTTP_404_NOT_FOUND)]
+        pk_s = [(valid_pk, status.HTTP_200_OK), (invalid_talent_pk, status.HTTP_200_OK)]
         for pk, expected_status_code in pk_s:
             params = {
                 'pk': pk
@@ -60,8 +59,10 @@ class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
             location_retrieve_url = reverse('api:talent:location-retrieve', kwargs=params)
             response = self.client.get(location_retrieve_url)
             self.assertEqual(response.status_code, expected_status_code)
-            if response.status_code == status.HTTP_200_OK:
-                self.assertEqual(response.data["pk"], talent.pk)
-                self.assertIn("locations", response.data)
-                self.assertIn("region", response.data["locations"][0])
-                self.assertIn("day", response.data["locations"][0])
+            if not response.data["results"]:
+                self.assertEqual(pk, invalid_talent_pk)
+            else:
+                print("333333", response.data)
+                self.assertEqual(response.data["results"][0]["talent_pk"], talent.pk)
+                self.assertIn("region", response.data["results"][0])
+                self.assertIn("day", response.data["results"][0])

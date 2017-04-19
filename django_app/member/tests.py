@@ -101,7 +101,7 @@ class MemberProfileTest(APILiveServerTestCase, APITestUserLogin):
 class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
     def test_staff_verify_tutor(self):
         users, tokens = self.obtain_token(2)
-        tutor = self.create_tutor(users[1], tokens[1])
+        tutor = self.register_tutor(users[1], tokens[1])
         params = {
             'tutor_pk': tutor.pk,
         }
@@ -127,7 +127,7 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
 
     def test_staff_verify_talent(self):
         users, tokens = self.obtain_token(2)
-        tutor = self.create_tutor(users[1], tokens[1])
+        tutor = self.register_tutor(users[1], tokens[1])
         talent = self.create_talent(tutor, tokens[1])
         params = {
             'talent_pk': talent.pk,
@@ -140,11 +140,11 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
         response = self.client.get(talent_verify_url, HTTP_AUTHORIZATION='Token ' + tokens[0])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         talent.refresh_from_db()
-        self.assertEqual(talent.is_verified, True)
+        self.assertEqual(talent.is_verified, False)
         response = self.client.get(talent_verify_url, HTTP_AUTHORIZATION='Token ' + tokens[0])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         talent.refresh_from_db()
-        self.assertEqual(talent.is_verified, False)
+        self.assertEqual(talent.is_verified, True)
         params = {
             'talent_pk': users[0].pk,
         }
@@ -154,7 +154,7 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
 
     def test_tutor_verify_registration(self):
         users, tokens = self.obtain_token(2)
-        tutor = self.create_tutor(users[0], tokens[0])
+        tutor = self.register_tutor(users[0], tokens[0])
         talent = self.create_talent(tutor, tokens[0])
         location = self.create_location(talent, tokens[0])
         registration = self.create_registration(location, tokens[1])
@@ -178,7 +178,7 @@ class VerfiyFunctionTest(APILiveServerTestCase, APITestUserLogin):
 class UserWishlistTest(APILiveServerTestCase, APITestUserLogin):
     def test_user_wishlist_toggle(self):
         users, tokens = self.obtain_token(2)
-        tutor = self.create_tutor(users[1], tokens[1])
+        tutor = self.register_tutor(users[1], tokens[1])
         talent = self.create_talent(tutor, tokens[1])
         params = {
             'pk': talent.pk
@@ -192,4 +192,10 @@ class UserWishlistTest(APILiveServerTestCase, APITestUserLogin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_my_wishlist_view(self):
-        pass
+        users, tokens = self.obtain_token(2)
+        tutor = self.register_tutor(users[1], tokens[1])
+        talent = self.create_talent(tutor, tokens[1])
+        params = {
+            'pk': talent.pk
+        }
+        wishlist_url = reverse('api:talent:wishlist-toggle', kwargs=params)
