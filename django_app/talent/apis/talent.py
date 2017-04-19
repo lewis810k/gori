@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -28,6 +29,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
     serializer_class = TalentListSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = LargeResultsSetPagination
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     # rest_framework의 SearchFilter 사용시
     # filter_backends = (filters.SearchFilter,)
@@ -85,6 +88,7 @@ class TalentListCreateView(generics.ListCreateAPIView):
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
+        print('a')
         queryset = Talent.objects.all()
         title = self.request.query_params.get('title', None)
         region = self.request.query_params.get('region', None)
@@ -105,6 +109,8 @@ class UnverifiedTalentListView(generics.ListAPIView):
     queryset = Talent.objects.filter(is_verified=False)
     serializer_class = TalentListSerializer
     pagination_class = LargeResultsSetPagination
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
 
 class TalentShortDetailView(generics.RetrieveAPIView):

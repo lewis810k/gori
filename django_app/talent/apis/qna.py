@@ -4,6 +4,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -24,6 +25,8 @@ class QuestionListCreateView(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Question.objects.filter(talent_id=self.kwargs['pk'])
@@ -36,6 +39,7 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         추가정보 :
         """
         request.data['user'] = request.user.id
+        print(request.data)
 
         # 생성 전용 시리얼라이저 사용
         serializer = QuestionCreateSerializer(data=request.data)

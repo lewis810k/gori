@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from talent.serializers import CurriculumSerializer, CurriculumUpdateSerializer
@@ -18,6 +19,8 @@ class CurriculumListCreateView(generics.ListCreateAPIView):
     serializer_class = CurriculumSerializer
     pagination_class = LargeResultsSetPagination
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return Curriculum.objects.filter(talent_id=self.kwargs['pk'])

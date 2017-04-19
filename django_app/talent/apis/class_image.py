@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from talent.models import ClassImage
@@ -18,6 +19,8 @@ class ClassImageListCreateView(generics.ListCreateAPIView):
     serializer_class = ClassImageSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = LargeResultsSetPagination
+    filter_backends = (OrderingFilter,)
+    ordering = ('-pk',)
 
     def get_queryset(self):
         return ClassImage.objects.filter(talent_id=self.kwargs['pk'])
