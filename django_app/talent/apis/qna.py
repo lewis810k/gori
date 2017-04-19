@@ -1,22 +1,21 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from talent.models import Talent, Question, Reply
-from talent.serializers import QuestionSerializer, QuestionCreateSerializer, ReplyCreateSerializer
+from talent.serializers import QuestionSerializer, QuestionCreateSerializer, ReplyCreateSerializer, \
+    QuestionUpdateSerializer
+from talent.serializers.qna import ReplyUpdateSerializer
 from utils import *
 
 __all__ = (
     'QuestionListCreateView',
     'QuestionDeleteView',
+    'QuestionUpdateView',
     'ReplyCreateView',
     'ReplyDeleteView',
+    'ReplyUpdateView',
 )
 
 
@@ -60,6 +59,29 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class QuestionUpdateView(generics.UpdateAPIView):
+    queryset = Question.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = QuestionUpdateSerializer
+
+    def get_queryset(self):
+        return Question.objects.filter(pk=self.kwargs['pk'], user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 
 class QuestionDeleteView(generics.DestroyAPIView):
@@ -111,6 +133,28 @@ class ReplyCreateView(generics.CreateAPIView):
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
+class ReplyUpdateView(generics.UpdateAPIView):
+    queryset = Reply.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ReplyUpdateSerializer
+
+    # def get_queryset(self):
+    #     return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user__name=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        print(request.data)
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 class ReplyDeleteView(generics.DestroyAPIView):
     queryset = Reply.objects.all()
@@ -118,3 +162,4 @@ class ReplyDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
+

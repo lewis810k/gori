@@ -33,11 +33,8 @@ class ClassImageCreateSerializer(serializers.ModelSerializer):
 
 
 class ClassImageUpdateSerializer(serializers.ModelSerializer):
-    classimage_pk = serializers.IntegerField(source='pk')
-
     class Meta:
         model = ClassImage
         fields = (
-            'classimage_pk',
             'image',
         )

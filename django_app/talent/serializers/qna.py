@@ -8,8 +8,10 @@ __all__ = (
     # 'QnaSerializer',
     'ReplySerializer',
     'ReplyCreateSerializer',
+    'ReplyUpdateSerializer',
     'QuestionSerializer',
     'QuestionCreateSerializer',
+    'QuestionUpdateSerializer'
 )
 
 User = get_user_model()
@@ -40,6 +42,14 @@ class ReplyCreateSerializer(serializers.ModelSerializer):
             'question_pk',
             'tutor',
             'content',
+        )
+
+
+class ReplyUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reply
+        fields = (
+            'content'
         )
 
 
@@ -74,4 +84,12 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
             'user',
             'talent_pk',
             'content',
+        )
+
+
+class QuestionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'content'
         )

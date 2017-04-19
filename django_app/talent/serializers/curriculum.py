@@ -39,7 +39,6 @@ class CurriculumUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Curriculum
         fields = (
-            'curriculum_pk',
             'information',
             'image'
         )
