@@ -5,9 +5,9 @@ from talent.models import Talent, Curriculum, Location
 from utils import review_average_rate, Tutor
 from .class_image import ClassImageSerializer
 from .curriculum import CurriculumSerializer
-from .review import ReviewSerializer, AverageRatesSerializer
-from .qna import QuestionSerializer
 from .location import LocationSerializer
+from .qna import QuestionSerializer
+from .review import ReviewSerializer, AverageRatesSerializer
 
 __all__ = (
     'TalentListSerializer',
@@ -15,6 +15,7 @@ __all__ = (
     'TalentCreateSerializer',
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
+    'TalentUpdateSerializer'
 )
 
 
@@ -272,6 +273,28 @@ class TalentCreateSerializer(serializers.ModelSerializer):
         model = Talent
         fields = (
             'tutor',
+            'title',
+            'category',
+            'type',
+            'cover_image',
+            'tutor_info',
+            'class_info',
+            'video1',
+            'video2',
+            'price_per_hour',
+            'hours_per_class',
+            'number_of_class',
+            'min_number_student',
+            'max_number_student',
+            'is_soldout',
+            'tutor_message',
+        )
+
+
+class TalentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Talent
+        fields = (
             'title',
             'category',
             'type',

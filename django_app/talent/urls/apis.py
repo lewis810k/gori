@@ -59,4 +59,5 @@ urlpatterns = [
     url(r'^update/(?P<pk>[0-9]+)/reply/$', apis.ReplyUpdateView.as_view(), name='reply-update'),
     url(r'^update/(?P<pk>[0-9]+)/registration/$', apis.RegistrationUpdateView.as_view(), name='reply-update'),
     url(r'^update/(?P<pk>[0-9]+)/location/$', apis.LocationUpdateView.as_view(), name='location-update'),
+    url(r'^update/(?P<pk>[0-9]+)/talent/$', apis.TalentUpdateView.as_view(), name='talent-update'),
 ]
