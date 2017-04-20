@@ -2,7 +2,7 @@
 
 #main-video .video-container { height: 720px; width: 100%; position: relative; }
 
-#main-video .video-container .temp-image { height: 100%; width: 100%; background: url(../../images/moon.jpg) no-repeat center; background-size: cover; }
+#main-video .video-container .temp-image { height: 100%; width: 100%; background: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/images/moon.jpg) no-repeat center; background-size: cover; }
 
 #main-video .video-container .slogan { position: absolute; display: inline-block; margin: 0 auto; top: 70%; left: 0; right: 0; transform: translateY(-50%); text-align: center; color: white; }
 
@@ -22,8 +22,6 @@
 
 #main-video .video-container .search-container .col-input .input-group .input-group-btn > button { color: white; font-size: 11px; width: 120px; height: 100%; border: 0px; margin: 0; padding: 0; }
 
-#main-video .video-container .search-container .col-input .input-group .input-group-btn > button > img { margin-right: 10px; height: 25px; width: 25px; content: url(../../images/icon_search_on.png); }
+#main-video .video-container .search-container .col-input .input-group .input-group-btn > button > img { margin-right: 10px; height: 25px; width: 25px; content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/images/icon_search_on.png); }
 
 #main-video .video-container .search-container .col-input .input-group .input-group-btn > button:hover { background-color: #eb3b4b; }
-
-/*# sourceMappingURL=main_video.compact.css.map */
