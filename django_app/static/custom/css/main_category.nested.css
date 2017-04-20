@@ -1,8 +1,9 @@
 #section-category {
   width: 100%;
-  height: 450px;
   background-image: url(../../images/cate_computer.jpg);
-  background-size: cover; }
+  background-size: cover;
+  display: inline-block;
+  padding-bottom: 60px; }
   #section-category .cate-text {
     text-align: center;
     padding-top: 90px;
@@ -13,18 +14,37 @@
       padding-bottom: 10px; }
     #section-category .cate-text .cate-msg {
       font-size: 18px; }
-  #section-category .cate-container .cate-row {
-    margin: 0 auto;
-    padding: 0; }
-    #section-category .cate-container .cate-row .cate-item {
-      border: 1px solid red;
-      box-sizing: border-box;
-      padding: 30px;
-      background-color: green; }
-      #section-category .cate-container .cate-row .cate-item > a {
-        width: 100%;
-        height: 100%;
-        background-color: red;
-        display: inline-block; }
+  #section-category .cate-container {
+    padding-top: 60px; }
+    #section-category .cate-container .cate-row {
+      margin: 0 auto;
+      padding: 0; }
+      #section-category .cate-container .cate-row .cate-item {
+        padding: 30px; }
+        #section-category .cate-container .cate-row .cate-item > a {
+          width: 100%;
+          height: 100%;
+          font-size: 16px;
+          color: #adadad;
+          display: inline-block;
+          text-align: center;
+          text-decoration: none; }
+          #section-category .cate-container .cate-row .cate-item > a > img {
+            width: 100%;
+            height: 100%; }
+          #section-category .cate-container .cate-row .cate-item > a:hover {
+            color: #fff; }
+          #section-category .cate-container .cate-row .cate-item > a.cate-health:hover > img {
+            content: url(../../images/cate_icon_health_on.png); }
+          #section-category .cate-container .cate-row .cate-item > a.cate-dance:hover > img {
+            content: url(../../images/cate_icon_dance_on.png); }
+          #section-category .cate-container .cate-row .cate-item > a.cate-language:hover > img {
+            content: url(../../images/cate_icon_language_on.png); }
+          #section-category .cate-container .cate-row .cate-item > a.cate-computer:hover > img {
+            content: url(../../images/cate_icon_computer_on.png); }
+          #section-category .cate-container .cate-row .cate-item > a.cate-music:hover > img {
+            content: url(../../images/cate_icon_music_on.png); }
+          #section-category .cate-container .cate-row .cate-item > a.cate-academy:hover > img {
+            content: url(../../images/cate_icon_academy_on.png); }
 
 /*# sourceMappingURL=main_category.nested.css.map */

@@ -1,8 +1,9 @@
 #section-category {
   width: 100%;
-  height: 450px;
   background-image: url(../../images/cate_computer.jpg);
   background-size: cover;
+  display: inline-block;
+  padding-bottom: 60px;
   .cate-text {
     text-align: center;
     padding-top: 90px;
@@ -18,19 +19,57 @@
   }
 
   .cate-container {
+    padding-top: 60px;
     .cate-row {
       margin: 0 auto;
       padding: 0;
       .cate-item {
-        border: 1px solid red;
-        box-sizing: border-box;
         padding: 30px;
-        background-color: green;
         > a {
           width: 100%;
           height: 100%;
-          background-color: red;
+          font-size: 16px;
+          color: #adadad;
           display: inline-block;
+          text-align: center;
+          text-decoration: none;
+          > img {
+            width: 100%;
+            height: 100%;
+          }
+          &:hover {
+            color: #fff;
+          }
+          &.cate-health:hover {
+            >img {
+              content: url(../../images/cate_icon_health_on.png);
+            }
+          }
+          &.cate-dance:hover {
+            >img {
+              content: url(../../images/cate_icon_dance_on.png);
+            }
+          }
+          &.cate-language:hover {
+            >img {
+              content: url(../../images/cate_icon_language_on.png);
+            }
+          }
+          &.cate-computer:hover {
+            >img {
+              content: url(../../images/cate_icon_computer_on.png);
+            }
+          }
+          &.cate-music:hover {
+            >img {
+              content: url(../../images/cate_icon_music_on.png);
+            }
+          }
+          &.cate-academy:hover {
+            >img {
+              content: url(../../images/cate_icon_academy_on.png);
+            }
+          }
         }
       }
     }
