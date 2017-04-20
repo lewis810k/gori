@@ -1,4 +1,129 @@
 @charset "UTF-8";
+#custom-nav {
+  height: 108px;
+  padding: 0;
+  background-color: white;
+  margin: 0;
+  border: 0;
+}
+
+.navbar-box {
+  width: 100%;
+  padding: 0;
+  background-color: white;
+  border-style: none;
+  border-color: white;
+}
+
+.custom-nav {
+  background-color: white;
+}
+
+.custom-nav .container-fluid {
+  padding: 0;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap {
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-color: white;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-left {
+  z-index: 2;
+  height: 100px;
+  left: 80px;
+  top: 20px;
+  bottom: 20px;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-left li.left-list-item {
+  width: 55px;
+  padding: 0;
+  margin-left: 30px;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-left li.left-list-item a.left-item {
+  padding: 0;
+  font-size: 1.2em;
+  font-style: italic;
+  color: #999;
+  font-weight: 600;
+  float: left;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-left li.left-list-item a:hover {
+  color: #ff005a;
+  cursor: pointer;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .center-logo {
+  overflow: hidden;
+  height: 105px;
+  z-index: 1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(../../images/bg_header_logo.jpg);
+  background-size: 340px 100px;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .center-logo img.logo {
+  size: 99px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  display: block;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .center-logo .logo-message {
+  display: table;
+  top: -20px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #999;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .right-button {
+  position: relative;
+  top: 20px;
+  left: 130px;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .right-button .button {
+  background-color: pink;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap .right-button ul.right-menu li.menu-item a.menu-link {
+  color: #999;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-right {
+  height: inherit;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-right li.dropdown ul.nav-list {
+  float: left;
+  content: “ “;
+  display: block;
+  height: inherit;
+  clear: both;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-right li.dropdown ul.nav-list li.right-list-item {
+  float: left;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-right li.dropdown ul.nav-list li.right-list-item img.right-image {
+  display: block;
+}
+
+.custom-nav .container-fluid .navbar-header .navbar-wrap ul.nav-right li.dropdown ul.nav-list li.right-list-item .right-item {
+  color: #999;
+  display: block;
+}
+
 .nav-wrap {
   width: 100vmax;
   height: 100px;
