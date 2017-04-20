@@ -41,6 +41,8 @@ urlpatterns = [
     # ##### 일반 뷰에 대한 URL #####
     url(r'^member/', include(member_urls)),
     url(r'^main/', include(talent_urls)),
+    url(r'^talent/', include(talent_urls)),
+
 
 ]
 

@@ -82,7 +82,7 @@ elif args.mode == MODE_PRODUCTION:
     imagename = IMAGE_PRODUCTION
 elif args.mode == MODE_DOCKERHUB:
     dockerfile = dockerfile_template.format(
-        from_image='gsh2448/gori-front',
+        from_image='gori-front-debug',
         maintainer=MAINTAINER,
         base='',
         extra=dockerfile_extra_dockerhub,
@@ -104,7 +104,7 @@ else:
 with open(os.path.join(ROOT_DIR, filename), 'wt') as f:
     f.write(dockerfile)
 
-build_command = 'docker build . -t {imagename} -f {filename}'.format(
+build_command = 'docker build --no-cache . -t {imagename} -f {filename}'.format(
     imagename=imagename,
     filename=filename
 )
