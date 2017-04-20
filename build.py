@@ -82,7 +82,7 @@ elif args.mode == MODE_PRODUCTION:
     imagename = IMAGE_PRODUCTION
 elif args.mode == MODE_DOCKERHUB:
     dockerfile = dockerfile_template.format(
-        from_image='gori-front-debug',
+        from_image='gsh2448/gori-front',
         maintainer=MAINTAINER,
         base='',
         extra=dockerfile_extra_dockerhub,

@@ -1,4 +1,4 @@
-FROM        gori-front-debug
+FROM        gsh2448/gori-front
 MAINTAINER  gsh2448@gmail.com
 
 
