@@ -11,7 +11,7 @@
     .temp-image {
       height: 100%;
       width: 100%;
-      background: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/moon.jpg) no-repeat center;
+      background: url(../../images/moon.jpg) no-repeat center;
       background-size: cover;
     }
     .slogan {
@@ -70,7 +70,7 @@
                 margin-right: 10px;
                 height: 25px;
                 width: 25px;
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png);
+                content: url(../../images/icon_search_on.png);
               }
               &:hover {
                 background-color: #eb3b4b;

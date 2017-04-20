@@ -1,6 +1,6 @@
 #section-category {
   width: 100%;
-  background-image: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_computer.jpg);
+  background-image: url(../../images/cate_computer.jpg);
   background-size: cover;
   display: inline-block;
   padding-bottom: 60px; }
@@ -35,16 +35,16 @@
           #section-category .cate-container .cate-row .cate-item > a:hover {
             color: #fff; }
           #section-category .cate-container .cate-row .cate-item > a.cate-health:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_health_on.png); }
+            content: url(../../images/cate_icon_health_on.png); }
           #section-category .cate-container .cate-row .cate-item > a.cate-dance:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_dance_on.png); }
+            content: url(../../images/cate_icon_dance_on.png); }
           #section-category .cate-container .cate-row .cate-item > a.cate-language:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_language_on.png); }
+            content: url(../../images/cate_icon_language_on.png); }
           #section-category .cate-container .cate-row .cate-item > a.cate-computer:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_computer_on.png); }
+            content: url(../../images/cate_icon_computer_on.png); }
           #section-category .cate-container .cate-row .cate-item > a.cate-music:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_music_on.png); }
+            content: url(../../images/cate_icon_music_on.png); }
           #section-category .cate-container .cate-row .cate-item > a.cate-academy:hover > img {
-            content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_academy_on.png); }
+            content: url(../../images/cate_icon_academy_on.png); }
 
 /*# sourceMappingURL=main_category.nested.css.map */

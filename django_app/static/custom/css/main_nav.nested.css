@@ -35,7 +35,7 @@
             width: 100px;
             height: 48px;
             text-indent: -999px;
-            background-image: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/logo.png); }
+            background-image: url(../../images/logo.png); }
           .navbar .container-fluid .navbar-header .navbar-logo .main-logo .logo-text {
             position: absolute;
             bottom: -1px;
@@ -61,24 +61,24 @@
         .navbar .container-fluid .navbar-collapse > ul > li > a:hover {
           color: #666; }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-search > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png); }
+          content: url(../../images/icon_search_on.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-search:hover > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search.png); }
+          content: url(../../images/icon_search.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-tutor > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_tutor_on.png); }
+          content: url(../../images/icon_tutor_on.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-tutor:hover > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_tutor.png); }
+          content: url(../../images/icon_tutor.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-info > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_info_on.png); }
+          content: url(../../images/icon_info_on.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-info:hover > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_info.png); }
+          content: url(../../images/icon_info.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-join > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_join_on.png); }
+          content: url(../../images/icon_join_on.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-join:hover > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_join.png); }
+          content: url(../../images/icon_join.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-login > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_login_on.png); }
+          content: url(../../images/icon_login_on.png); }
         .navbar .container-fluid .navbar-collapse > ul > li > a.nav-login:hover > img {
-          content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_login.png); }
+          content: url(../../images/icon_login.png); }
 
 /*# sourceMappingURL=main_nav.nested.css.map */
