@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.serializers import UserSerializer
-from talent.serializers import TalentDetailSerializer, TalentCreateSerializer
+from talent.serializers import TalentDetailSerializer, TalentCreateSerializer, TalentUpdateSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import *
 
@@ -19,6 +19,7 @@ __all__ = (
     'TalentShortDetailView',
     'TalentSalesStatusToggleView',
     'TalentDeleteView',
+    'TalentUpdateView'
 )
 
 User = get_user_model()
@@ -155,6 +156,38 @@ class TalentSalesStatusToggleView(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "해당 수업 내역을 찾을 수 없습니다."})
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "해당 요청에 대한 권한이 없습니다."})
+
+
+class TalentUpdateView(generics.UpdateAPIView):
+    queryset = Talent.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TalentUpdateSerializer
+
+    def get_queryset(self):
+        return Talent.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        talent = Talent.objects.get(pk=kwargs['pk'])
+
+        if talent.title != request.data.get('title', ''):
+            data = {
+                'title': request.data.get('title', ''),
+            }
+            if verify_duplicate(Talent, data=data):
+                return Response(data={"detail": "같은 제목의 수업이 존재합니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_200_OK, data=success_update)
 
 
 class TalentDeleteView(generics.DestroyAPIView):

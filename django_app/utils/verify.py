@@ -53,6 +53,7 @@ def verify_blank_data(data):
             return False
     return True
 
+
 def switch_sales_status(pk):
     talent = Talent.objects.get(pk=pk)
     if talent.is_soldout:

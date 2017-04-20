@@ -1,10 +1,8 @@
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
-from talent.models import Talent, Location
 from talent.serializers import LocationSerializer, LocationCreateSerializer
 from utils import *
 
@@ -87,6 +85,7 @@ class LocationListCreateView(generics.ListCreateAPIView):
 
         return Response(success_msg, status=status.HTTP_201_CREATED)
 
+
 class LocationUpdateView(generics.UpdateAPIView):
     queryset = Location.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
@@ -100,23 +99,37 @@ class LocationUpdateView(generics.UpdateAPIView):
         instance = self.get_object()
         location = Location.objects.get(pk=kwargs['pk'])
         talent = location.talent
-        if location.region == request.data['region'] and location.day == request.data['day']:
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
 
-        else:
-            data = {
-                'talent': talent,
-                'region': request.data['region'],
-                'day': request.data['day'],
-            }
-            if verify_duplicate(Location, data=data):
-                return Response(data={"detail":"지역 중복 or 요일 중복"}, status=status.HTTP_400_BAD_REQUEST)
+        if location.region != request.data.get('region', '') or location.day != request.data.get('day', ''):
+            if location.day != request.data.get('day', ''):
+                data = {
+                    'talent': talent,
+                    'region': location.region,
+                    'day': request.data.get('day', ''),
+                }
+                if verify_duplicate(Location, data=data):
+                    return Response(data={"detail": "지역 중복 or 요일 중복"}, status=status.HTTP_400_BAD_REQUEST)
 
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
+            elif location.region != request.data.get('region', ''):
+                data = {
+                    'talent': talent,
+                    'region': request.data.get('region', ''),
+                    'day': location.day
+                }
+                if verify_duplicate(Location, data=data):
+                    return Response(data={"detail": "지역 중복 or 요일 중복"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                data = {
+                    'talent': talent,
+                    'region': request.data.get('region', ''),
+                    'day': request.data.get('day', '')
+                }
+                if verify_duplicate(Location, data=data):
+                    return Response(data={"detail": "지역 중복 or 요일 중복"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
@@ -124,6 +137,7 @@ class LocationUpdateView(generics.UpdateAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(status=status.HTTP_200_OK, data=success_update)
+
 
 class LocationDeleteView(generics.DestroyAPIView):
     queryset = Location.objects.all()

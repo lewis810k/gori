@@ -19,6 +19,7 @@ __all__ = (
     'TalentDetailSerializer',
     'TalentShortDetailSerializer',
     'MyTalentsWrapperSerializer',
+    'TalentUpdateSerializer',
 )
 
 User = get_user_model()
@@ -350,4 +351,26 @@ class MyTalentsWrapperSerializer(serializers.ModelSerializer):
             'profile_image',
             'joined_date',
             'results',
+        )
+
+
+class TalentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Talent
+        fields = (
+            'title',
+            'category',
+            'type',
+            'cover_image',
+            'tutor_info',
+            'class_info',
+            'video1',
+            'video2',
+            'price_per_hour',
+            'hours_per_class',
+            'number_of_class',
+            'min_number_student',
+            'max_number_student',
+            'is_soldout',
+            'tutor_message',
         )
