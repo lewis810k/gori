@@ -2,6 +2,7 @@ FROM        gsh2448/gori-front
 MAINTAINER  gsh2448@gmail.com
 
 
+COPY        . srv/app
 WORKDIR     /srv/app/django_app
 
 EXPOSE      80

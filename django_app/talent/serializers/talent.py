@@ -247,8 +247,6 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         for location_item in obj.locations.all():
             if location_item.region in regions.keys():
                 regions[location_item.region] += 1
-
-
             else:
                 regions[location_item.region] = 1
         locationss = []

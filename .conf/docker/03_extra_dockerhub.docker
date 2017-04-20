@@ -1,3 +1,4 @@
+COPY        . srv/app
 WORKDIR     /srv/app/django_app
 
 EXPOSE      80
