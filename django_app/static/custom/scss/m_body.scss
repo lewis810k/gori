@@ -1,0 +1,47 @@
+@import "variables";
+ul{
+  list-style: none;
+}
+.my-info-wrap{
+  background-color: pink;
+  border-top: 1px $color-pink;
+
+  height: 200px;
+  .right{
+    height: inherit;
+    background-color: yellow;
+
+    ul.image-name{
+      .profile-image{
+        img.user-image{
+          float: left;
+          overflow: hidden;
+          display: block;
+          margin: 0 auto;
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          background-size: cover;
+          background-position: center;
+        }
+
+      }
+      ul.names{
+        li.name-item{
+
+        }
+      }
+    }
+  }
+  div.center{
+    height: inherit;
+    background-color: blue;
+
+
+  }
+  div.left{
+    height: inherit;
+    background-color: red;
+
+  }
+}
