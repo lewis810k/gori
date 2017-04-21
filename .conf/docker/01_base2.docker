@@ -1,6 +1,7 @@
+WORKDIR     /srv/app/front
+
+RUN         npm install
+RUN         npm run build
+
 RUN         pip3 install -r requirements.txt
 RUN         pip3 install uwsgi
-
-RUN         apt-get -y install curl && \
-            curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-            apt-get -y install nodejs

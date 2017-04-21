@@ -1,1 +1,2 @@
+WORKDIR     /
 COPY        . srv/app
