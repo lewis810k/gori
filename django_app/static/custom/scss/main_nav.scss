@@ -1,3 +1,4 @@
+@import "variables";
 .navbar {
   height: 100px;
   width: 100%;
@@ -37,7 +38,7 @@
                width: 100px;
                height: 48px;
                text-indent: -999px;
-               background-image: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/logo.png);
+               background-image: url($host + "images/logo.png");
              }
            }
            .logo-text {
@@ -75,51 +76,51 @@
             }
             &.nav-search {
               > img {
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png);
+                content: url($host + "images/icon_search_on.png");
               }
               &:hover {
                 > img {
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search.png);
+                  content: url($host + "images/icon_search.png");
                 }
               }
             }
             &.nav-tutor {
               > img {
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_tutor_on.png);
+                content: url($host + "images/icon_tutor_on.png");
               }
               &:hover {
                 > img {
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_tutor.png);
+                  content: url($host + "images/icon_tutor.png");
                 }
               }
             }
             &.nav-info {
               > img {
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_info_on.png);
+                content: url($host + "images/icon_info_on.png");
               }
               &:hover {
                 > img {
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_info.png);
+                  content: url($host + "images/icon_info.png");
                 }
               }
             }
             &.nav-join {
               > img {
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_join_on.png);
+                content: url($host + "images/icon_join_on.png");
               }
               &:hover {
                 > img {
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_join.png);
+                  content: url($host + "images/icon_join.png");
                 }
               }
             }
             &.nav-login {
               > img {
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_login_on.png);
+                content: url($host + "images/icon_login_on.png");
               }
               &:hover {
                 > img {
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_login.png);
+                  content: url($host + "images/icon_login.png");
                 }
               }
             }

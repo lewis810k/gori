@@ -1,5 +1,6 @@
+@import "variables";
+
 #main-video {
-  height: 720px;
   width: 100%;
   display: inline-block;
   top: 0;
@@ -8,12 +9,10 @@
     width: 100%;
     position: relative;
     > video {
-      height: 100%;
-      background-size: cover;
+      width: 100%;
       z-index: -999;
-
+      background-size: cover;
     }
-
     .slogan {
       position: absolute;
       display: inline-block;
@@ -24,6 +23,12 @@
       transform: translateY(-50%);
       text-align: center;
       color: white;
+      .test {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 30px;
+        background-color: rgba(265,102,102,0.7);
+      }
       .slogan-top {
         display: block;
         font-size: 52px;
@@ -71,7 +76,7 @@
                 margin-right: 10px;
                 height: 25px;
                 width: 25px;
-                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png);
+                content: url($host + "images/icon_search_on.png");
               }
               &:hover {
                 background-color: #eb3b4b;
