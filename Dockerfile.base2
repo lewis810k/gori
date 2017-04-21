@@ -1,9 +1,12 @@
 FROM        gori-front-base
-MAINTAINER  gsh2448@gmail.com
+MAINTAINER  gsh2448.com
 
-RUN         pip3 install -r requirements.txt
-RUN         pip3 install uwsgi
+WORKDIR     /srv/front
 
-RUN         apt-get -y install curl && \
-            curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-            apt-get -y install nodejs
+RUN         npm install
+RUN         npm run build
+
+
+
+
+
