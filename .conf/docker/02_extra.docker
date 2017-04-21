@@ -1,8 +1,6 @@
-COPY        . srv/app
 WORKDIR     /srv/app/front
 
 RUN         npm install
-RUN         npm rebuild node-sass --force
 RUN         npm run build
 
 COPY        .conf/uwsgi-app         /etc/uwsgi/sites/app.ini

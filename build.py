@@ -42,6 +42,7 @@ dockerfile_original = open(os.path.join(CONF_DOCKER_DIR, '00_original_gori.docke
 dockerfile_base = open(os.path.join(CONF_DOCKER_DIR, '01_base.docker')).read()
 dockerfile_base2 = open(os.path.join(CONF_DOCKER_DIR, '01_base2.docker')).read()
 dockerfile_extra = open(os.path.join(CONF_DOCKER_DIR, '02_extra.docker')).read()
+dockerfile_extra2 = open(os.path.join(CONF_DOCKER_DIR, '02_extra2.docker')).read()
 dockerfile_extra_dockerhub = open(os.path.join(CONF_DOCKER_DIR, '03_extra_dockerhub.docker')).read()
 
 if args.mode == MODE_BASE:
@@ -73,10 +74,10 @@ elif args.mode == MODE_DEBUG:
     imagename = IMAGE_DEBUG
 elif args.mode == MODE_PRODUCTION:
     dockerfile = dockerfile_template.format(
-        from_image='ubuntu:16.04',
+        from_image='gori-front-debug',
         maintainer=MAINTAINER,
-        base=dockerfile_base,
-        extra=dockerfile_extra
+        base='',
+        extra=dockerfile_extra2,
     )
     filename = DOCKERFILE_PRODUCTION
     imagename = IMAGE_PRODUCTION
