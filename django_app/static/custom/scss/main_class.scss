@@ -1,3 +1,4 @@
+@import "variables";
 
 #section-class {
   width: 100%;
@@ -82,7 +83,7 @@
                   float: left;
                   height: 18px;
                   width: 18px;
-                  content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_won.png);
+                  content: url($host + "images/icon_won.png");
                   top: 50%;
                   transform: translateY(-50%);
                 }
@@ -167,20 +168,20 @@
                   .star-on-img {
                     height: 12px;
                     width: 12px;
-                    content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_star_on.png);
+                    content: url($host + "images/icon_star_on.png");
                     margin-bottom: 2px;
                   }
                   .star-off-img {
                     height: 12px;
                     width: 12px;
-                    content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_star_off.png);
+                    content: url($host + "images/icon_star_off.png");
                     margin-bottom: 2px;
                   }
                   .new-img {
                     width: 50px;
                     height: 23px;
                     margin-bottom: 2px;
-                    content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_new.png);
+                    content: url($host + "images/icon_new.png");
                   }
                   .item-review-count {
                     display: inline;
