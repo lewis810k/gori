@@ -3,16 +3,9 @@ MAINTAINER  gsh2448.com
 
 
 WORKDIR     /srv
-
 COPY        . app
-
 WORKDIR     /srv/app
-
 RUN         pip3 install -r requirements.txt
 
 
-WORKDIR     /srv/app/django_app
-
-EXPOSE      80
-CMD ["supervisord", "-n"]
 

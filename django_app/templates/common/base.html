@@ -12,28 +12,36 @@
     <!-- script -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
-    <!-- custom -->
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/base.css">
-
-    <!-- main-page -->
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/main_nav.min.css">
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/main_video.min.css">
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/main_class.min.css">
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/main_category.min.css">
-
-    <!--  -->
-    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/css/common.css">
+    <!-- bootstrap js -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- <link rel="stylesheet" href="../../static/custom/css/base.css">
+    <link rel="stylesheet" href="../../static/custom/css/common.css">
+    <link rel="stylesheet" href="../../static/custom/css/main_nav.min.css">
+    <link rel="stylesheet" href="../../static/custom/css/main_video.min.css">
+    <link rel="stylesheet" href="../../static/custom/css/main_class.min.css">
+    <link rel="stylesheet" href="../../static/custom/css/main_category.min.css"> -->
+
 
     <title>메인 테스트입니다.</title>
 </head>
 <body>
+  <script>
+    var host = "https://s3.ap-northeast-2.amazonaws.com/projectgori/static/";
+    // var host = "../../static/";
+    // base css
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/base.css">');
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/common.css">');
+    // main page css
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/main_nav.min.css">');
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/main_video.min.css">');
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/main_class.min.css">');
+    $('head').append('<link rel="stylesheet" href="' + host + 'custom/css/main_category.min.css">');
+  </script>
+
 {% block content %} {% endblock %}
 
-<script>
 
-
-</script>
 
 </body>
 </html>
