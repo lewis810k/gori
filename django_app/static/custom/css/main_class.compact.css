@@ -26,7 +26,7 @@
 
 #section-class .class-section-content .class-container .class-row .class-item .item-container .item-top .item-price { position: absolute; bottom: 0; left: 0; padding: 4px 20px; background-color: rgba(0, 0, 0, 0.6); display: inline-block; }
 
-#section-class .class-section-content .class-container .class-row .class-item .item-container .item-top .item-price > img { position: absolute; float: left; height: 18px; width: 18px; content: url(../../images/icon_won.png); top: 50%; transform: translateY(-50%); }
+#section-class .class-section-content .class-container .class-row .class-item .item-container .item-top .item-price > img { position: absolute; float: left; height: 18px; width: 18px; content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_won.png); top: 50%; transform: translateY(-50%); }
 
 #section-class .class-section-content .class-container .class-row .class-item .item-container .item-top .item-price .item-price-text { height: 30px; line-height: 30px; display: inline-block; margin-left: 25px; color: #fd6a70; }
 
@@ -50,11 +50,11 @@
 
 #section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img { float: left; width: 100%; }
 
-#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .star-on-img { height: 12px; width: 12px; content: url(../../images/icon_star_on.png); margin-bottom: 2px; }
+#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .star-on-img { height: 12px; width: 12px; content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_star_on.png); margin-bottom: 2px; }
 
-#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .star-off-img { height: 12px; width: 12px; content: url(../../images/icon_star_off.png); margin-bottom: 2px; }
+#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .star-off-img { height: 12px; width: 12px; content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_star_off.png); margin-bottom: 2px; }
 
-#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .new-img { width: 50px; height: 23px; margin-bottom: 2px; content: url(../../images/icon_new.png); }
+#section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .new-img { width: 50px; height: 23px; margin-bottom: 2px; content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_new.png); }
 
 #section-class .class-section-content .class-container .class-row .class-item .item-container .item-bot .item-rate .item-rate-img .item-review-count { display: inline; margin-left: 3px; }
 

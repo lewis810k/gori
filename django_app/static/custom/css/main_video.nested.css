@@ -2,17 +2,15 @@
   height: 720px;
   width: 100%;
   display: inline-block;
-  top: 0;
-  z-index: -999; }
+  top: 0; }
   #main-video .video-container {
-    height: 720px;
+    height: 100%;
     width: 100%;
     position: relative; }
-    #main-video .video-container .temp-image {
+    #main-video .video-container > video {
       height: 100%;
-      width: 100%;
-      background: url(../../images/moon.jpg) no-repeat center;
-      background-size: cover; }
+      background-size: cover;
+      z-index: -999; }
     #main-video .video-container .slogan {
       position: absolute;
       display: inline-block;
@@ -42,17 +40,18 @@
         height: 50px;
         top: 50%;
         transform: translateY(-50%); }
-        #main-video .video-container .search-container .col-input .input-group {
-          height: 100%; }
-          #main-video .video-container .search-container .col-input .input-group .input-box {
+        #main-video .video-container .search-container .col-input .input-search {
+          height: 100%;
+          margin: 0 auto; }
+          #main-video .video-container .search-container .col-input .input-search .input-box {
             height: 100%;
             font-size: 20px;
             border: 0px; }
-          #main-video .video-container .search-container .col-input .input-group .input-group-btn {
+          #main-video .video-container .search-container .col-input .input-search .input-group-btn {
             background-color: #eb3b4b;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px; }
-            #main-video .video-container .search-container .col-input .input-group .input-group-btn > button {
+            #main-video .video-container .search-container .col-input .input-search .input-group-btn > button {
               color: white;
               font-size: 11px;
               width: 120px;
@@ -60,12 +59,12 @@
               border: 0px;
               margin: 0;
               padding: 0; }
-              #main-video .video-container .search-container .col-input .input-group .input-group-btn > button > img {
+              #main-video .video-container .search-container .col-input .input-search .input-group-btn > button > img {
                 margin-right: 10px;
                 height: 25px;
                 width: 25px;
-                content: url(../../images/icon_search_on.png); }
-              #main-video .video-container .search-container .col-input .input-group .input-group-btn > button:hover {
+                content: url(https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png); }
+              #main-video .video-container .search-container .col-input .input-search .input-group-btn > button:hover {
                 background-color: #eb3b4b; }
 
 /*# sourceMappingURL=main_video.nested.css.map */

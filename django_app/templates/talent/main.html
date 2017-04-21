@@ -64,15 +64,15 @@
 
 <div id="main-video">
   <div class="video-container">
-    <div class="temp-image img-responsive"></div>
+    <video autoplay src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/main_video.mp4" loop muted></video>
     <div class="slogan">
       <div class="slogan-top">무엇이 당신을 빛나게 하나요?</div>
       <div class="slogan-bottom">배움으로 삶을 풍요롭게 해보세요!</div>
     </div>
     <div class="search-container">
       <div class="col-xs-3"></div>
-      <div class="col-xs-6 col-input">
-        <div class="input-group">
+      <div class="col-input">
+        <div class="input-group input-search">
           <input type="text" class="form-control input-box" placeholder="배우고 싶은 과목을 검색해보세요!">
           <span class="input-group-btn">
             <button class="btn btn-default" type="button">
@@ -118,22 +118,22 @@
   <div class="container cate-container">
     <div class="row cate-row">
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-health" href=""><img src="../../static/images/cate_icon_health.png" alt="">헬스 &amp; 뷰티</a>
+        <a class="cate-health" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_health.png" alt="">헬스 &amp; 뷰티</a>
       </div>
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-dance" href=""><img src="../../static/images/cate_icon_dance.png" alt="">댄스</a>
+        <a class="cate-dance" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_dance.png" alt="">댄스</a>
       </div>
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-language" href=""><img src="../../static/images/cate_icon_language.png" alt="">어학</a>
+        <a class="cate-language" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_language.png" alt="">어학</a>
       </div>
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-computer" href=""><img src="../../static/images/cate_icon_computer.png" alt="">컴퓨터</a>
+        <a class="cate-computer" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_computer.png" alt="">컴퓨터</a>
       </div>
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-music" href=""><img src="../../static/images/cate_icon_music.png" alt="">미술 &amp; 음악</a>
+        <a class="cate-music" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_music.png" alt="">미술 &amp; 음악</a>
       </div>
       <div class="col-md-2 col-sm-4 col-xs-4 cate-item">
-        <a class="cate-academy" href=""><img src="../../static/images/cate_icon_academy.png" alt="">탈잉아카데미</a>
+        <a class="cate-academy" href=""><img src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/cate_icon_academy.png" alt="">탈잉아카데미</a>
       </div>
     </div>
   </div>
@@ -142,12 +142,12 @@
 <script>
   init();
   function init(){
-    var row_width = $('.row').width() - 30;
+    var row_width = $('.class-row').width() - 30;
     $('.search-custom-link').width(row_width);
 
     $('.cate-row').width(row_width);
     $('.cate-item').height($('.cate-item').width());
-
+    $('.input-search').width(row_width);
   }
 
   $(window).resize(function() {
@@ -156,7 +156,7 @@
 
     $('.cate-row').width(row_width);
     $('.cate-item').height($('.cate-item').width());
-
+    $('.input-search').width(row_width);
   });
 
   set_class_section();
@@ -219,7 +219,7 @@
         item_bot.find('.item-rate').append('<div class="item-rate-img"></div>');
         var item_rate_img = item_bot.find('.item-rate-img');
         var average_rate = results[i].average_rate;
-        console.log(average_rate);
+        // console.log(average_rate);
         //리뷰가 없을 경우 NEW 이미지로
         if (results[i].review_count == 0) {
           item_rate_img.append('<img class="new-img" src="" alt="" />');
