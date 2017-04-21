@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.serializers import UserSerializer
+from talent import permissions
 from talent.serializers import TalentDetailSerializer, TalentCreateSerializer, TalentUpdateSerializer
 from talent.serializers import TalentListSerializer, TalentShortDetailSerializer
 from utils import *
@@ -32,6 +33,8 @@ class TalentListCreateView(generics.ListCreateAPIView):
     pagination_class = LargeResultsSetPagination
     filter_backends = (OrderingFilter,)
     ordering = ('-pk',)
+
+    # ordering_fields = ('tale')
 
     # rest_framework의 SearchFilter 사용시
     # filter_backends = (filters.SearchFilter,)
@@ -117,12 +120,20 @@ class TalentShortDetailView(generics.RetrieveAPIView):
     queryset = Talent.objects.all()
     serializer_class = TalentShortDetailSerializer
 
+    def get_queryset(self):
+        talent = Talent.objects.get(pk=self.kwargs["pk"])
+        talent.view_count += 1
+        talent.save()
+        return Talent.objects.filter(pk=self.kwargs["pk"])
+
 
 # 하나의 talent에 대한 세부 정보 api (request user 정보 포함)
 class TalentDetailView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             talent = Talent.objects.get(pk=kwargs['pk'])
+            talent.view_count += 1
+            talent.save()
             talent_dict = TalentDetailSerializer(talent).data
             user = request.user
             try:
@@ -169,7 +180,7 @@ class TalentUpdateView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        talent = Talent.objects.get(pk=kwargs['pk'])
+        talent = Talent.objects.get(lpk=kwargs['pk'])
 
         if talent.title != request.data.get('title', ''):
             data = {
