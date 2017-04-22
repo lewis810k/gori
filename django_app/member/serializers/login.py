@@ -61,10 +61,8 @@ class CustomRegisterSerializer(serializers.Serializer):
     def save(self, request):
         adapter = get_adapter()
         user = adapter.new_user(request)
-        print('before request.post')
         if 'name' in request.POST:
-            print('in reqeust.post')
-            user.name = request.POST['name'].encode('ascii', 'ignore')
+            user.name = request.POST['name']
         # user.name = user.name.encode('utf-8')
         self.cleaned_data = self.get_cleaned_data()
         adapter.save_user(request, user, self)
