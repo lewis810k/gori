@@ -1,0 +1,10 @@
+{
+	"version": 3,
+	"file": "main_stats.css",
+	"sources": [
+		"../scss/main_stats.scss",
+		"../scss/_variables.scss"
+	],
+	"names": [],
+	"mappings": "AAEA,AAAA,cAAc,CAAC;EACb,MAAM,EAAE,KAAK;EACb,gBAAgB,EAAE,GAAG;EACrB,UAAU,EAAE,aAAe;CAC5B"
+}
