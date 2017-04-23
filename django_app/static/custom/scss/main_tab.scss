@@ -1,0 +1,293 @@
+#section-tab {
+  margin-top: 60px;
+  .nav-tabs {
+    margin: 5px;
+    padding-bottom: 5px;
+    > li {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      > a {
+        margin: 0;
+        padding: 10px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #000;
+      }
+      &.active {
+        > a {
+          color: #eb3b4b;
+        }
+      }
+    }
+  }
+}
+
+#home {
+  .container-fluid {
+    .row {
+      .top-left {
+        padding: 0;
+        .top-left-first-row {
+          padding: 5px;
+          width: 100%;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/location01.jpg);
+            }
+          }
+        }
+        .top-left-second-row {
+          width: 100%;
+          .top-left-second-row-first-item {
+            padding: 0 5px;
+            > a {
+              width: 100%;
+              > img {
+                width: 100%;
+                content: url(../../images/location02.jpg);
+              }
+            }
+          }
+          .top-left-second-row-second-item {
+            padding: 0 5px;
+            > a {
+              width: 100%;
+              > img {
+                width: 100%;
+                content: url(../../images/location03.jpg);
+              }
+            }
+          }
+        }
+      }
+      .top-right {
+        padding: 5px;
+        > a {
+          width: 100%;
+          > img {
+            width: 100%;
+            content: url(../../images/location04.jpg);
+
+          }
+        }
+      }
+      .bot-left {
+        padding: 0;
+        .bot-left-first-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/location05.jpg);
+            }
+          }
+        }
+        .bot-left-second-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/location06.jpg);
+            }
+          }
+        }
+      }
+      .bot-right {
+        padding: 0 5px;
+        padding-bottom: 5px;
+        > a {
+          width: 100%;
+          > img {
+            width: 100%;
+            content: url(../../images/location07.jpg);
+          }
+        }
+      }
+    }
+  }
+}
+
+#menu1 {
+  .container-fluid {
+    .row {
+      .top-left {
+        padding: 0;
+        .top-left-first-row {
+          padding: 5px;
+          width: 100%;
+          > a {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            > img {
+              width: 100%;
+              content: url(../../images/class_01.jpg);
+            }
+          }
+        }
+        .top-left-second-row {
+          width: 100%;
+          .top-left-second-row-first-item {
+            padding: 5px;
+            > a {
+              width: 100%;
+              > img {
+                width: 100%;
+                content: url(../../images/class_02.jpg);
+              }
+            }
+          }
+          .top-left-second-row-second-item {
+            padding: 5px;
+            > a {
+              width: 100%;
+              > img {
+                width: 100%;
+                content: url(../../images/class_03.jpg);
+              }
+            }
+          }
+        }
+      }
+      .top-right {
+        padding: 5px;
+        > a {
+          width: 100%;
+          > img {
+            width: 100%;
+            content: url(../../images/class_04.jpg);
+
+          }
+        }
+      }
+      .bot-left {
+        padding: 0;
+        .bot-left-first-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/class_05.jpg);
+            }
+          }
+        }
+        .bot-left-second-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/class_06.jpg);
+            }
+          }
+        }
+      }
+      .bot-right {
+        padding: 0;
+        .bot-right-first-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/class_07.jpg);
+            }
+          }
+        }
+        .bot-right-second-item {
+          padding: 0 5px;
+          padding-bottom: 5px;
+          > a {
+            width: 100%;
+            > img {
+              width: 100%;
+              content: url(../../images/class_08.jpg);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.img-radius {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: 0.5s;
+  display: inline-block;
+  position: relative;
+  > img {
+    overflow: hidden;
+    border-radius: 8px;
+    transition: 0.5s;
+  }
+  &:hover {
+
+    > img {
+      transform: scale(1.2);
+    }
+    .location_text_background {
+      background-color: rgba(80, 91, 120, 0.7);
+    }
+  }
+  .location_text_background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    .location_text_wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      .location_text {
+        position: absolute;
+        vertical-align: middle;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #fff;
+        text-align: center;
+        .location_major {
+          height: 26px;
+          font-size: 26px;
+          text-shadow: 1px 1px #919191;
+        }
+        .location_margin {
+          height: 5px;
+        }
+        .location_minor {
+          line-height: 18px;
+          font-size: 18px;
+          text-shadow: 2px 2px #919191;
+        }
+      }
+
+      .class_text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: inline-block;
+
+        line-height: 20px;
+        font-size: 20px;
+        padding: 10px 15px;
+        white-space: pre;
+        border-radius: 20px;
+        color: #fff;
+        border: 2px solid #fff;
+      }
+    }
+  }
+}

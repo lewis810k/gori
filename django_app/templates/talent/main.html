@@ -138,78 +138,248 @@
     </div>
   </div>
 </div>
-<!--
+
 <div id="section-tab" class="container">
-  <h2>Dynamic Tabs with jQuery</h2>
-  <p>Click on the Tabs to display the active and previous tab.</p>
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#home">Home</a></li>
-    <li><a href="#menu1">Menu 1</a></li>
-    <li><a href="#menu2">Menu 2</a></li>
-    <li><a href="#menu3">Menu 3</a></li>
+    <li class="active col-md-4 col-sm-4 col-xs-4"><a href="#home">LOCATION</a></li>
+    <li class="col-md-4 col-sm-4 col-xs-4"><a href="#menu1">POPULAR</a></li>
+    <li class="col-md-4 col-sm-4 col-xs-4"><a href="#menu2">UNIV</a></li>
   </ul>
 
   <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- 좌측상단 성북 회기-->
+          <div class="col-md-6 top-left">
+            <div class="top-left-first-row">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="location_text">
+                      <div class="location_major">성북 회기</div>
+                      <div class="location_margin"></div>
+                      <div class="location_minor">안암,혜화,동대문,회기</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="top-left-second-row">
+              <div class="col-md-6 col-sm-6 col-xs-6 top-left-second-row-first-item">
+                <a class="img-radius" href="">
+                  <img src="" alt="">
+                  <div class="location_text_background">
+                    <div class="location_text_wrapper">
+                      <div class="location_text">
+                        <div class="location_major">대구 부산</div>
+                        <div class="location_margin"></div>
+                        <div class="location_minor">대구,부산,부산대</div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-6 top-left-second-row-second-item">
+                <a class="img-radius" href="">
+                  <img src="" alt="">
+                  <div class="location_text_background">
+                    <div class="location_text_wrapper">
+                      <div class="location_text">
+                        <div class="location_major">동작 관악</div>
+                        <div class="location_margin"></div>
+                        <div class="location_minor">사당,신림,동작,서울역,흑석</div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- 우측상단 -->
+          <div class="col-md-6 col-xs-12 top-right">
+            <a class="img-radius" href="">
+              <img src="" alt="">
+              <div class="location_text_background">
+                <div class="location_text_wrapper">
+                  <div class="location_text">
+                    <div class="location_major">서대문 마포</div>
+                    <div class="location_margin"></div>
+                    <div class="location_minor">신촌,홍대,합정,마포,은평</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <!-- 좌측하단 -->
+          <div class="col-md-6 bot-left">
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-left-first-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="location_text">
+                      <div class="location_major">종로,중구,용산</div>
+                      <div class="location_margin"></div>
+                      <div class="location_minor">종로,중구,용산</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-left-second-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="location_text">
+                      <div class="location_major">중랑,광진,성동</div>
+                      <div class="location_margin"></div>
+                      <div class="location_minor">상봉,건대입구,왕십리,성수</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <!-- 우측하단 -->
+          <div class="col-md-6 col-xs-12 bot-right">
+            <a class="img-radius" href="">
+              <img src="" alt="">
+              <div class="location_text_background">
+                <div class="location_text_wrapper">
+                  <div class="location_text">
+                    <div class="location_major">서초 강남</div>
+                    <div class="location_margin"></div>
+                    <div class="location_minor">서초,방배,강남,삼성,신사</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div id="menu1" class="tab-pane fade">
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- 헬스/필라테스 -->
+          <div class="col-md-6 top-left">
+            <div class="top-left-first-row class-half-size">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="class_text"> 헬스/필라테스 </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="top-left-second-row">
+              <div class="col-md-6 col-sm-6 col-xs-6 top-left-second-row-first-item">
+                <a class="img-radius" href="">
+                  <img src="" alt="">
+                  <div class="location_text_background">
+                    <div class="location_text_wrapper">
+                      <div class="class_text"> 영상편집 </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-6 top-left-second-row-second-item">
+                <a class="img-radius" href="">
+                  <img src="" alt="">
+                  <div class="location_text_background">
+                    <div class="location_text_wrapper">
+                      <div class="class_text"> 메이크업 </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- 우측상단 -->
+          <div class="col-md-6 col-xs-12 top-right">
+            <a class="img-radius" href="">
+              <img src="" alt="">
+              <div class="location_text_background">
+                <div class="location_text_wrapper">
+                  <div class="class_text"> 주식투자 </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <!-- 좌측하단 -->
+          <div class="col-md-6 bot-left">
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-left-first-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="class_text"> 댄스 </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-left-second-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="class_text"> 파워포인트 </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <!-- 우측하단 -->
+          <div class="col-md-6 bot-right">
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-right-first-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="location_text">
+                      <div class="class_text"> 스피치/발표 </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 bot-right-second-item">
+              <a class="img-radius" href="">
+                <img src="" alt="">
+                <div class="location_text_background">
+                  <div class="location_text_wrapper">
+                    <div class="location_text">
+                      <div class="class_text"> 영어회화 </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div id="menu2" class="tab-pane fade">
       <h3>Menu 2</h3>
       <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
     </div>
-    <div id="menu3" class="tab-pane fade">
-      <h3>Menu 3</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-    </div>
   </div>
-    <hr>
-    <p class="act"><b>Active Tab</b>: <span></span></p>
-    <p class="prev"><b>Previous Tab</b>: <span></span></p>
-</div> -->
+</div>
 
-<!-- <script src="https://s3.ap-northeast-2.amazonaws.com/projectgori/static/custom/js/set_class_section.js"></script> -->
 <script>
-  init();
-  function init(){
-    var row_width = $('.class-row').width() - 60;
-    $('.search-custom-link').width(row_width);
-
-    $('.cate-row').width(row_width);
-    $('.cate-item').height($('.cate-item').width());
-    console.log($('.cate-item').height() + "//" + $('.cate-item').width());
-    $('.input-search').width(row_width);
-
-    var host = "https://s3.ap-northeast-2.amazonaws.com/projectgori/static/";
-    // var host = "../../static/";
-    //비디오 설정
-    $('video').attr('src', host + 'images/main_video.mp4');
-    //이미지 설정
-    $('.cate-health-img').attr('src', host + 'images/cate_icon_health.png');
-    $('.cate-dance-img').attr('src', host + 'images/cate_icon_dance.png');
-    $('.cate-language-img').attr('src', host + 'images/cate_icon_language.png');
-    $('.cate-computer-img').attr('src', host + 'images/cate_icon_computer.png');
-    $('.cate-music-img').attr('src', host + 'images/cate_icon_music.png');
-    $('.cate-academy-img').attr('src', host + 'images/cate_icon_academy.png');
-  }
-
-
-
-  $(window).resize(function() {
-    var row_width = $('.class-row').width() - 30;
-    $('.search-custom-link').width(row_width);
-
-    $('.cate-row').width(row_width);
-    $('.cate-item').height($('.cate-item').width());
-    $('.input-search').width(row_width);
-  });
 
   set_class_section();
   function set_class_section(){
+    console.log('class');
     var url = 'https://mozzi.co.kr/api/talent/list/';
 
     // var url = 'http://localhost:8000/api/talent/list/';
@@ -311,17 +481,62 @@
         item_bot.find('.item-location').text(regions);
 
         $('.class-row').append(newDom);
+
       }
+      init();
+
     })
     .fail(function(data){
       console.log('fail');
     });
   }
 
+
+  function init(){
+    console.log("init");
+    var row_width = $('.class-row').width() - 30;
+    $('.search-custom-link').width(row_width);
+
+    $('.cate-row').width(row_width);
+    $('.cate-item').height($('.cate-item').width());
+    console.log($('.cate-item').height() + "//" + $('.cate-item').width());
+    $('.input-search').width(row_width);
+
+    var host = "https://s3.ap-northeast-2.amazonaws.com/projectgori/static/";
+    // var host = "../../static/";
+    //비디오 설정
+    $('video').attr('src', host + 'images/main_video.mp4');
+    //이미지 설정
+    $('.cate-health-img').attr('src', host + 'images/cate_icon_health.png');
+    $('.cate-dance-img').attr('src', host + 'images/cate_icon_dance.png');
+    $('.cate-language-img').attr('src', host + 'images/cate_icon_language.png');
+    $('.cate-computer-img').attr('src', host + 'images/cate_icon_computer.png');
+    $('.cate-music-img').attr('src', host + 'images/cate_icon_music.png');
+    $('.cate-academy-img').attr('src', host + 'images/cate_icon_academy.png');
+    console.log($('.class-half-size').width());
+    //tab bar의 class부분 이미지 길이 조정
+    $('.class-half-size').height($('.class-half-size').width() / 2 - 5);
+  }
+
+  $(window).resize(function() {
+    var row_width = $('.class-row').width() - 30;
+    $('.search-custom-link').width(row_width);
+
+    $('.cate-row').width(row_width);
+    $('.cate-item').height($('.cate-item').width());
+    $('.input-search').width(row_width);
+    console.log($('.class-half-size').width());
+
+    $('.class-half-size').height($('.class-half-size').width() / 2 - 5);
+
+  });
+
+
 </script>
 
-<!-- <script>
+<script>
 $(document).ready(function(){
+
     $(".nav-tabs a").click(function(){
         $(this).tab('show');
     });
@@ -330,8 +545,9 @@ $(document).ready(function(){
         var y = $(event.relatedTarget).text();  // previous tab
         $(".act span").text(x);
         $(".prev span").text(y);
+        $(window).resize();
     });
 });
-</script> -->
+</script>
 
 {% endblock %}
