@@ -46,14 +46,10 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             - comment : 코멘트
         """
         request.data['user'] = request.user.id
-        print("=====================")
 
         # 생성 전용 시리얼라이저 사용
-        print('---------before serializer-------')
         serializer = ReviewCreateSerializer(data=request.data)
-        print('---------before is_valid---------')
         serializer.is_valid(raise_exception=True)
-        print('---------after is_valid--------')
         # ##### 추가 검증 절차 #####
         talent = Talent.objects.get(pk=request.data['talent_pk'])
 

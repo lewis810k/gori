@@ -38,7 +38,6 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         추가정보 :
         """
         request.data['user'] = request.user.id
-        print(request.data)
 
         # 생성 전용 시리얼라이저 사용
         serializer = QuestionCreateSerializer(data=request.data)
@@ -142,7 +141,6 @@ class ReplyUpdateView(generics.UpdateAPIView):
     #     return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user__name=self.request.user)
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)

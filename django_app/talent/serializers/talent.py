@@ -200,6 +200,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField(read_only=True)
     reviews = serializers.SerializerMethodField()
     qna = serializers.SerializerMethodField()
+    wishlist = serializers.SerializerMethodField()
 
     class Meta:
         depth = 1
@@ -233,7 +234,15 @@ class TalentDetailSerializer(serializers.ModelSerializer):
             'curriculums',
             'qna',
             'reviews',
+            'wishlist',
         )
+        # '__sizeof__', '__slotnames__', '__str__', '__subclasshook__', '__weakref__', '_add_items', '_apply_rel_filters', '_build_remove_filters', '_constructor_args', '_create_user', '_db', '_get_queryset_methods', '_hints', '_insert', '_queryset_class', '_remove_items', '_set_creation_counter', '_update', 'add', 'aggregate', 'all', 'annotate', 'auto_created', 'bulk_create', 'check', 'clear', 'complex_filter', 'contribute_to_class', 'core_filters', 'count', 'create', 'create_superuser', 'create_user', 'creation_counter', 'dates', 'datetimes', 'db', 'db_manager', 'deconstruct', 'defer', 'distinct', 'do_not_call_in_templates', 'earliest', 'exclude', 'exists', 'extra', 'filter', 'first', 'from_queryset', 'get', 'get_by_natural_key', 'get_or_create', 'get_prefetch_queryset', 'get_queryset', 'in_bulk', 'instance', 'iterator', 'last', 'latest', 'make_random_password', 'model', 'name', 'none', 'normalize_email', 'only', 'order_by', 'prefetch_cache_name', 'prefetch_related', 'query_field_name', 'raw', 'related_val', 'remove', 'reverse', 'select_for_update', 'select_related', 'set', 'source_field', 'source_field_name', 'symmetrical', 'target_field', 'target_field_name', 'through', 'update', 'update_or_create', 'use_in_migrations', 'using', 'values', 'values_list']
+
+    def get_wishlist(self, obj):
+        wishlist_users = []
+        for wished_user in obj.wishlist_users.all():
+            wishlist_users.append(wished_user.user.pk)
+        return wishlist_users
 
     def get_reviews(self, obj):
         ordered_queryset = obj.reviews.order_by('-pk')
