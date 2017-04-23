@@ -1,3 +1,5 @@
+@import "variables";
+
 #section-tab {
   margin-top: 60px;
   .nav-tabs {
@@ -23,19 +25,31 @@
   }
 }
 
-#home {
+#home, #menu2 {
   .container-fluid {
     .row {
       .top-left {
         padding: 0;
+        .univ-half-size {
+          overflow: hidden;
+        }
         .top-left-first-row {
           padding: 5px;
           width: 100%;
+          height: 100%;
           > a {
             width: 100%;
+            height: 100%;
             > img {
               width: 100%;
-              content: url(../../images/location01.jpg);
+            }
+            .location-img {
+              content: url($host + "images/location01.jpg");
+            }
+            .class-img {
+              height: 100%;
+
+              content: url($host + "images/univ_seoul.jpg");
             }
           }
         }
@@ -47,7 +61,14 @@
               width: 100%;
               > img {
                 width: 100%;
-                content: url(../../images/location02.jpg);
+              }
+              .location-img {
+                content: url($host + "images/location02.jpg");
+              }
+              .class-img {
+                padding-top: 5px;
+                content: url($host + "images/univ_busan.jpg");
+
               }
             }
           }
@@ -57,7 +78,14 @@
               width: 100%;
               > img {
                 width: 100%;
-                content: url(../../images/location03.jpg);
+              }
+              .location-img {
+                content: url($host + "images/location03.jpg");
+              }
+              .class-img {
+                padding-top: 5px;
+                content: url($host + "images/kyunghee_univ.jpg");
+
               }
             }
           }
@@ -69,7 +97,12 @@
           width: 100%;
           > img {
             width: 100%;
-            content: url(../../images/location04.jpg);
+          }
+          .location-img {
+            content: url($host + "images/location04.jpg");
+          }
+          .class-img {
+            content: url($host + "images/univ_korea.jpg");
 
           }
         }
@@ -83,7 +116,13 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/location05.jpg);
+            }
+            .location-img {
+              content: url($host + "images/location05.jpg");
+            }
+            .class-img {
+              content: url($host + "images/univ_ehwa.jpg");
+
             }
           }
         }
@@ -94,19 +133,36 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/location06.jpg);
+            }
+            .location-img {
+              content: url($host + "images/location06.jpg");
+            }
+            .class-img {
+              content: url($host + "images/s_univ.jpg");
+
             }
           }
         }
       }
+      .univ-half-size {
+        overflow: hidden;
+      }
       .bot-right {
         padding: 0 5px;
         padding-bottom: 5px;
+        height: 100%;
         > a {
           width: 100%;
+          height: 100%;
           > img {
             width: 100%;
-            content: url(../../images/location07.jpg);
+          }
+          .location-img {
+            content: url($host + "images/location07.jpg");
+          }
+          .class-img {
+            content: url($host + "images/univ_yonsei.jpg");
+
           }
         }
       }
@@ -128,7 +184,7 @@
             overflow: hidden;
             > img {
               width: 100%;
-              content: url(../../images/class_01.jpg);
+              content: url($host + "images/class_01.jpg");
             }
           }
         }
@@ -140,7 +196,7 @@
               width: 100%;
               > img {
                 width: 100%;
-                content: url(../../images/class_02.jpg);
+                content: url($host + "images/class_02.jpg");
               }
             }
           }
@@ -150,7 +206,7 @@
               width: 100%;
               > img {
                 width: 100%;
-                content: url(../../images/class_03.jpg);
+                content: url($host + "images/class_03.jpg");
               }
             }
           }
@@ -162,7 +218,7 @@
           width: 100%;
           > img {
             width: 100%;
-            content: url(../../images/class_04.jpg);
+            content: url($host + "images/class_04.jpg");
 
           }
         }
@@ -176,7 +232,7 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/class_05.jpg);
+              content: url($host + "images/class_05.jpg");
             }
           }
         }
@@ -187,7 +243,7 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/class_06.jpg);
+              content: url($host + "images/class_06.jpg");
             }
           }
         }
@@ -201,7 +257,7 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/class_07.jpg);
+              content: url($host + "images/class_07.jpg");
             }
           }
         }
@@ -212,7 +268,7 @@
             width: 100%;
             > img {
               width: 100%;
-              content: url(../../images/class_08.jpg);
+              content: url($host + "images/class_08.jpg");
             }
           }
         }
@@ -288,6 +344,32 @@
         color: #fff;
         border: 2px solid #fff;
       }
+    }
+  }
+}
+
+.all-class-link {
+  text-align: center;
+  height: 60px;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-top: 20px;
+  > a {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 18px;
+    text-decoration: none;
+    line-height: 60px;
+    color: black;
+    transition: 0.3s;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    &:hover {
+      background-color: #eb3b4b;
+      color: #fff;
+      border: 0px;
     }
   }
 }
