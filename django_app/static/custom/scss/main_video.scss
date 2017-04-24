@@ -1,5 +1,6 @@
 @import "variables";
 
+
 #main-video {
   width: 100%;
   display: inline-block;
@@ -23,12 +24,7 @@
       transform: translateY(-50%);
       text-align: center;
       color: white;
-      .test {
-        display: block;
-        font-size: 20px;
-        margin-bottom: 30px;
-        background-color: rgba(265,102,102,0.7);
-      }
+
       .slogan-top {
         display: block;
         font-size: 52px;
