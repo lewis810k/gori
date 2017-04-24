@@ -3,47 +3,159 @@
 
 
 <!-- my info block -->
-<div class="my-info-wrap clear-fix">
-  <div class="right clear-fix col-sm-4">
-    <ul class="image-name">
-      <li class="profile-image"><img class="user-image" src="" alt=""></li>
-      <ul class="names">
-        <li class="name-item"></li>
-        <li class="name-item"></li>
-        <li class="name-item"></li>
+<div class="container-fluid">
+  <div class="row">
+    <div class="left col-md-4">
+      <div class="image-name">
+        <div class="profile-image col-md-6 col-xs-6"><img class="user-image" id="user-prof-image" src="../../static/images/default_profile.png" alt=""></div>
+        <div class="names col-md-6 col-xs-6">
+          <ul class="left-list clear-fix">
+            <li class="name-item" id="user-name"></li>
+            <li class="name-item" id="nickname"></li>
+            <li class="name-item" id="info-edit">정보 수정</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+    <div class="center clear-fix col-md-4">
+      <div id="center-item">
+        <div class="center-item-list col-md-4 col-sm-4 col-xs-4">
+          <ul class="center-list">
+            <li><img src="../../static/images/icon_my_menu.png" alt=""></li>
+            <li class="data">받은 수업 신청서</li>
+            <li class="count" id="received_registrations">0</li>
+          </ul>
+        </li>
+      </div>
+
+      <div class="center-item-list col-md-4 col-sm-4 col-xs-4">
+        <ul class="center-list">
+          <li><img src="../../static/images/icon_my_menu2.png" alt=""></li>
+          <li class="data">신청한 수업</li>
+          <li class="count" id="sent_registrations">0</li>
+        </ul>
+      </li>
+    </div>
+    <div class="center-item-list col-md-4 col-sm-4 col-xs-4">
+      <ul class="center-list">
+        <li><img src="../../static/images/icon_my_menu3.png" alt=""></li>
+        <li class="data">위시리스트</li>
+        <li class="count" id="wish_list_count">0</li>
       </ul>
-
-    </ul>
-
-
+    </li>
   </div>
-  <div class="center clear-fix col-sm-4">
+</div>
+</div>
+<div class="right clear-fix col-md-4">
+  <table id="account-info" class="table-responsive col-sm-12">
+    <tr class="info-row">
+      <td class="col-md-6"></td>
+      <td></td>
+    </tr>
+    <tr class="info-row">
+      <td>등록된 전화번호</td>
+      <td id="user-cell">전환번호 value here</td>
+    </tr>
+    <tr class="info-row">
+      <td>등록된 이메일</td>
+      <td id="user-email">email goes here</td>
+    </tr>
+    <tr class="info-row">
+      <td>학교 정보</td>
+      <td id="user-school">school info here</td>
+    </tr>
 
-    <ul class=center-item>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-    <ul class=center-item>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-    <ul class=center-item>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+    <tr class="info-row">
+      <td>계정 정보</td>
+      <td id="user-type">이메일 계정 사용중</td>
+    </tr>
+  </table>
+</div>
+</div>
+</div>
 
-  </div>
-  <div class="left clear-fix col-sm-4">
-
-  </div>
-
-
+<div class="my-info-wrap clear-fix">
 
 </div>
 
+<div id="blank" class="col-sm-12">
+</div>
+
+<div id="my-info-tab">
+  <div class="tab-wrap row" role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active col-sm-6"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">수강생</a></li>
+      <li role="presentation" class="col-sm-6"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">튜터</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content col-sm-12">
+      <div role="tabpanel" class="tab-pane active member-tab" id="home">
+        <ul class="tab-list">
+          <li class="col-sm-2 col-xs-4 tab-lists" id="regis-tab-list"><a class="tab-list-item" id="regis-tab">수업신청서</a></li>
+          <li class="col-sm-2 col-xs-4 tab-lists" id="veri-regis-tab-list"><a class="tab-list-item" id="veri-regis-tab">수강 목록</a></li>
+          <li class="col-sm-2 col-xs-4 tab-lists"id="wish-list-tab-list"><a class="tab-list-item" id="wish-list-tab"> 위시리스트</a></li>
+        </ul>
+      </div>
+      <div role="tabpanel" class="tab-pane member-tab" id="profile">
+        <ul class="tab-list">
+          <li class="col-sm-2 col-xs-4 tab-lists" id="my-class-tab-list">  <a class="tab-list-item" id="my-class-tab">내 수업</a></li>
+          <li class="col-sm-2 col-xs-4 tab-lists" id="incoming-regis-tab-list">  <a class="tab-list-item" id="incoming-regis-tab"> 수업 신청서</a></li>
+        </div>
+      </div>
+
+      <div id="info-box" class="col-sm-12 row">
+
+      </div>
+    </div>
+
+
+    <script src="../../static/custom/js/apis.js"></script>
+    <script src="../../static/custom/js/dom-utils.js"></script>
+    <script src="../../static/custom/js/cookies.js"></script>
+    <script src="../../static/custom/js/utils.js"></script>
+
+    <script>
+
+
+
+    $("#regis-tab").on( "click", function( event ) {
+      $(".tab-list-item" ).css( "color", "grey");
+      $("#regis-tab").css("color","black");
+
+    });
+
+    $("#veri-regis-tab").on( "click", function( event ) {
+      $(".tab-list-item" ).css( "color", "grey");
+      $("#veri-regis-tab").css("color","black");
+      getUserEnrollList();
+
+    });
+
+    $("#wish-list-tab").on( "click", function( event ) {
+      $(".tab-list-item").css("color","grey");
+      $("#wish-list-tab" ).css( "color", "black");
+      getUserWishList();
+
+    });
+    $("#my-class-tab").on( "click", function( event ) {
+      $(".tab-list-item").css("color","grey");
+      $("#my-class-tab" ).css( "color", "black");
+    });
+    $("#incoming-regis-tab").on( "click", function( event ) {
+      $(".tab-list-item").css("color","grey");
+      $("#incoming-regis-tab" ).css( "color", "black");
+    });
+
+
+
+    obtainAuthToken('y.gori','fastcamp');
+    getUserProfile();
+    // getUserWishList();
+
+    </script>
 
 
 
@@ -51,5 +163,4 @@
 
 
 
-
-{% endblock %}
+    {% endblock %}
