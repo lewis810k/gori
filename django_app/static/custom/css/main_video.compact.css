@@ -6,8 +6,6 @@
 
 #main-video .video-container .slogan { position: absolute; display: inline-block; margin: 0 auto; top: 70%; left: 0; right: 0; transform: translateY(-50%); text-align: center; color: white; }
 
-#main-video .video-container .slogan .test { display: block; font-size: 20px; margin-bottom: 30px; background-color: rgba(255, 102, 102, 0.7); }
-
 #main-video .video-container .slogan .slogan-top { display: block; font-size: 52px; line-height: 52px; }
 
 #main-video .video-container .slogan .slogan-bottom { margin-top: 20px; display: inline-block; font-size: 20px; font-weight: 100; }
@@ -27,3 +25,5 @@
 #main-video .video-container .search-container .col-input .input-search .input-group-btn > button > img { margin-right: 10px; height: 25px; width: 25px; content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_search_on.png"); }
 
 #main-video .video-container .search-container .col-input .input-search .input-group-btn > button:hover { background-color: #eb3b4b; }
+
+/*# sourceMappingURL=main_video.compact.css.map */

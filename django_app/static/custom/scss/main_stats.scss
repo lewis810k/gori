@@ -1,7 +1,46 @@
 @import "variables";
 
-#section_stats {
-  height: 660px;
-  background-color: red;
-  background: url($host + "");
+#section-stats {
+  margin-top: 60px;
+  padding: 60px 0;
+  background: url($host + "images/bg_taling_count.jpg");
+  background-size: cover;
+  z-index: -999;
+  .stats-icon {
+    width: 100%;
+    position: relative;
+    // background: url($host + "images/bg_icon.png");
+    // background-size: cover;
+    > img {
+      width: 100%;
+      content: url($host + "images/bg_icon.png");
+    }
+    .row {
+      top: 56%;
+      position: absolute;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+
+      .stats-item {
+        padding: 0;
+        height: 80px;
+        .stats-text-left {
+          font-size: 16px;
+          text-align: center;
+          padding-right: 10px;
+        }
+        .stats-text-center{
+          padding-left: 10px;
+          font-size: 18px;
+          text-align: center;
+        }
+        .stats-text-right {
+          font-size: 16px;
+          text-align: center;
+          padding-left: 25px;
+        }
+      }
+    }
+  }
 }

@@ -1,0 +1,78 @@
+@import "variables";
+
+#footer {
+  background-color: #525252;
+  margin-top: 60px;
+  padding: 60px 0;
+  .footer-container {
+    .list-row {
+      padding-bottom: 60px;
+      border-bottom: 1px solid #666;
+      .footer-list {
+        padding: 0;
+        > ul {
+          >li {
+            margin-bottom: 5px;
+            color: #fff;
+            &:nth-child(1) {
+              font-size: 16px;
+              font-weight: 800;
+              margin-bottom: 15px;
+            }
+            > a {
+              color: #fff;
+              font-weight: 100;
+              text-decoration: none;
+              &:hover {
+                color: #666;
+              }
+              > img {
+                width: 16px;
+                height: 16px;
+                content: url($host + "images/yellow.png");
+              }
+            }
+
+          }
+
+        }
+      }
+    }
+    .social-row {
+      padding-top: 40px;
+      .social-title {
+        color: #fff;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 400;
+      }
+      .social-btn {
+        text-align: center;
+        margin-top: 10px;
+        > a {
+          > img {
+            width: 50px;
+            height: 50px;
+
+          }
+          .facebook_img {
+            content: url($host + "images/facebook_b.png");
+          }
+          .blog_img {
+            content: url($host + "images/blog_b.png");
+          }
+          .insta_img {
+            content: url($host + "images/insta_b.png");
+          }
+        }
+      }
+      .address {
+        margin-top: 15px;
+        color: #999;
+        font-size: 16px;
+        font-weight: 100;
+        text-align: center;
+      }
+    }
+  }
+}
