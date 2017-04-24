@@ -1,3 +1,3 @@
-#section_stats{height:660px;background-color:red;background:url("../../")}
+#section-stats{margin-top:60px;padding:60px 0;background:url("../../images/bg_taling_count.jpg");background-size:cover;z-index:-999}#section-stats .stats-icon{width:100%;position:relative}#section-stats .stats-icon>img{width:100%;content:url("../../images/bg_icon.png")}#section-stats .stats-icon .row{top:56%;position:absolute;width:100%;padding:0;margin:0}#section-stats .stats-icon .row .stats-item{padding:0;height:80px}#section-stats .stats-icon .row .stats-item .stats-text-left{font-size:16px;text-align:center;padding-right:10px}#section-stats .stats-icon .row .stats-item .stats-text-center{padding-left:10px;font-size:18px;text-align:center}#section-stats .stats-icon .row .stats-item .stats-text-right{font-size:16px;text-align:center;padding-left:25px}
 
 /*# sourceMappingURL=main_stats.min.css.map */

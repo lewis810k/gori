@@ -63,7 +63,7 @@
 
 <div id="main-video">
   <div class="video-container">
-    <!-- <video autoplay src="" loop muted></video> -->
+    <video autoplay src="" loop muted></video>
     <div class="slogan">
       <div class="test">이 페이지는 패스트캠퍼스 웹프로그래밍 4기-5조가 taling.me의 페이지를 참고하여 구현한 페이지입니다.</div>
       <div class="slogan-top">무엇이 당신을 빛나게 하나요?</div>
@@ -490,9 +490,32 @@
   <a href="">모든강의 보기 +</a>
 </div>
 
-<!-- <div id="section_stats">
+<!-- <div id="section-review">
 
 </div> -->
+
+<div id="section-stats">
+  <div class="stats-icon">
+    <img src="" alt="">
+    <div class="row">
+      <div class="col-md-4 col-sm-4 col-xs-4 stats-item">
+        <div class="stats-text-left">
+          <b>13050</b><br>지금까지 <font color="#f00">탈잉</font>한 사람
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4 stats-item">
+        <div class="stats-text-center">
+          <b>247000</b><br>탈출시킨 <font color="#f00">잉여로운 시간</font>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4 stats-item">
+        <div class="stats-text-right">
+          <b>1208</b><br>등록된 <font color="#f00">수업 수</font>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 
@@ -500,7 +523,6 @@
   function set_class_section(){
     console.log('class');
     var url = 'https://mozzi.co.kr/api/talent/list/';
-
     // var url = 'http://localhost:8000/api/talent/list/';
     $.ajax({
       url: url,

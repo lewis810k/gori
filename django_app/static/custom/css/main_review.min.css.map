@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "main_review.min.css",
+	"sources": [
+		"../scss/main_review.scss"
+	],
+	"names": [],
+	"mappings": "AAAA,AAAA,eAAe,AAAC,CACd,MAAM,CAAE,KAAK,CACb,gBAAgB,CAAE,GAAG,CACrB,MAAM,CAAE,MAAM,CACf"
+}
