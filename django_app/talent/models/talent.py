@@ -46,6 +46,7 @@ class Talent(models.Model):
     max_number_student = models.IntegerField(default=1, validators=[MaxValueValidator(9), MinValueValidator(1)])
     tutor_message = models.TextField(blank=True)
     location_message = models.TextField(blank=True)
+    view_count = models.IntegerField(default=0)
 
     def __str__(self):
         return '{}'.format(self.title)

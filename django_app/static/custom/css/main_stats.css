@@ -1,7 +1,7 @@
 #section-stats {
   margin-top: 60px;
   padding: 60px 0;
-  background: url("../../images/bg_taling_count.jpg");
+  background: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/bg_taling_count.jpg");
   background-size: cover;
   z-index: -999;
 }
@@ -13,7 +13,7 @@
 
 #section-stats .stats-icon > img {
   width: 100%;
-  content: url("../../images/bg_icon.png");
+  content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/bg_icon.png");
 }
 
 #section-stats .stats-icon .row {
