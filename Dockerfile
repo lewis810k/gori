@@ -1,5 +1,5 @@
 FROM        gsh2448/gori-front
-MAINTAINER  gsh2448.com
+MAINTAINER  gsh2448@gmail.com
 
 
 WORKDIR     /srv/app/django_app

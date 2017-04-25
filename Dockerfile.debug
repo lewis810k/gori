@@ -1,5 +1,5 @@
 FROM        gori-front-base2
-MAINTAINER  gsh2448.com
+MAINTAINER  gsh2448@gmail.com
 
 
 WORKDIR     /srv
