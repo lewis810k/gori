@@ -52,12 +52,12 @@ urlpatterns = [
     # url(r'^registration/$', apis.RegistrationList.as_view()),
 
     ###### 수정 #######
-    url(r'^update/(?P<pk>[0-9]+)/curriculum/$', apis.CurriculumUpdateView.as_view(), name='curriculum-update'),
-    url(r'^update/(?P<pk>[0-9]+)/class-image/$', apis.ClassImageUpdateView.as_view(), name='classimage-update'),
-    url(r'^update/(?P<pk>[0-9]+)/review/$', apis.ReviewUpdateView.as_view(), name='review-update'),
-    url(r'^update/(?P<pk>[0-9]+)/question/$', apis.QuestionUpdateView.as_view(), name='question-update'),
-    url(r'^update/(?P<pk>[0-9]+)/reply/$', apis.ReplyUpdateView.as_view(), name='reply-update'),
-    url(r'^update/(?P<pk>[0-9]+)/registration/$', apis.RegistrationUpdateView.as_view(), name='reply-update'),
-    url(r'^update/(?P<pk>[0-9]+)/location/$', apis.LocationUpdateView.as_view(), name='location-update'),
-    url(r'^update/(?P<pk>[0-9]+)/talent/$', apis.TalentUpdateView.as_view(), name='talent-update'),
+    url(r'^update/curriculum/(?P<pk>[0-9]+)/$', apis.CurriculumUpdateView.as_view(), name='curriculum-update'),
+    url(r'^update/class-image/(?P<pk>[0-9]+)/$', apis.ClassImageUpdateView.as_view(), name='classimage-update'),
+    url(r'^update/review/(?P<pk>[0-9]+)/$', apis.ReviewUpdateView.as_view(), name='review-update'),
+    url(r'^update/question/(?P<pk>[0-9]+)/$', apis.QuestionUpdateView.as_view(), name='question-update'),
+    url(r'^update/reply/(?P<pk>[0-9]+)/$', apis.ReplyUpdateView.as_view(), name='reply-update'),
+    url(r'^update/registration/(?P<pk>[0-9]+)/$', apis.RegistrationUpdateView.as_view(), name='reply-update'),
+    url(r'^update/location/(?P<pk>[0-9]+)/$', apis.LocationUpdateView.as_view(), name='location-update'),
+    url(r'^update/talent/(?P<pk>[0-9]+)/$', apis.TalentUpdateView.as_view(), name='talent-update'),
 ]
