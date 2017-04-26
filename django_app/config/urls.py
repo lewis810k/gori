@@ -43,7 +43,6 @@ urlpatterns = [
     url(r'^main/', include(talent_urls)),
     url(r'^talent/', include(talent_urls)),
 
-
 ]
 
 if settings.DEBUG:

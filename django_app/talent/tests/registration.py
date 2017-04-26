@@ -9,6 +9,7 @@ from utils import APITestUserLogin
 
 User = get_user_model()
 
+
 class RegistrationCreateRetrieveTest(APILiveServerTestCase, APITestUserLogin):
     def test_registration_create(self):
         users, tokens = self.obtain_token(3)

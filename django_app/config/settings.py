@@ -20,7 +20,6 @@ STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 print(DEBUG)
 print(STORAGE_S3)
 
-
 # /gori/django_app/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # /gori/
@@ -99,7 +98,7 @@ CALLBACK_URL = '/admin/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",

@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.filters import OrderingFilter

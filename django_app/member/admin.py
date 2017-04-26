@@ -1,8 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import AllValuesFieldListFilter
 from django_admin_listfilter_dropdown.filters import DropdownFilter
-from rest_framework.authtoken.admin import TokenAdmin
-from rest_framework.authtoken.models import Token
 
 from member.models import GoriUser, Tutor
 from talent.admin import RegistrationInline

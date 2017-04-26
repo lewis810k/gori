@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
-from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 from requests.exceptions import HTTPError
 from rest_auth.registration.serializers import SocialLoginSerializer

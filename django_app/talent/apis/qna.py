@@ -132,6 +132,7 @@ class ReplyCreateView(generics.CreateAPIView):
 
         return Response(success_msg, status=status.HTTP_201_CREATED, headers=headers)
 
+
 class ReplyUpdateView(generics.UpdateAPIView):
     queryset = Reply.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
@@ -154,10 +155,10 @@ class ReplyUpdateView(generics.UpdateAPIView):
 
         return Response(status=status.HTTP_200_OK, data=success_update)
 
+
 class ReplyDeleteView(generics.DestroyAPIView):
     queryset = Reply.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return Reply.objects.filter(pk=self.kwargs['pk'], tutor__user=self.request.user)
-

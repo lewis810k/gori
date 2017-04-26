@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 
 import requests
+from allauth.socialaccount import providers
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider, GRAPH_API_URL
 from allauth.socialaccount.providers.facebook.views import compute_appsecret_proof, FacebookOAuth2Adapter
 from django.contrib.auth import get_user_model
@@ -8,7 +9,6 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.db import IntegrityError
 from rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount import providers
 
 from member.serializers import CustomSocialLoginSerializer
 

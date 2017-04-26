@@ -156,7 +156,7 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
         qna = list(response.data['qna'][0])
         reply = list(response.data['qna'][0]['replies'][0])
         reviews = list(response.data['reviews'][0])
-        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews,location_detail]
+        data_list = [tutor, average_reates, location, curriculums, qna, reply, reviews, location_detail]
         for data_item in data_list:
             data.extend(data_item)
         field_list = ['pk', 'title', 'category', 'type', 'tutor', 'user_id', 'name', 'nickname', 'is_verified',
@@ -166,7 +166,7 @@ class TalentListTest(APITestUserLogin, APITestListVerify):
                       'max_number_student', 'average_rates', 'review_count', 'is_soldout', 'is_verified', 'locations',
                       'talent_pk', 'region', 'specific_location', 'extra_fee', 'extra_fee_amount', 'time', 'image',
                       'information', 'qna', 'user', 'user_image', 'created_date', 'content', 'replies', 'tutor_image',
-                      'talent', 'comment','day','location_message']
+                      'talent', 'comment', 'day', 'location_message']
 
         self.verify_util(data, field_list)
 

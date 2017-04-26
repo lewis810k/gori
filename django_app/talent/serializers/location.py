@@ -95,4 +95,3 @@ class LocationCreateSerializer(serializers.ModelSerializer):
             'day',
             'time',
         )
-

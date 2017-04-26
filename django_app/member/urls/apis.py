@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 
 from .. import apis
-from talent.apis import registration as regis_apis
 
 app_name = 'member'
 
@@ -26,7 +25,8 @@ urlpatterns = [
         name='talent-verify'),
 
     # ##### tutor가 수업신청 인증 (취소) #####
-    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(),name='registration-verify' ),
+    url(r'^verify/registration/(?P<registration_pk>[0-9]+)/$', apis.TutorVerifyRegistrationView.as_view(),
+        name='registration-verify'),
 
     # ##### 로그인/로그아웃 #####
     url(r'^fb_login/$', apis.CreateFacebookUserView.as_view()),

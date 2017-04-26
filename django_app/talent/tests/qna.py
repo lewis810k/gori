@@ -60,7 +60,7 @@ class ReplyCreateTest(APITestListVerify, APITestUserLogin):
         tutor = self.register_tutor(user[0], user_token[0])
         talent = self.create_talent(tutor, user_token[0])
         question = self.create_question(talent, user_token[1])
-        reply = self.create_reply(question,user_token[0])
+        reply = self.create_reply(question, user_token[0])
 
         test_list = [
             [555, "content", user_token[1]],

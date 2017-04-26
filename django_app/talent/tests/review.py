@@ -10,6 +10,7 @@ __all__ = (
     'ReviewRetrieveTest'
 )
 
+
 class ReviewCreateTest(APILiveServerTestCase, APITestUserLogin):
     def test_create_review(self):
         user, user_token = self.obtain_token(2)
