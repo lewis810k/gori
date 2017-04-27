@@ -9,7 +9,7 @@ function addArticle(curPost) {
   // var strDay = moment(day).format('YYYY년 M월 D일');
   newDomPostHeader.append('<span class="header-date"></span>')
 
-  newDom.find('span.header-date').text(curPost.created_date)
+  newDom.find('span.header-date').text(curPost.created_date);
 
   newDomPostHeader.append('<span class="post-delete clearfix"></span>')
 

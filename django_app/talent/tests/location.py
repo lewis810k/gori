@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
-    def test_location_create(self):
+    def test_create_location(self):
         user, token = self.obtain_token()
         tutor = self.register_tutor(user, token)
         talent = self.create_talent(tutor, token)
@@ -62,7 +62,6 @@ class LocationCreateRetriveTest(APILiveServerTestCase, APITestUserLogin):
             if not response.data["results"]:
                 self.assertEqual(pk, invalid_talent_pk)
             else:
-                print("333333", response.data)
                 self.assertEqual(response.data["results"][0]["talent_pk"], talent.pk)
                 self.assertIn("region", response.data["results"][0])
                 self.assertIn("day", response.data["results"][0])

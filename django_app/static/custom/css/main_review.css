@@ -64,15 +64,15 @@
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-item-top-img .swiper-img-1 {
-  content: url("../../images/review_pic_1.jpg");
+  content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/review_pic_1.jpg");
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-item-top-img .swiper-img-2 {
-  content: url("../../images/review_pic_2.jpg");
+  content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/review_pic_2.jpg");
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-item-top-img .swiper-img-3 {
-  content: url("../../images/review_pic_3.jpg");
+  content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/review_pic_3.jpg");
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-item-center {
@@ -93,7 +93,7 @@
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-item-center .swiper-rate .star-on {
-  content: url("../../images/icon_star_on.png");
+  content: url("https://s3.ap-northeast-2.amazonaws.com/projectgori/static/images/icon_star_on.png");
 }
 
 #section-review .swiper-container .swiper-wrapper .swiper-slide .swiper-item .swiper-item-top .swiper-name {

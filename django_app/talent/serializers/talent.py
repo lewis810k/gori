@@ -38,6 +38,7 @@ class TalentShortInfoSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'title',
+            'view_count',
             'category',
             'type',
             'cover_image',
@@ -88,6 +89,7 @@ class TalentListSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'title',
+            'view_count',
             # 'category_name',
             'category',
             # 'type_name',
@@ -148,6 +150,7 @@ class TalentShortDetailSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'title',
+            'view_count',
             'tutor',
             'category',
             'type',
@@ -207,6 +210,7 @@ class TalentDetailSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'title',
+            'view_count',
             'tutor',
             # 'category_name',
             'tutor_message',

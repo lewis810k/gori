@@ -687,8 +687,8 @@
   set_class_section();
   function set_class_section(){
     console.log('class');
-    var url = 'https://mozzi.co.kr/api/talent/list/';
-    // var url = 'http://localhost:8000/api/talent/list/';
+    // var url = 'https://mozzi.co.kr/api/talent/list/';
+    var url = 'http://localhost:8000/api/talent/list/';
     $.ajax({
       url: url,
       method: "GET",
@@ -809,8 +809,8 @@
     $('.input-search').width(row_width);
     $('.footer-container').width(row_width);
 
-    var host = "https://s3.ap-northeast-2.amazonaws.com/projectgori/static/";
-    // var host = "../../static/";
+    // var host = "https://s3.ap-northeast-2.amazonaws.com/projectgori/static/";
+    var host = "../../static/";
     //비디오 설정
     $('video').attr('src', host + 'images/main_video.mp4');
     //이미지 설정
